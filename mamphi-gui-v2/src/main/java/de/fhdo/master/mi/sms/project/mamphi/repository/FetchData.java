@@ -16,14 +16,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import de.fhdo.master.mi.sms.project.mamphi.model.PatientCenter;
+import de.fhdo.master.mi.sms.project.mamphi.model.Consent;
 import de.fhdo.master.mi.sms.project.mamphi.model.InformedConsent;
+import de.fhdo.master.mi.sms.project.mamphi.model.Land;
 import de.fhdo.master.mi.sms.project.mamphi.model.MonitorVisite;
 import de.fhdo.master.mi.sms.project.mamphi.model.RandomizationWeek;
 import de.fhdo.master.mi.sms.project.mamphi.model.Zentrum;
 
 public class FetchData {
 
-	private Connection connection;
+	private static Connection connection;
+	private static Statement statement;
+	private static ResultSet results;
+	private static int result;
 	private Zentrum center;
 	private List<Zentrum> centerList;
 	private List<InformedConsent> consentList;
@@ -33,20 +38,21 @@ public class FetchData {
 	private List<Integer> centerIDs;
 	private List<Integer> centerListByWeek;
 	private List<Integer> patientIDs;
-	// db parameters
+	private static String query;
+
+	// DB parameters
 	private final String url = "jdbc:sqlite:C:\\Users\\biocl\\Desktop\\Beauclair\\USB DISK\\Master\\FH_DO\\PyDev\\sms-sose-2019-mamphi-administration\\data\\mamphi.db";
 
 	public void updateZentrum(Zentrum center) {
 		try {
 			// create a connection to the database
 			connection = DriverManager.getConnection(url);
-			int result;
 
-			String sql = "INSERT INTO Zentren VALUES (?, ?, ?, ?, ?)";
+			query = "INSERT INTO Zentren VALUES (?, ?, ?, ?, ?)";
 
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			PreparedStatement stmt = connection.prepareStatement(query);
 			stmt.setLong(1, center.getZentrum_id());
-			stmt.setString(2, center.getLand().equals("Deutschland") ? "D" : "GB");
+			stmt.setString(2, center.getLand().equals("Deutschland") ? Land.D.toString() : Land.GB.toString());
 			stmt.setString(3, center.getOrt());
 			stmt.setString(4, center.getPruefer());
 			stmt.setString(5, center.getMonitor());
@@ -56,7 +62,7 @@ public class FetchData {
 			if (result != 0) {
 				System.out.println("New row added to zentren table!");
 			}
-			
+
 			connection.close();
 
 		} catch (SQLException e) {
@@ -70,11 +76,11 @@ public class FetchData {
 		try {
 			// create a connection to the database
 			connection = DriverManager.getConnection(url);
-			String query = "Select * from Zentren";
+			query = "Select * from Zentren";
 
-			Statement statement = connection.createStatement();
+			statement = connection.createStatement();
 
-			ResultSet results = statement.executeQuery(query);
+			results = statement.executeQuery(query);
 
 			centerList = new ArrayList<Zentrum>();
 
@@ -82,7 +88,7 @@ public class FetchData {
 			while (results.next()) {
 				center = new Zentrum(results.getString("Monitor"), results.getString("Pruefer"),
 						results.getString("Ort"),
-						results.getString("Land").equals("D") ? "Deutschland" : "Großbritanien",
+						results.getString("Land").equals(Land.D.toString()) ? "Deutschland" : "Großbritanien",
 						results.getInt("Zentrum_Id"));
 				centerList.add(center);
 			}
@@ -92,21 +98,19 @@ public class FetchData {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		return centerList;
-
 	}
-	
-	public List<Zentrum> fetchCenterData(String land) {
+
+	public List<Zentrum> fetchCenterData(Land land) {
 
 		try {
 			// create a connection to the database
 			connection = DriverManager.getConnection(url);
-			String query = "Select * from Zentren where Land = '" +land+"'";
+			query = "Select * from Zentren where Land = '" + land + "'";
 
-			Statement statement = connection.createStatement();
+			statement = connection.createStatement();
 
-			ResultSet results = statement.executeQuery(query);
+			results = statement.executeQuery(query);
 
 			centerList = new ArrayList<Zentrum>();
 
@@ -134,11 +138,11 @@ public class FetchData {
 			// create a connection to the database
 			connection = DriverManager.getConnection(url);
 
-			String query = "select * from Informed_consent";
+			query = "select * from Informed_consent";
 
-			Statement statement = connection.createStatement();
+			statement = connection.createStatement();
 
-			ResultSet results = statement.executeQuery(query);
+			results = statement.executeQuery(query);
 			InformedConsent consent;
 			consentList = new ArrayList<InformedConsent>();
 
@@ -159,57 +163,34 @@ public class FetchData {
 		return consentList;
 	}
 
-	public List<InformedConsent> fetchMissingConsent() {
+	public List<InformedConsent> fetchInformedConsent(Consent consent) {
 
-		// create a connection to the database
 		try {
 			connection = DriverManager.getConnection(url);
-			String query = "SELECT * FROM Informed_consent WHERE Einwilligung = 'nan' AND Datum != 'NaT'";
 
-			Statement statement = connection.createStatement();
+			if (consent.equals(Consent.INCOMPLETE)) {
+				query = "SELECT * FROM Informed_consent WHERE Einwilligung = 'nan'";
+			} else if (consent.equals(Consent.MISSING)) {
+				query = "SELECT * FROM Informed_consent WHERE Einwilligung = 'nan' AND Datum != 'NaT'";
+			} else {
+				query = "SELECT * FROM Informed_consent WHERE Einwilligung != 'nan' AND Datum > '2019.06.03'";
+			}
 
-			ResultSet results = statement.executeQuery(query);
-			InformedConsent consent;
+			statement = connection.createStatement();
+
+			results = statement.executeQuery(query);
+			InformedConsent informedConsent;
 			consentList = new ArrayList<InformedConsent>();
 			// loop through the result set
 			while (results.next()) {
 
-				consent = new InformedConsent(results.getInt("Patient_Id"), results.getInt("Zentrum"),
+				informedConsent = new InformedConsent(results.getInt("Patient_Id"), results.getInt("Zentrum"),
 						results.getString("Einwilligung").toUpperCase(), results.getString("Datum"));
-				consentList.add(consent);
+				consentList.add(informedConsent);
 
 			}
 			connection.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
-		return consentList;
-
-	}
-
-	public List<InformedConsent> fetchIncompletedConsent() {
-
-		// create a connection to the database
-		try {
-			connection = DriverManager.getConnection(url);
-			String query = "SELECT * FROM Informed_consent WHERE Einwilligung = 'nan'";
-
-			Statement statement = connection.createStatement();
-
-			ResultSet results = statement.executeQuery(query);
-			InformedConsent consent;
-			consentList = new ArrayList<InformedConsent>();
-			// loop through the result set
-			while (results.next()) {
-
-				consent = new InformedConsent(results.getInt("Patient_Id"), results.getInt("Zentrum"),
-						results.getString("Einwilligung").toUpperCase(), results.getString("Datum"));
-				consentList.add(consent);
-
-			}
-			connection.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -288,7 +269,6 @@ public class FetchData {
 			}
 
 			visiteList.add(sampleVisite);
-
 		}
 
 		return visiteList;
@@ -299,11 +279,10 @@ public class FetchData {
 		// create a connection to the database
 		try {
 			connection = DriverManager.getConnection(url);
-			int result;
 
-			String sql =  "INSERT INTO Random_Woche_"+week +" VALUES (?, ?, ?, ?)";
+			query = "INSERT INTO Random_Woche_" + week + " VALUES (?, ?, ?, ?)";
 
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			PreparedStatement stmt = connection.prepareStatement(query);
 			stmt.setLong(1, rand.getPatient_id());
 			stmt.setLong(2, rand.getZentrum());
 			stmt.setString(3, rand.getBehandlungsarm());
@@ -314,7 +293,6 @@ public class FetchData {
 			if (result != 0) {
 				System.out.println("New row added to Randomization Table Week " + week);
 			}
-			connection.commit();
 			connection.close();
 
 		} catch (SQLException e) {
@@ -322,48 +300,17 @@ public class FetchData {
 			e.printStackTrace();
 		}
 
-	}
-
-	public List<InformedConsent> fetchInformedConsentAfterRadomization() {
-
-		// create a connection to the database
-		try {
-			connection = DriverManager.getConnection(url);
-			String query = "SELECT * FROM Informed_consent WHERE Datum > '2019.06.03'";
-
-			Statement statement = connection.createStatement();
-
-			ResultSet results = statement.executeQuery(query);
-			InformedConsent consent;
-			consentList = new ArrayList<InformedConsent>();
-
-			// loop through the result set
-			while (results.next()) {
-
-				consent = new InformedConsent(results.getInt("Patient_Id"), results.getInt("Zentrum"),
-						results.getString("Einwilligung").toUpperCase(), results.getString("Datum"));
-				consentList.add(consent);
-
-			}
-			connection.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return consentList;
 	}
 
 	public void updateInformedConsent(InformedConsent consent) {
 
 		// create a connection to the database
 		try {
+
 			connection = DriverManager.getConnection(url);
-			int result;
+			query = "INSERT INTO Informed_consent VALUES (?, ?, ?, ?)";
 
-			String sql = "INSERT INTO Informed_consent VALUES (?, ?, ?, ?)";
-
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			PreparedStatement stmt = connection.prepareStatement(query);
 			stmt.setLong(1, consent.getPatient_id());
 			stmt.setLong(2, consent.getZentrum_id());
 			stmt.setString(3, consent.getEinwilligung());
@@ -374,7 +321,6 @@ public class FetchData {
 			if (result != 0) {
 				System.out.println("New row added to Informed Consent table!");
 			}
-			connection.commit();
 			connection.close();
 
 		} catch (SQLException e) {
@@ -388,11 +334,11 @@ public class FetchData {
 		try {
 			// create a connection to the database
 			connection = DriverManager.getConnection(url);
-			String query = "select Zentrum_Id from Zentren";
+			query = "select Zentrum_Id from Zentren";
 
-			Statement statement = connection.createStatement();
+			statement = connection.createStatement();
 
-			ResultSet results = statement.executeQuery(query);
+			results = statement.executeQuery(query);
 
 			centerIDs = new ArrayList<>();
 
@@ -408,8 +354,8 @@ public class FetchData {
 
 		return centerIDs;
 	}
-	
-	public List<PatientCenter> fetchNumberPatientenPerCenterByLandByWeek(String land, int week) {
+
+	public List<PatientCenter> fetchNumberPatientenPerCenterByLandByWeek(Land land, int week) {
 
 		List<PatientCenter> numberOfPatientPerCenterGermany = new ArrayList<PatientCenter>();
 		List<PatientCenter> numberOfPatientPerCenterGB = new ArrayList<PatientCenter>();
@@ -424,9 +370,9 @@ public class FetchData {
 			}
 		});
 
-		return land.equals("Deutschland") ? numberOfPatientPerCenterGermany : numberOfPatientPerCenterGB;
+		return land.equals(Land.D) ? numberOfPatientPerCenterGermany : numberOfPatientPerCenterGB;
 	}
-	
+
 	public List<PatientCenter> fetchNumberOfPatientPerCenterByWeek(int week) {
 
 		centerListByWeek = fetchZentrumByRandWeek(week);
@@ -462,17 +408,18 @@ public class FetchData {
 		try {
 			// create a connection to the database
 			connection = DriverManager.getConnection(url);
-			String query = "SELECT Zentrum FROM Random_Woche_"+week;
+			query = "SELECT Zentrum FROM Random_Woche_" + week;
 
-			Statement statement = connection.createStatement();
+			statement = connection.createStatement();
 			centerListByWeek = new ArrayList<Integer>();
-			ResultSet results = statement.executeQuery(query);
+			results = statement.executeQuery(query);
 
 			// loop through the result set
 			while (results.next()) {
 
 				centerListByWeek.add(results.getInt("Zentrum"));
 			}
+			connection.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -486,16 +433,17 @@ public class FetchData {
 		try {
 			// create a connection to the database
 			connection = DriverManager.getConnection(url);
-			String query = "select Patient_Id from Informed_consent";
+			query = "select Patient_Id from Informed_consent";
 
-			Statement statement = connection.createStatement();
+			statement = connection.createStatement();
 			patientIDs = new ArrayList<>();
-			ResultSet results = statement.executeQuery(query);
+			results = statement.executeQuery(query);
 
 			// loop through the result set
 			while (results.next()) {
 				patientIDs.add(results.getInt("Patient_Id"));
 			}
+			connection.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -509,11 +457,11 @@ public class FetchData {
 		try {
 			// create a connection to the database
 			connection = DriverManager.getConnection(url);
-			String query = "SELECT * FROM Random_Woche_"+week;
+			query = "SELECT * FROM Random_Woche_" + week;
 
-			Statement statement = connection.createStatement();
+			statement = connection.createStatement();
 			randomizationList = new ArrayList<RandomizationWeek>();
-			ResultSet results = statement.executeQuery(query);
+			results = statement.executeQuery(query);
 
 			// loop through the result set
 			while (results.next()) {
@@ -522,6 +470,7 @@ public class FetchData {
 						results.getString("Behandlungsarm"), results.getString("Datum"));
 				randomizationList.add(randWeekItem);
 			}
+			connection.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -14,9 +14,9 @@ import javafx.beans.property.SimpleStringProperty;
  *
  */
 public class Zentrum {
-	
+
 	private static final int incrementor = 1;
-	private int maxId = 0;
+	private static int maxId = 0;
 	private SimpleStringProperty monitor;
 	private SimpleStringProperty pruefer;
 	private SimpleStringProperty ort;
@@ -48,10 +48,11 @@ public class Zentrum {
 
 	/**
 	 * Construct a new center using required attributes and compute the id manually
-	 * @param monitor Monitor
-	 * @param pruefer Pruefer
-	 * @param ort Ort
-	 * @param land Land
+	 * 
+	 * @param monitor    Monitor
+	 * @param pruefer    Pruefer
+	 * @param ort        Ort
+	 * @param land       Land
 	 * @param centerList List of current center
 	 */
 	public Zentrum(String monitor, String pruefer, String ort, String land, List<Zentrum> centerList) {
@@ -102,13 +103,12 @@ public class Zentrum {
 	public void setZentrum_id(int zentrum_id) {
 		this.zentrum_id.set(zentrum_id);
 	}
-	
+
 	private int getZentrum_id(String land, List<Zentrum> centerList) {
-		
+
 		List<Zentrum> centerInD = new ArrayList<Zentrum>();
 		List<Zentrum> centerInGB = new ArrayList<Zentrum>();
-		
-		
+
 		for (Zentrum center : centerList) {
 			if (center.getLand().equals("Deutschland")) {
 				centerInD.add(center);
@@ -120,19 +120,18 @@ public class Zentrum {
 		if (land.equals("Deutschland")) {
 			for (Zentrum center : centerInD) {
 
-				if (center.getZentrum_id() > this.maxId) {
-					this.maxId = center.getZentrum_id();
+				if (center.getZentrum_id() > maxId) {
+					maxId = center.getZentrum_id();
 				}
 			}
 		} else {
 			for (Zentrum center : centerInGB) {
 
-				if (center.getZentrum_id() > this.maxId) {
-					this.maxId = center.getZentrum_id();
+				if (center.getZentrum_id() > maxId) {
+					maxId = center.getZentrum_id();
 				}
 			}
 		}
-		return this.maxId + incrementor;	
+		return maxId + incrementor;
 	}
-
 }

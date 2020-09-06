@@ -48,22 +48,18 @@ public class MonitorVisite extends Zentrum {
 		this.visiteDate = (visites !=null) ? new SimpleListProperty<LocalDate>(FXCollections.observableArrayList(visites)): null;
 	}
 	
-
 	public int getNumberOfPatient() {
 		return this.numberOfPatient.get();
 	}
 	
-
 	public void setNumberOfPatient(int numberOfPatient) {
 		this.numberOfPatient.set(numberOfPatient);
 	}
 	
-
 	public List<LocalDate> getVisiteDate() {
 		return this.visiteDate.get();
 	}
 	
-
 	public void setVisiteDate(List<LocalDate> visiteDate) {
 		this.visiteDate.set(FXCollections.observableArrayList(visiteDate));
 	}		

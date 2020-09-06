@@ -1,11 +1,15 @@
 package de.fhdo.master.mi.sms.project.mamphi.gui.app;
 
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import de.fhdo.master.mi.sms.project.mamphi.model.Consent;
 import de.fhdo.master.mi.sms.project.mamphi.model.InformedConsent;
+import de.fhdo.master.mi.sms.project.mamphi.model.Land;
 import de.fhdo.master.mi.sms.project.mamphi.model.MonitorVisite;
 import de.fhdo.master.mi.sms.project.mamphi.model.PatientCenter;
 import de.fhdo.master.mi.sms.project.mamphi.model.RandomizationWeek;
@@ -29,9 +33,11 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.image.Image;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -41,9 +47,9 @@ import javafx.scene.text.Text;
 
 public class Main extends Application {
 
-	private String selectedLand, selConsent, choosenGroup;
-	private int choosenCenter, choosenPatient, week;
-	private FetchData fetcher = new FetchData();
+	private static String selectedLand, selConsent, choosenGroup;
+	private static int choosenCenter, choosenPatient, week;
+	private static FetchData fetcher = new FetchData();
 	private TableView<InformedConsent> consentTable;
 	private List<InformedConsent> consentList;
 	private ObservableList<InformedConsent> consentData;
@@ -66,12 +72,18 @@ public class Main extends Application {
 	private ObservableList<RandomizationWeek> randWeekData;
 	private TableView<RandomizationWeek> randWeekTable;
 	private VBox vbRand = new VBox();
-	private FlowPane root;
+	private static FlowPane root;
 
 	@Override
 	public void start(Stage primaryStage) {
 		try {
 			primaryStage.setTitle("Mamphi Administration GUI");
+			// Set Icon
+			// Create an Image
+			InputStream stream = getClass().getResourceAsStream("mamphi.png");
+			Image icon = new Image(stream);
+			primaryStage.getIcons().add(icon);
+
 			// Define grid pane for login
 			GridPane grid = new GridPane();
 			grid.setAlignment(Pos.CENTER);
@@ -99,6 +111,8 @@ public class Main extends Application {
 			// grid.setGridLinesVisible(true);
 
 			Button btn = new Button("Sign in");
+			btn.setTooltip(new Tooltip("Einloggen und Studie verwalten"));
+			btn.setId("sign-in");
 			HBox hbBtn = new HBox(10);
 			hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
 			hbBtn.getChildren().add(btn);
@@ -106,17 +120,22 @@ public class Main extends Application {
 
 			final Text actiontarget = new Text();
 			grid.add(actiontarget, 1, 6);
+			actiontarget.setId("actiontarget");
 
-			new Label();
 			final Button consentBtn = new Button("Patientenliste");
+			consentBtn.setTooltip(new Tooltip("Einwilligungen verwalten"));
 			consentBtn.setFont(new Font("Arial", 20));
 			final Button centerBtn = new Button("Zentrumsliste");
+			centerBtn.setTooltip(new Tooltip("Zentren verwalten"));
 			centerBtn.setFont(new Font("Arial", 20));
 			final Button randomWeekBtn = new Button("Wochenliste");
+			randomWeekBtn.setTooltip(new Tooltip("Wochenliste verwalten"));
 			randomWeekBtn.setFont(new Font("Arial", 20));
 			final Button monitoringBtn = new Button("Monitoring Plan");
+			monitoringBtn.setTooltip(new Tooltip("Monitorplan anzeigen und verwalten"));
 			monitoringBtn.setFont(new Font("Arial", 20));
 			final Button logoutBtn = new Button("Sign out");
+			logoutBtn.setTooltip(new Tooltip("Ausloggen"));
 			logoutBtn.setFont(new Font("Arial", 20));
 
 			HBox btnMenu = new HBox();
@@ -130,7 +149,8 @@ public class Main extends Application {
 			loginScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
 			Scene mainScene = new Scene(root, 950, 600);
-			
+			mainScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+
 			// Add event handler for login button in the login view
 			btn.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -195,7 +215,6 @@ public class Main extends Application {
 
 					mainScene.setRoot(root);
 				}
-
 			});
 
 			randomWeekBtn.setOnAction(new EventHandler<ActionEvent>() {
@@ -217,10 +236,9 @@ public class Main extends Application {
 				@SuppressWarnings("unchecked")
 				@Override
 				public void handle(ActionEvent event) {
-					FlowPane root = new FlowPane(10, 10);
-					Label monitorplanLabel = new Label("Plan wann welches Monitor welches Zentrum besuchen soll.");
+					root = new FlowPane(10, 10);
+					Text monitorplanLabel = new Text("Plan wann welches Monitor welches Zentrum besuchen soll.");
 					monitorplanLabel.setFont(new Font("Arial", 20));
-					monitorplanLabel.setPadding(new Insets(10));
 					TableView<MonitorVisite> monitorplan = new TableView<MonitorVisite>();
 					monitorplan.setEditable(false);
 					List<MonitorVisite> visiteItems = fetcher.fetchMonitorVisites();
@@ -288,22 +306,24 @@ public class Main extends Application {
 					PropertyValueFactory<MonitorVisite, List<LocalDate>> visitesDates = new PropertyValueFactory<MonitorVisite, List<LocalDate>>(
 							"visiteDate");
 					visitesCol.setCellValueFactory(visitesDates);
+
 					visitesCol.setPrefWidth(380);
 
 					monitorplan.setItems(visiteData);
 					monitorplan.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 					monitorplan.getColumns().addAll(zentrumIDCol, landCol, ortCol, prueferCol, monitorCol, visitesCol);
-					
+
 					// Delete some items
 					Button deleteItemsBtn = new Button("Löschen");
 					deleteItemsBtn.setOnAction(ActionEvent -> {
-						ObservableList<MonitorVisite> selectedVisites = monitorplan.getSelectionModel().getSelectedItems();
+						ObservableList<MonitorVisite> selectedVisites = monitorplan.getSelectionModel()
+								.getSelectedItems();
 						ArrayList<MonitorVisite> rows = new ArrayList<MonitorVisite>(selectedVisites);
 						rows.forEach(e -> {
 							monitorplan.getItems().remove(e);
 						});
 					});
-					
+
 					// Adding new items
 					Text centerFormText = new Text("Neues Zentrum Anlegen: ");
 					centerFormText.setFont(new Font("Arial", 20));
@@ -400,7 +420,7 @@ public class Main extends Application {
 	 */
 	@SuppressWarnings("unchecked")
 	private HBox createRamdomizationPane() {
-		
+
 		randWeekTable = new TableView<RandomizationWeek>();
 		randWeekTable.setEditable(false);
 		week = 1;
@@ -529,7 +549,7 @@ public class Main extends Application {
 			}
 		});
 
-		Text numberPatientPerCenterTableLabel = new Text("Anzahl Patient pro Zentrum Woche 1");
+		Text numberPatientPerCenterTableLabel = new Text("Anzahl Patient pro Zentrum \nin Woche 1");
 		numberPatientPerCenterTableLabel.setFont(new Font("Arial", 20));
 		List<PatientCenter> patientPerCenter = fetcher.fetchNumberOfPatientPerCenterByWeek(week);
 		ObservableList<PatientCenter> patientPerCenterData = FXCollections.observableArrayList(patientPerCenter);
@@ -548,7 +568,7 @@ public class Main extends Application {
 		patientPerCenterTable.getColumns().addAll(patientPerCenterCol, patientPerCenterCol2);
 
 		VBox patientPerCenterVb = new VBox(numberPatientPerCenterTableLabel, patientPerCenterTable);
-		patientPerCenterVb.setSpacing(10);
+		patientPerCenterVb.setSpacing(20);
 		patientPerCenterVb.setPadding(new Insets(50, 10, 10, 20));
 
 		VBox randAddVb = new VBox(hbAddPatientRand, hbAddCenterRand, hbAddGroupRand, hbAddDateRand, addRandBtn);
@@ -585,7 +605,7 @@ public class Main extends Application {
 					randWeekItems = fetcher.fetchRandomWeek(week);
 					randWeekData = FXCollections.observableArrayList(randWeekItems);
 					randTableText.setText("Angaben zur Randomisierung in der Woche 1");
-					numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro Zentrum Woche 1");
+					numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro Zentrum \nin Woche 1");
 					randWeekTable.setItems(randWeekData);
 					break;
 				case "Angaben zur Randomisierung in der Woche 2 anzeigen":
@@ -596,61 +616,60 @@ public class Main extends Application {
 					randWeekItems = fetcher.fetchRandomWeek(week);
 					randWeekData = FXCollections.observableArrayList(randWeekItems);
 					randTableText.setText("Angaben zur Randomisierung in der Woche 2");
-					numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro Zentrum Woche 2");
+					numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro Zentrum \nin Woche 2");
 					randWeekTable.setItems(randWeekData);
 					break;
 				case "Anzanl der Patienten pro Zentrum in Deutschland in der Woche 1":
 					week = 1;
-					patientPerCenter = fetcher.fetchNumberPatientenPerCenterByLandByWeek("Deutschland", week);
+					patientPerCenter = fetcher.fetchNumberPatientenPerCenterByLandByWeek(Land.D, week);
 					patientPerCenterData = FXCollections.observableArrayList(patientPerCenter);
 					patientPerCenterTable.setItems(patientPerCenterData);
 					randWeekItems = fetcher.fetchRandomWeek(week);
 					randWeekData = FXCollections.observableArrayList(randWeekItems);
 					randTableText.setText("Angaben zur Randomisierung in der Woche 1");
-					numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro Zentrum \nin Deutschland Woche 1");
+					numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro deutsches Zentrum \nin Woche 1");
 					randWeekTable.setItems(randWeekData);
 					break;
 				case "Anzanl der Patienten pro Zentrum in Deutschland in der Woche 2":
 					week = 2;
-					patientPerCenter = fetcher.fetchNumberPatientenPerCenterByLandByWeek("Deutschland", week);
+					patientPerCenter = fetcher.fetchNumberPatientenPerCenterByLandByWeek(Land.D, week);
 					patientPerCenterData = FXCollections.observableArrayList(patientPerCenter);
 					patientPerCenterTable.setItems(patientPerCenterData);
 					randWeekItems = fetcher.fetchRandomWeek(week);
 					randWeekData = FXCollections.observableArrayList(randWeekItems);
 					randTableText.setText("Angaben zur Randomisierung in der Woche 2");
-					numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro Zentrum \nin Deutschland Woche 2");
+					numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro deutsches Zentrum \nin Woche 2");
 					randWeekTable.setItems(randWeekData);
 					break;
 				case "Anzanl der Patienten pro Zentrum in Großbritanien in der Woche 1":
 					week = 1;
-					patientPerCenter = fetcher.fetchNumberPatientenPerCenterByLandByWeek("Großbritanien", week);
+					patientPerCenter = fetcher.fetchNumberPatientenPerCenterByLandByWeek(Land.GB, week);
 					patientPerCenterData = FXCollections.observableArrayList(patientPerCenter);
 					patientPerCenterTable.setItems(patientPerCenterData);
 					randWeekItems = fetcher.fetchRandomWeek(week);
 					randWeekData = FXCollections.observableArrayList(randWeekItems);
 					randTableText.setText("Angaben zur Randomisierung in der Woche 1");
-					numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro Zentrum \nin Großbritanien Woche 1");
+					numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro britisches Zentrum \nin Woche 1");
 					randWeekTable.setItems(randWeekData);
 					break;
 				case "Anzanl der Patienten pro Zentrum in Großbritanien in der Woche 2":
 					week = 2;
-					patientPerCenter = fetcher.fetchNumberPatientenPerCenterByLandByWeek("Großbritanien", week);
+					patientPerCenter = fetcher.fetchNumberPatientenPerCenterByLandByWeek(Land.GB, week);
 					patientPerCenterData = FXCollections.observableArrayList(patientPerCenter);
 					patientPerCenterTable.setItems(patientPerCenterData);
 					randWeekItems = fetcher.fetchRandomWeek(week);
 					randWeekData = FXCollections.observableArrayList(randWeekItems);
 					randTableText.setText("Angaben zur Randomisierung in der Woche 2");
-					numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro Zentrum \nin Großbritanien Woche 2");
+					numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro britisches Zentrum \nin Woche 2");
 					randWeekTable.setItems(randWeekData);
 					break;
 				}
-
 			}
 		});
 
 		HBox hbRand = new HBox(randWeekTableLabel, cbRandWeek);
 		hbRand.setSpacing(10);
-		hbRand.setPadding(new Insets(5, 0, 0, 200));
+		hbRand.setPadding(new Insets(5, 0, 0, 150));
 
 		vbRand = new VBox(randTableText, hbRand, randWeekTable);
 		vbRand.setSpacing(10);
@@ -667,7 +686,7 @@ public class Main extends Application {
 	 */
 	@SuppressWarnings("unchecked")
 	private HBox createConsentTable() {
-		
+
 		consentTable = new TableView<InformedConsent>();
 		consentTable.setEditable(true);
 		consentList = fetcher.fetchInformedConsent();
@@ -691,7 +710,7 @@ public class Main extends Application {
 			public void handle(CellEditEvent<InformedConsent, String> event) {
 
 				((InformedConsent) event.getTableView().getItems().get(event.getTablePosition().getRow()))
-						.setEinwilligung(event.getNewValue());
+						.setEinwilligung(event.getNewValue().toUpperCase());
 			}
 		});
 
@@ -715,12 +734,13 @@ public class Main extends Application {
 		Text consentFormText = new Text("Neue Einwilligung Anlegen:");
 		consentFormText.setFont(new Font("Arial", 20));
 		Button deleteConsentBtn = new Button("Einwilligung löschen");
-		//deleteConsentBtn.setVisible(selectedConsent != null ? true : false);
+		deleteConsentBtn.setVisible(true);
 		deleteConsentBtn.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
 				InformedConsent selectedConsent = consentTable.getSelectionModel().getSelectedItem();
+				// deleteConsentBtn.setVisible(selectedConsent != null ? true : false);
 				consentTable.getItems().remove(selectedConsent);
 			}
 		});
@@ -744,7 +764,7 @@ public class Main extends Application {
 		});
 
 		HBox hbAddCenter = new HBox(centerText, cbCenter);
-		hbAddCenter.setSpacing(25);
+		hbAddCenter.setSpacing(30);
 		hbAddCenter.setPadding(new Insets(10));
 
 		Label consentText = new Label("Einwilligung: ");
@@ -757,7 +777,6 @@ public class Main extends Application {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-
 				selConsent = cbConsent.getValue().toLowerCase();
 			}
 		});
@@ -771,7 +790,7 @@ public class Main extends Application {
 		consentDate.setMinWidth(consentTable.getColumns().get(3).getPrefWidth());
 		consentDate.setPromptText("JJJJ-MM-TT");
 		HBox hbAddDate = new HBox(dateText, consentDate);
-		hbAddDate.setSpacing(37);
+		hbAddDate.setSpacing(40);
 		hbAddDate.setPadding(new Insets(10));
 
 		final Button addConsentBtn = new Button("Speichern");
@@ -785,10 +804,11 @@ public class Main extends Application {
 
 				Collections.sort(patientIds);
 
-				InformedConsent newConsent = new InformedConsent(patientIds.get(patientIds.size() - 1) + 1,
-						choosenCenter, selConsent, consentDate.getValue().toString());
-				consentData.add(newConsent);
-				fetcher.updateInformedConsent(newConsent);
+				InformedConsent newInformedConsent = new InformedConsent(patientIds.get(patientIds.size() - 1) + 1,
+						choosenCenter, selConsent == null ? "nan" : selConsent,
+						consentDate.getValue() != null ? consentDate.getValue().toString() : "NaT");
+				consentData.add(newInformedConsent);
+				fetcher.updateInformedConsent(newInformedConsent);
 			}
 		});
 
@@ -800,7 +820,7 @@ public class Main extends Application {
 		final HBox hbConsentTable = new HBox();
 		hbConsentTable.setSpacing(10);
 
-		Label consentTableLabel = new Label("Angabe zu Einwilligung der Studienteilnehmer");
+		Text consentTableLabel = new Text("Angabe zu Einwilligung der Studienteilnehmer");
 		consentTableLabel.setFont(new Font("Arial", 20));
 		// Filter Consent Table
 		Label filterConsent = new Label("Filtern: ");
@@ -819,28 +839,33 @@ public class Main extends Application {
 				String choice = cbConsentFilter.getValue();
 				List<InformedConsent> missingList;
 				ObservableList<InformedConsent> missingConsentData;
-				List<InformedConsent> incompletedList = fetcher.fetchIncompletedConsent();
-				ObservableList<InformedConsent> incompleteConsentData = FXCollections
-						.observableArrayList(incompletedList);
-				List<InformedConsent> lateConsentList = fetcher.fetchInformedConsentAfterRadomization();
-				ObservableList<InformedConsent> lateConsentData = FXCollections.observableArrayList(lateConsentList);
+				List<InformedConsent> incompletedList;
+				ObservableList<InformedConsent> incompleteConsentData;
+				List<InformedConsent> lateConsentList;
+				ObservableList<InformedConsent> lateConsentData;
 
 				switch (choice) {
 				case "Liste der Patienten mit fehlende Einwilligung":
-					missingList = fetcher.fetchMissingConsent();
+					missingList = fetcher.fetchInformedConsent(Consent.MISSING);
 					missingConsentData = FXCollections.observableArrayList(missingList);
 					consentTable.setItems(missingConsentData);
 					vbConsent.setVisible(false);
 					break;
 				case "Liste der Patienten mit unvollständigen Einwilligung":
+					incompletedList = fetcher.fetchInformedConsent(Consent.INCOMPLETE);
+					incompleteConsentData = FXCollections.observableArrayList(incompletedList);
 					consentTable.setItems(incompleteConsentData);
 					vbConsent.setVisible(false);
 					break;
 				case "Liste der Patienten mit erteilten Einwilligung nach der Radomisierung":
+					lateConsentList = fetcher.fetchInformedConsent(Consent.LATE);
+					lateConsentData = FXCollections.observableArrayList(lateConsentList);
 					consentTable.setItems(lateConsentData);
 					vbConsent.setVisible(false);
 					break;
 				case "Alle Einwilligungen":
+					consentList = fetcher.fetchInformedConsent();
+					consentData = FXCollections.observableArrayList(consentList);
 					consentTable.setItems(consentData);
 					vbConsent.setVisible(true);
 					break;
@@ -937,26 +962,28 @@ public class Main extends Application {
 			}
 		});
 
-		TableColumn<Zentrum, String> zentrumIDCol = new TableColumn<Zentrum, String>("Zentrum_ID");
+		TableColumn<Zentrum, String> zentrumIDCol = new TableColumn<Zentrum, String>("Zentrum ID");
 		zentrumIDCol.setMinWidth(100);
 		zentrumIDCol.setCellValueFactory(new PropertyValueFactory<Zentrum, String>("zentrum_id"));
 
 		centerTable.setItems(data);
 		centerTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		centerTable.getColumns().addAll(zentrumIDCol, landCol, ortCol, prueferCol, monitorCol);
-		
+
 		// Delete center items from table (not from database)
 		Button deleteCenterBtn = new Button("Eintrag löschen");
 		deleteCenterBtn.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
-				
+
 				Zentrum selectedCenter = centerTable.getSelectionModel().getSelectedItem();
 				centerTable.getItems().remove(selectedCenter);
 			}
 		});
-		
+
+		Text centerTableLabel = new Text("Liste aller vorhandenen Zentren in der Studie");
+
 		// Filter Consent Table
 		Label filterCenter = new Label("Filtern: ");
 		ObservableList<String> centerFilterOptions = FXCollections.observableArrayList("Liste aller Zentren",
@@ -968,32 +995,34 @@ public class Main extends Application {
 
 			@Override
 			public void handle(ActionEvent event) {
-				
+
 				String choice = cbCenterFilter.getValue();
 				List<Zentrum> centerListLand;
 				ObservableList<Zentrum> centerListData;
-				
-				switch(choice) {
+
+				switch (choice) {
 				case "Liste aller Zentren":
 					centerList = fetcher.fetchCenterData();
 					data = FXCollections.observableArrayList(centerList);
+					centerTableLabel.setText("Liste aller vorhandenen Zentren in der Studie");
 					centerTable.setItems(data);
 					break;
 				case "Liste der Zentren in Deutschland":
-					centerListLand = fetcher.fetchCenterData("D");
+					centerListLand = fetcher.fetchCenterData(Land.D);
+					centerTableLabel.setText("Liste aller vorhandenen deutschen Zentren in der Studie");
 					centerListData = FXCollections.observableArrayList(centerListLand);
 					centerTable.setItems(centerListData);
 					break;
 				case "Liste der Zentren in Großbritanien":
-					centerListLand = fetcher.fetchCenterData("GB");
+					centerListLand = fetcher.fetchCenterData(Land.GB);
+					centerTableLabel.setText("Liste aller vorhandenen britischen Zentren in der Studie");
 					centerListData = FXCollections.observableArrayList(centerListLand);
 					centerTable.setItems(centerListData);
 					break;
 				}
-
 			}
 		});
-		
+
 		HBox hbCenterFilter = new HBox(filterCenter, cbCenterFilter);
 		hbCenterFilter.setSpacing(10);
 		hbCenterFilter.setPadding(new Insets(5, 0, 0, 250));
@@ -1062,10 +1091,11 @@ public class Main extends Application {
 			}
 		});
 
-		final VBox vbAddCenter = new VBox(centerFormText, hbMonitor, hbPruefer, hbLand, hbOrt, addCenterBtn, deleteCenterBtn);
+		final VBox vbAddCenter = new VBox(centerFormText, hbMonitor, hbPruefer, hbLand, hbOrt, addCenterBtn,
+				deleteCenterBtn);
 		vbAddCenter.setSpacing(5);
 		vbAddCenter.setPadding(new Insets(80, 10, 10, 30));
-		Label centerTableLabel = new Label("Liste vorhandenen Zentren in Rahmen der Studie");
+
 		centerTableLabel.setFont(new Font("Arial", 20));
 		final VBox vbCenter = new VBox(centerTableLabel, hbCenterFilter, centerTable);
 		vbCenter.setSpacing(5);
