@@ -145,10 +145,10 @@ public class Main extends Application {
 
 			root = new FlowPane(10, 10);
 
-			Scene loginScene = new Scene(grid, 400, 400);
+			Scene loginScene = new Scene(grid, 990, 600);
 			loginScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
-			Scene mainScene = new Scene(root, 950, 600);
+			Scene mainScene = new Scene(root, 990, 600);
 			mainScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
 			// Add event handler for login button in the login view
@@ -169,7 +169,6 @@ public class Main extends Application {
 					userTextField.clear();
 					pwBox.clear();
 				}
-
 			});
 
 			// Add Event Handler for log out button
@@ -300,6 +299,10 @@ public class Main extends Application {
 							"Zentrum ID");
 					zentrumIDCol.setMinWidth(100);
 					zentrumIDCol.setCellValueFactory(new PropertyValueFactory<MonitorVisite, String>("zentrum_id"));
+					
+					TableColumn<MonitorVisite, Integer> numberPatientCol = new TableColumn<MonitorVisite, Integer>("Anzahl Patienten");
+					numberPatientCol.setMinWidth(100);
+					numberPatientCol.setCellValueFactory(new PropertyValueFactory<MonitorVisite, Integer>("numberOfPatient"));
 
 					TableColumn<MonitorVisite, List<LocalDate>> visitesCol = new TableColumn<MonitorVisite, List<LocalDate>>(
 							"Besuch Termine");
@@ -311,7 +314,7 @@ public class Main extends Application {
 
 					monitorplan.setItems(visiteData);
 					monitorplan.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-					monitorplan.getColumns().addAll(zentrumIDCol, landCol, ortCol, prueferCol, monitorCol, visitesCol);
+					monitorplan.getColumns().addAll(zentrumIDCol, landCol, ortCol, prueferCol, monitorCol, numberPatientCol, visitesCol);
 
 					// Delete some items
 					Button deleteItemsBtn = new Button("Löschen");
