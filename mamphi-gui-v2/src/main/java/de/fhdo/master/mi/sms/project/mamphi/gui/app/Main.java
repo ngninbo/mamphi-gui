@@ -46,7 +46,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 public class Main extends Application {
-
+	
+	private static final int valueMissing = -999;
 	private static String selectedLand, selConsent, choosenGroup;
 	private static int choosenCenter, choosenPatient, week;
 	private static FetchData fetcher = new FetchData();
@@ -145,10 +146,10 @@ public class Main extends Application {
 
 			root = new FlowPane(10, 10);
 
-			Scene loginScene = new Scene(grid, 990, 600);
+			Scene loginScene = new Scene(grid, 400, 400);
 			loginScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
-			Scene mainScene = new Scene(root, 990, 600);
+			Scene mainScene = new Scene(root, 999, 600);
 			mainScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
 			// Add event handler for login button in the login view
@@ -299,10 +300,12 @@ public class Main extends Application {
 							"Zentrum ID");
 					zentrumIDCol.setMinWidth(100);
 					zentrumIDCol.setCellValueFactory(new PropertyValueFactory<MonitorVisite, String>("zentrum_id"));
-					
-					TableColumn<MonitorVisite, Integer> numberPatientCol = new TableColumn<MonitorVisite, Integer>("Anzahl Patienten");
+
+					TableColumn<MonitorVisite, Integer> numberPatientCol = new TableColumn<MonitorVisite, Integer>(
+							"Anzahl Patienten");
 					numberPatientCol.setMinWidth(100);
-					numberPatientCol.setCellValueFactory(new PropertyValueFactory<MonitorVisite, Integer>("numberOfPatient"));
+					numberPatientCol
+							.setCellValueFactory(new PropertyValueFactory<MonitorVisite, Integer>("numberOfPatient"));
 
 					TableColumn<MonitorVisite, List<LocalDate>> visitesCol = new TableColumn<MonitorVisite, List<LocalDate>>(
 							"Besuch Termine");
@@ -314,7 +317,8 @@ public class Main extends Application {
 
 					monitorplan.setItems(visiteData);
 					monitorplan.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-					monitorplan.getColumns().addAll(zentrumIDCol, landCol, ortCol, prueferCol, monitorCol, numberPatientCol, visitesCol);
+					monitorplan.getColumns().addAll(zentrumIDCol, landCol, ortCol, prueferCol, monitorCol,
+							numberPatientCol, visitesCol);
 
 					// Delete some items
 					Button deleteItemsBtn = new Button("Löschen");
@@ -761,7 +765,7 @@ public class Main extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 
-				choosenCenter = cbCenter.getValue();
+				choosenCenter = cbCenter.getValue() > 0 ? cbCenter.getValue() : valueMissing;
 			}
 
 		});
@@ -795,7 +799,7 @@ public class Main extends Application {
 		HBox hbAddDate = new HBox(dateText, consentDate);
 		hbAddDate.setSpacing(40);
 		hbAddDate.setPadding(new Insets(10));
-
+		
 		final Button addConsentBtn = new Button("Speichern");
 
 		addConsentBtn.setOnAction(new EventHandler<ActionEvent>() {
@@ -907,7 +911,6 @@ public class Main extends Application {
 				}
 				return -1;
 			}
-
 		});
 
 		data = FXCollections.observableArrayList(centerList);
@@ -1070,10 +1073,12 @@ public class Main extends Application {
 			@Override
 			public void handle(ActionEvent arg0) {
 
-				selectedLand = cbLand.getValue();
+				selectedLand = cbLand.getValue() !=null ? cbLand.getValue() : null;
 			}
 		});
-
+		
+		final Text centerInputValid = new Text();
+		centerInputValid.setId("centerInputValid");
 		HBox hbLand = new HBox(landText, cbLand);
 		hbLand.setSpacing(25);
 		hbLand.setPadding(new Insets(10));
@@ -1082,19 +1087,24 @@ public class Main extends Application {
 
 			@Override
 			public void handle(ActionEvent event) {
-
-				Zentrum neuZentrum = new Zentrum(addMonitorName.getText(), addPrueferName.getText(), addOrt.getText(),
-						selectedLand, data);
-
-				data.add(neuZentrum);
-				fetcher.updateZentrum(neuZentrum);
-				addMonitorName.clear();
-				addPrueferName.clear();
-				addOrt.clear();
+				
+				Zentrum neuZentrum = null;
+				
+				if(addMonitorName.getText() != null && addPrueferName.getText() != null && addOrt.getText() != null && selectedLand !=null) {
+					neuZentrum = new Zentrum(addMonitorName.getText(), addPrueferName.getText(), addOrt.getText(), selectedLand, data);
+					data.add(neuZentrum);
+					fetcher.updateZentrum(neuZentrum);
+					addMonitorName.clear();
+					addPrueferName.clear();
+					addOrt.clear();
+					centerInputValid.setText("");
+				}else {
+					centerInputValid.setText("Bitte Eingaben prüfen!");
+				}
 			}
 		});
 
-		final VBox vbAddCenter = new VBox(centerFormText, hbMonitor, hbPruefer, hbLand, hbOrt, addCenterBtn,
+		final VBox vbAddCenter = new VBox(centerFormText, hbMonitor, hbPruefer, hbLand, hbOrt, centerInputValid, addCenterBtn,
 				deleteCenterBtn);
 		vbAddCenter.setSpacing(5);
 		vbAddCenter.setPadding(new Insets(80, 10, 10, 30));

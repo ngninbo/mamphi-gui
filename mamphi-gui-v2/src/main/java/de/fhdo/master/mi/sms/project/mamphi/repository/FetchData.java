@@ -41,7 +41,7 @@ public class FetchData {
 	private static String query;
 
 	// DB parameters
-	private final String url = "jdbc:sqlite:C:\\Users\\biocl\\Desktop\\Beauclair\\USB DISK\\Master\\FH_DO\\PyDev\\sms-sose-2019-mamphi-administration\\data\\mamphi.db";
+	private final String url = "jdbc:sqlite:C:\\mamphi\\mamphi.db";
 
 	public void updateZentrum(Zentrum center) {
 		try {
