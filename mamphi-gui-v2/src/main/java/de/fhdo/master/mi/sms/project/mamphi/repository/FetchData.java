@@ -248,8 +248,7 @@ public class FetchData {
 		int numberOfPatient = 0;
 		String key;
 
-		for (int i = 0; i < centerList.size() - 1; i++) {
-			center = centerList.get(i);
+		for (Zentrum center : centerList) {
 			key = String.valueOf(center.getZentrum_id());
 			numberOfPatient = allCenterFreq.containsKey(key) ? allCenterFreq.get(key) : 0;
 			if (numberOfPatient >= 10) {
