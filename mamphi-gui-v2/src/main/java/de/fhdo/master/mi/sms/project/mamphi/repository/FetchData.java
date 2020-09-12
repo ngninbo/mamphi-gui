@@ -202,15 +202,9 @@ public class FetchData {
 	public List<MonitorVisite> fetchMonitorVisites() {
 
 		centerList = fetchCenterData();
-		List<Integer> centerIDList = new ArrayList<Integer>();
-		List<Integer> centerIDList2 = new ArrayList<Integer>();
-		centerIDList = fetchZentrumByRandWeek(1);
-		centerIDList2 = fetchZentrumByRandWeek(2);
+		List<Integer> centerIDList = fetchZentrumByAllRandWeek();
 		MonitorVisite sampleVisite;
 		HashMap<String, Integer> centerFreq = new HashMap<String, Integer>();
-
-		HashMap<String, Integer> centerFreqWeek2 = new HashMap<String, Integer>();
-		HashMap<String, Integer> allCenterFreq = new HashMap<String, Integer>(centerFreq);
 
 		visiteList = new ArrayList<MonitorVisite>();
 
@@ -222,25 +216,10 @@ public class FetchData {
 			}
 		}
 
-		for (Integer integer : centerIDList2) {
-			if (!centerFreqWeek2.containsKey(integer.toString())) {
-				centerFreqWeek2.put(integer.toString(), 1);
-			} else {
-				centerFreqWeek2.put(integer.toString(), centerFreqWeek2.get(integer.toString()) + 1);
-			}
-		}
-
 		centerFreq.forEach((key, value) -> {
-			allCenterFreq.put(key, value);
+			centerFreq.put(key, value);
 		});
 
-		centerFreqWeek2.forEach((key, value) -> {
-			if (!allCenterFreq.containsKey(key)) {
-				allCenterFreq.put(key, value);
-			} else {
-				allCenterFreq.replace(key, allCenterFreq.get(key) + value);
-			}
-		});
 
 		LocalDate startDate = LocalDate.of(2019, 6, 1);
 		LocalDate endDate = startDate.plusYears(2);
@@ -250,7 +229,7 @@ public class FetchData {
 
 		for (Zentrum center : centerList) {
 			key = String.valueOf(center.getZentrum_id());
-			numberOfPatient = allCenterFreq.containsKey(key) ? allCenterFreq.get(key) : 0;
+			numberOfPatient = centerFreq.containsKey(key) ? centerFreq.get(key) : 0;
 			if (numberOfPatient >= 10) {
 				listOfDates = startDate.datesUntil(endDate, Period.ofMonths(1)).collect(Collectors.toList());
 				sampleVisite = new MonitorVisite(center, numberOfPatient, listOfDates.subList(0, 5));
@@ -402,12 +381,67 @@ public class FetchData {
 
 		return list;
 	}
+	
+	public List<PatientCenter> fetchNumberOfPatientPerCenterByAllWeek() {
+
+		List<Integer> centerListAllWeek = fetchZentrumByAllRandWeek();
+		HashMap<String, Integer> centerFreq = new HashMap<String, Integer>();
+		List<PatientCenter> list = new ArrayList<PatientCenter>();
+
+		for (Integer integer : centerListAllWeek) {
+			if (!centerFreq.containsKey(integer.toString())) {
+				centerFreq.put(integer.toString(), 1);
+			} else {
+				centerFreq.put(integer.toString(), centerFreq.get(integer.toString()) + 1);
+			}
+		}
+
+		centerFreq.forEach((key, value) -> {
+			PatientCenter patientCenter = new PatientCenter(key, value);
+			list.add(patientCenter);
+		});
+
+		Collections.sort(list, new Comparator<PatientCenter>() {
+
+			@Override
+			public int compare(PatientCenter o1, PatientCenter o2) {
+				// TODO Auto-generated method stub
+				return o1.getCenter().compareTo(o2.getCenter());
+			}
+		});
+
+		return list;
+	}
 
 	public List<Integer> fetchZentrumByRandWeek(int week) {
 		try {
 			// create a connection to the database
 			connection = DriverManager.getConnection(url);
 			query = "SELECT Zentrum FROM Random_Woche_" + week;
+
+			statement = connection.createStatement();
+			centerListByWeek = new ArrayList<Integer>();
+			results = statement.executeQuery(query);
+
+			// loop through the result set
+			while (results.next()) {
+
+				centerListByWeek.add(results.getInt("Zentrum"));
+			}
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return centerListByWeek;
+	}
+	
+	public List<Integer> fetchZentrumByAllRandWeek() {
+		try {
+			// create a connection to the database
+			connection = DriverManager.getConnection(url);
+			query = "SELECT Zentrum FROM Random_Woche_1 UNION ALL SELECT Zentrum FROM Random_Woche_2"; 
 
 			statement = connection.createStatement();
 			centerListByWeek = new ArrayList<Integer>();
@@ -457,6 +491,33 @@ public class FetchData {
 			// create a connection to the database
 			connection = DriverManager.getConnection(url);
 			query = "SELECT * FROM Random_Woche_" + week;
+
+			statement = connection.createStatement();
+			randomizationList = new ArrayList<RandomizationWeek>();
+			results = statement.executeQuery(query);
+
+			// loop through the result set
+			while (results.next()) {
+
+				randWeekItem = new RandomizationWeek(results.getInt("Patient_Id"), results.getInt("Zentrum"),
+						results.getString("Behandlungsarm"), results.getString("Datum"));
+				randomizationList.add(randWeekItem);
+			}
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return randomizationList;
+	}
+	
+	public List<RandomizationWeek> fetchRandomWeek() {
+
+		try {
+			// create a connection to the database
+			connection = DriverManager.getConnection(url);
+			query = "SELECT * FROM Random_Woche_1 UNION SELECT * FROM Random_Woche_2";
 
 			statement = connection.createStatement();
 			randomizationList = new ArrayList<RandomizationWeek>();

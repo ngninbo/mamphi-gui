@@ -177,7 +177,6 @@ public class Main extends Application {
 
 				@Override
 				public void handle(ActionEvent event) {
-
 					primaryStage.setScene(loginScene);
 					primaryStage.show();
 				}
@@ -431,7 +430,7 @@ public class Main extends Application {
 		randWeekTable = new TableView<RandomizationWeek>();
 		randWeekTable.setEditable(false);
 		week = 1;
-		randWeekItems = fetcher.fetchRandomWeek(week);
+		randWeekItems = fetcher.fetchRandomWeek();
 		randWeekData = FXCollections.observableArrayList(randWeekItems);
 
 		TableColumn<RandomizationWeek, Integer> patientIDCol = new TableColumn<RandomizationWeek, Integer>(
@@ -556,9 +555,9 @@ public class Main extends Application {
 			}
 		});
 
-		Text numberPatientPerCenterTableLabel = new Text("Anzahl Patient pro Zentrum \nin Woche 1");
+		Text numberPatientPerCenterTableLabel = new Text("Anzahl Patient pro Zentrum \nalle Wochen");
 		numberPatientPerCenterTableLabel.setFont(new Font("Arial", 20));
-		List<PatientCenter> patientPerCenter = fetcher.fetchNumberOfPatientPerCenterByWeek(week);
+		List<PatientCenter> patientPerCenter = fetcher.fetchNumberOfPatientPerCenterByAllWeek();
 		ObservableList<PatientCenter> patientPerCenterData = FXCollections.observableArrayList(patientPerCenter);
 		TableView<PatientCenter> patientPerCenterTable = new TableView<PatientCenter>();
 		patientPerCenterTable.setEditable(false);
@@ -582,10 +581,11 @@ public class Main extends Application {
 		randAddVb.setSpacing(10);
 
 		Label randWeekTableLabel = new Label("Filtern");
-		Text randTableText = new Text("Angabe zur Randomisierung in der Woche 1");
+		Text randTableText = new Text("Angabe zur Randomisierung in alle Wochen");
 		randTableText.setFont(new Font("Arial", 20));
 
 		ObservableList<String> randListOpt = FXCollections.observableArrayList(
+				"Angabe zur Randomisierung in alle Wochen",
 				"Angaben zur Randomisierung in der Woche 1 anzeigen",
 				"Angaben zur Randomisierung in der Woche 2 anzeigen",
 				"Anzanl der Patienten pro Zentrum in Deutschland in der Woche 1",
@@ -668,6 +668,16 @@ public class Main extends Application {
 					randWeekData = FXCollections.observableArrayList(randWeekItems);
 					randTableText.setText("Angaben zur Randomisierung in der Woche 2");
 					numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro britisches Zentrum \nin Woche 2");
+					randWeekTable.setItems(randWeekData);
+					break;
+				case "Angabe zur Randomisierung in alle Wochen":
+					patientPerCenter = fetcher.fetchNumberOfPatientPerCenterByAllWeek();
+					patientPerCenterData = FXCollections.observableArrayList(patientPerCenter);
+					patientPerCenterTable.setItems(patientPerCenterData);
+					randWeekItems = fetcher.fetchRandomWeek();
+					randWeekData = FXCollections.observableArrayList(randWeekItems);
+					randTableText.setText("Angaben zur Randomisierung in all Woche");
+					numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro Zentrum \nalle Woche");
 					randWeekTable.setItems(randWeekData);
 					break;
 				}
