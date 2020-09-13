@@ -429,8 +429,7 @@ public class Main extends Application {
 
 		randWeekTable = new TableView<RandomizationWeek>();
 		randWeekTable.setEditable(false);
-		week = 1;
-		randWeekItems = fetcher.fetchRandomWeek();
+		randWeekItems = fetcher.fetchAllRandomWeekItems();
 		randWeekData = FXCollections.observableArrayList(randWeekItems);
 
 		TableColumn<RandomizationWeek, Integer> patientIDCol = new TableColumn<RandomizationWeek, Integer>(
@@ -477,7 +476,7 @@ public class Main extends Application {
 
 		// Adding new Items
 		Label addPatientLabel = new Label("Patient ID: ");
-		patientIds = fetcher.fetchPatientenID();
+		patientIds = fetcher.fetchPatientenAllID();
 		patientIdData = FXCollections.observableArrayList(patientIds);
 
 		ComboBox<Integer> cbAddRandPatient = new ComboBox<Integer>(patientIdData);
@@ -496,7 +495,7 @@ public class Main extends Application {
 		hbAddPatientRand.setPadding(new Insets(10, 10, 10, 10));
 
 		Label addCenterLabel = new Label("Zentrum: ");
-		centerIds = fetcher.fetchCenterID();
+		centerIds = fetcher.fetchAllCenterID();
 		centerIdData = FXCollections.observableArrayList(centerIds);
 		ComboBox<Integer> cbAddCenterRand = new ComboBox<Integer>(centerIdData);
 		cbAddCenterRand.setPromptText("Bitte Wählen");
@@ -508,7 +507,6 @@ public class Main extends Application {
 				// TODO Auto-generated method stub
 				choosenCenter = cbAddCenterRand.getValue();
 			}
-
 		});
 
 		HBox hbAddCenterRand = new HBox(addCenterLabel, cbAddCenterRand);
@@ -580,7 +578,7 @@ public class Main extends Application {
 		VBox randAddVb = new VBox(hbAddPatientRand, hbAddCenterRand, hbAddGroupRand, hbAddDateRand, addRandBtn);
 		randAddVb.setSpacing(10);
 
-		Label randWeekTableLabel = new Label("Filtern");
+		Label randWeekTableLabel = new Label("Filtern: ");
 		Text randTableText = new Text("Angabe zur Randomisierung in alle Wochen");
 		randTableText.setFont(new Font("Arial", 20));
 
@@ -588,10 +586,10 @@ public class Main extends Application {
 				"Angabe zur Randomisierung in alle Wochen",
 				"Angaben zur Randomisierung in der Woche 1 anzeigen",
 				"Angaben zur Randomisierung in der Woche 2 anzeigen",
-				"Anzanl der Patienten pro Zentrum in Deutschland in der Woche 1",
-				"Anzanl der Patienten pro Zentrum in Großbritanien in der Woche 1",
-				"Anzanl der Patienten pro Zentrum in Deutschland in der Woche 2",
-				"Anzanl der Patienten pro Zentrum in Großbritanien in der Woche 2");
+				"Anzahl der Patienten pro Zentrum in Deutschland in der Woche 1",
+				"Anzahl der Patienten pro Zentrum in Großbritanien in der Woche 1",
+				"Anzahl der Patienten pro Zentrum in Deutschland in der Woche 2",
+				"Anzahl der Patienten pro Zentrum in Großbritanien in der Woche 2");
 
 		ComboBox<String> cbRandWeek = new ComboBox<String>(randListOpt);
 		cbRandWeek.setPromptText("Andere wochenliche Liste anzeigen lassen");
@@ -606,10 +604,10 @@ public class Main extends Application {
 				switch (choice) {
 				case "Angaben zur Randomisierung in der Woche 1 anzeigen":
 					week = 1;
-					patientPerCenter = fetcher.fetchNumberOfPatientPerCenterByWeek(week);
+					patientPerCenter = fetcher.fetchAllNumberOfPatientPerCenterByWeek(week);
 					patientPerCenterData = FXCollections.observableArrayList(patientPerCenter);
 					patientPerCenterTable.setItems(patientPerCenterData);
-					randWeekItems = fetcher.fetchRandomWeek(week);
+					randWeekItems = fetcher.fetchAllRandomizationByWeek(week);
 					randWeekData = FXCollections.observableArrayList(randWeekItems);
 					randTableText.setText("Angaben zur Randomisierung in der Woche 1");
 					numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro Zentrum \nin Woche 1");
@@ -617,54 +615,54 @@ public class Main extends Application {
 					break;
 				case "Angaben zur Randomisierung in der Woche 2 anzeigen":
 					week = 2;
-					patientPerCenter = fetcher.fetchNumberOfPatientPerCenterByWeek(week);
+					patientPerCenter = fetcher.fetchAllNumberOfPatientPerCenterByWeek(week);
 					patientPerCenterData = FXCollections.observableArrayList(patientPerCenter);
 					patientPerCenterTable.setItems(patientPerCenterData);
-					randWeekItems = fetcher.fetchRandomWeek(week);
+					randWeekItems = fetcher.fetchAllRandomizationByWeek(week);
 					randWeekData = FXCollections.observableArrayList(randWeekItems);
 					randTableText.setText("Angaben zur Randomisierung in der Woche 2");
 					numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro Zentrum \nin Woche 2");
 					randWeekTable.setItems(randWeekData);
 					break;
-				case "Anzanl der Patienten pro Zentrum in Deutschland in der Woche 1":
+				case "Anzahl der Patienten pro Zentrum in Deutschland in der Woche 1":
 					week = 1;
-					patientPerCenter = fetcher.fetchNumberPatientenPerCenterByLandByWeek(Land.D, week);
+					patientPerCenter = fetcher.fetchAllNumberPatientenPerCenterByLandByWeek(Land.D, week);
 					patientPerCenterData = FXCollections.observableArrayList(patientPerCenter);
 					patientPerCenterTable.setItems(patientPerCenterData);
-					randWeekItems = fetcher.fetchRandomWeek(week);
+					randWeekItems = fetcher.fetchAllRandomizationByWeek(week);
 					randWeekData = FXCollections.observableArrayList(randWeekItems);
 					randTableText.setText("Angaben zur Randomisierung in der Woche 1");
 					numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro deutsches Zentrum \nin Woche 1");
 					randWeekTable.setItems(randWeekData);
 					break;
-				case "Anzanl der Patienten pro Zentrum in Deutschland in der Woche 2":
+				case "Anzahl der Patienten pro Zentrum in Deutschland in der Woche 2":
 					week = 2;
-					patientPerCenter = fetcher.fetchNumberPatientenPerCenterByLandByWeek(Land.D, week);
+					patientPerCenter = fetcher.fetchAllNumberPatientenPerCenterByLandByWeek(Land.D, week);
 					patientPerCenterData = FXCollections.observableArrayList(patientPerCenter);
 					patientPerCenterTable.setItems(patientPerCenterData);
-					randWeekItems = fetcher.fetchRandomWeek(week);
+					randWeekItems = fetcher.fetchAllRandomizationByWeek(week);
 					randWeekData = FXCollections.observableArrayList(randWeekItems);
 					randTableText.setText("Angaben zur Randomisierung in der Woche 2");
 					numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro deutsches Zentrum \nin Woche 2");
 					randWeekTable.setItems(randWeekData);
 					break;
-				case "Anzanl der Patienten pro Zentrum in Großbritanien in der Woche 1":
+				case "Anzahl der Patienten pro Zentrum in Großbritanien in der Woche 1":
 					week = 1;
-					patientPerCenter = fetcher.fetchNumberPatientenPerCenterByLandByWeek(Land.GB, week);
+					patientPerCenter = fetcher.fetchAllNumberPatientenPerCenterByLandByWeek(Land.GB, week);
 					patientPerCenterData = FXCollections.observableArrayList(patientPerCenter);
 					patientPerCenterTable.setItems(patientPerCenterData);
-					randWeekItems = fetcher.fetchRandomWeek(week);
+					randWeekItems = fetcher.fetchAllRandomizationByWeek(week);
 					randWeekData = FXCollections.observableArrayList(randWeekItems);
 					randTableText.setText("Angaben zur Randomisierung in der Woche 1");
 					numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro britisches Zentrum \nin Woche 1");
 					randWeekTable.setItems(randWeekData);
 					break;
-				case "Anzanl der Patienten pro Zentrum in Großbritanien in der Woche 2":
+				case "Anzahl der Patienten pro Zentrum in Großbritanien in der Woche 2":
 					week = 2;
-					patientPerCenter = fetcher.fetchNumberPatientenPerCenterByLandByWeek(Land.GB, week);
+					patientPerCenter = fetcher.fetchAllNumberPatientenPerCenterByLandByWeek(Land.GB, week);
 					patientPerCenterData = FXCollections.observableArrayList(patientPerCenter);
 					patientPerCenterTable.setItems(patientPerCenterData);
-					randWeekItems = fetcher.fetchRandomWeek(week);
+					randWeekItems = fetcher.fetchAllRandomizationByWeek(week);
 					randWeekData = FXCollections.observableArrayList(randWeekItems);
 					randTableText.setText("Angaben zur Randomisierung in der Woche 2");
 					numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro britisches Zentrum \nin Woche 2");
@@ -674,9 +672,9 @@ public class Main extends Application {
 					patientPerCenter = fetcher.fetchNumberOfPatientPerCenterByAllWeek();
 					patientPerCenterData = FXCollections.observableArrayList(patientPerCenter);
 					patientPerCenterTable.setItems(patientPerCenterData);
-					randWeekItems = fetcher.fetchRandomWeek();
+					randWeekItems = fetcher.fetchAllRandomWeekItems();
 					randWeekData = FXCollections.observableArrayList(randWeekItems);
-					randTableText.setText("Angaben zur Randomisierung in all Woche");
+					randTableText.setText("Angaben zur Randomisierung in alle Wochen");
 					numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro Zentrum \nalle Woche");
 					randWeekTable.setItems(randWeekData);
 					break;
@@ -706,7 +704,7 @@ public class Main extends Application {
 
 		consentTable = new TableView<InformedConsent>();
 		consentTable.setEditable(true);
-		consentList = fetcher.fetchInformedConsent();
+		consentList = fetcher.fetchAllInformedConsent();
 		consentData = FXCollections.observableArrayList(consentList);
 		TableColumn<InformedConsent, Integer> patientIDCol = new TableColumn<InformedConsent, Integer>("Patient ID");
 		patientIDCol.setMinWidth(100);
@@ -763,7 +761,7 @@ public class Main extends Application {
 		});
 
 		// Adding new Item for informed consent
-		centerIds = fetcher.fetchCenterID();
+		centerIds = fetcher.fetchAllCenterID();
 		Collections.sort(centerIds);
 		centerIdData = FXCollections.observableArrayList(centerIds);
 		Label centerText = new Label("Zentrum: ");
@@ -817,7 +815,7 @@ public class Main extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 
-				patientIds = fetcher.fetchPatientenID();
+				patientIds = fetcher.fetchPatientenAllID();
 
 				Collections.sort(patientIds);
 
@@ -863,25 +861,25 @@ public class Main extends Application {
 
 				switch (choice) {
 				case "Liste der Patienten mit fehlende Einwilligung":
-					missingList = fetcher.fetchInformedConsent(Consent.MISSING);
+					missingList = fetcher.fetchAllInformedConsent(Consent.MISSING);
 					missingConsentData = FXCollections.observableArrayList(missingList);
 					consentTable.setItems(missingConsentData);
 					vbConsent.setVisible(false);
 					break;
 				case "Liste der Patienten mit unvollständigen Einwilligung":
-					incompletedList = fetcher.fetchInformedConsent(Consent.INCOMPLETE);
+					incompletedList = fetcher.fetchAllInformedConsent(Consent.INCOMPLETE);
 					incompleteConsentData = FXCollections.observableArrayList(incompletedList);
 					consentTable.setItems(incompleteConsentData);
 					vbConsent.setVisible(false);
 					break;
 				case "Liste der Patienten mit erteilten Einwilligung nach der Radomisierung":
-					lateConsentList = fetcher.fetchInformedConsent(Consent.LATE);
+					lateConsentList = fetcher.fetchAllInformedConsent(Consent.LATE);
 					lateConsentData = FXCollections.observableArrayList(lateConsentList);
 					consentTable.setItems(lateConsentData);
 					vbConsent.setVisible(false);
 					break;
 				case "Alle Einwilligungen":
-					consentList = fetcher.fetchInformedConsent();
+					consentList = fetcher.fetchAllInformedConsent();
 					consentData = FXCollections.observableArrayList(consentList);
 					consentTable.setItems(consentData);
 					vbConsent.setVisible(true);
@@ -910,7 +908,7 @@ public class Main extends Application {
 	private HBox createCenterTable() {
 		centerTable = new TableView<Zentrum>();
 		centerTable.setEditable(true);
-		centerList = fetcher.fetchCenterData();
+		centerList = fetcher.fetchAllCenter();
 
 		Collections.sort(centerList, new Comparator<Zentrum>() {
 
@@ -1018,19 +1016,19 @@ public class Main extends Application {
 
 				switch (choice) {
 				case "Liste aller Zentren":
-					centerList = fetcher.fetchCenterData();
+					centerList = fetcher.fetchAllCenter();
 					data = FXCollections.observableArrayList(centerList);
 					centerTableLabel.setText("Liste aller vorhandenen Zentren in der Studie");
 					centerTable.setItems(data);
 					break;
 				case "Liste der Zentren in Deutschland":
-					centerListLand = fetcher.fetchCenterData(Land.D);
+					centerListLand = fetcher.fetchAllCenterByLand(Land.D);
 					centerTableLabel.setText("Liste aller vorhandenen deutschen Zentren in der Studie");
 					centerListData = FXCollections.observableArrayList(centerListLand);
 					centerTable.setItems(centerListData);
 					break;
 				case "Liste der Zentren in Großbritanien":
-					centerListLand = fetcher.fetchCenterData(Land.GB);
+					centerListLand = fetcher.fetchAllCenterByLand(Land.GB);
 					centerTableLabel.setText("Liste aller vorhandenen britischen Zentren in der Studie");
 					centerListData = FXCollections.observableArrayList(centerListLand);
 					centerTable.setItems(centerListData);

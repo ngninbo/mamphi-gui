@@ -71,7 +71,7 @@ public class FetchData {
 		}
 	}
 
-	public List<Zentrum> fetchCenterData() {
+	public List<Zentrum> fetchAllCenter() {
 
 		try {
 			// create a connection to the database
@@ -101,7 +101,7 @@ public class FetchData {
 		return centerList;
 	}
 
-	public List<Zentrum> fetchCenterData(Land land) {
+	public List<Zentrum> fetchAllCenterByLand(Land land) {
 
 		try {
 			// create a connection to the database
@@ -133,7 +133,7 @@ public class FetchData {
 
 	}
 
-	public List<InformedConsent> fetchInformedConsent() {
+	public List<InformedConsent> fetchAllInformedConsent() {
 		try {
 			// create a connection to the database
 			connection = DriverManager.getConnection(url);
@@ -163,7 +163,7 @@ public class FetchData {
 		return consentList;
 	}
 
-	public List<InformedConsent> fetchInformedConsent(Consent consent) {
+	public List<InformedConsent> fetchAllInformedConsent(Consent consent) {
 
 		try {
 			connection = DriverManager.getConnection(url);
@@ -201,7 +201,7 @@ public class FetchData {
 
 	public List<MonitorVisite> fetchMonitorVisites() {
 
-		centerList = fetchCenterData();
+		centerList = fetchAllCenter();
 		List<Integer> centerIDList = fetchZentrumByAllRandWeek();
 		MonitorVisite sampleVisite;
 		HashMap<String, Integer> centerFreq = new HashMap<String, Integer>();
@@ -307,7 +307,7 @@ public class FetchData {
 		}
 	}
 
-	public List<Integer> fetchCenterID() {
+	public List<Integer> fetchAllCenterID() {
 
 		try {
 			// create a connection to the database
@@ -333,12 +333,12 @@ public class FetchData {
 		return centerIDs;
 	}
 
-	public List<PatientCenter> fetchNumberPatientenPerCenterByLandByWeek(Land land, int week) {
+	public List<PatientCenter> fetchAllNumberPatientenPerCenterByLandByWeek(Land land, int week) {
 
 		List<PatientCenter> numberOfPatientPerCenterGermany = new ArrayList<PatientCenter>();
 		List<PatientCenter> numberOfPatientPerCenterGB = new ArrayList<PatientCenter>();
 
-		List<PatientCenter> allPatientCenter = fetchNumberOfPatientPerCenterByWeek(week);
+		List<PatientCenter> allPatientCenter = fetchAllNumberOfPatientPerCenterByWeek(week);
 
 		allPatientCenter.forEach((e) -> {
 			if (Integer.parseInt(e.getCenter()) < 200) {
@@ -351,9 +351,9 @@ public class FetchData {
 		return land.equals(Land.D) ? numberOfPatientPerCenterGermany : numberOfPatientPerCenterGB;
 	}
 
-	public List<PatientCenter> fetchNumberOfPatientPerCenterByWeek(int week) {
+	public List<PatientCenter> fetchAllNumberOfPatientPerCenterByWeek(int week) {
 
-		centerListByWeek = fetchZentrumByRandWeek(week);
+		centerListByWeek = fetchAllZentrumByRandWeek(week);
 		HashMap<String, Integer> centerFreq = new HashMap<String, Integer>();
 		List<PatientCenter> list = new ArrayList<PatientCenter>();
 
@@ -413,7 +413,7 @@ public class FetchData {
 		return list;
 	}
 
-	public List<Integer> fetchZentrumByRandWeek(int week) {
+	public List<Integer> fetchAllZentrumByRandWeek(int week) {
 		try {
 			// create a connection to the database
 			connection = DriverManager.getConnection(url);
@@ -461,7 +461,7 @@ public class FetchData {
 		return centerListByWeek;
 	}
 
-	public List<Integer> fetchPatientenID() {
+	public List<Integer> fetchPatientenAllID() {
 
 		try {
 			// create a connection to the database
@@ -485,7 +485,7 @@ public class FetchData {
 
 	}
 
-	public List<RandomizationWeek> fetchRandomWeek(int week) {
+	public List<RandomizationWeek> fetchAllRandomizationByWeek(int week) {
 
 		try {
 			// create a connection to the database
@@ -512,7 +512,7 @@ public class FetchData {
 		return randomizationList;
 	}
 	
-	public List<RandomizationWeek> fetchRandomWeek() {
+	public List<RandomizationWeek> fetchAllRandomWeekItems() {
 
 		try {
 			// create a connection to the database
