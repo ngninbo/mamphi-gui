@@ -32,7 +32,6 @@ public class FetchData {
 	private Zentrum center;
 	private List<Zentrum> centerList;
 	private List<InformedConsent> consentList;
-	private List<MonitorVisite> visiteList;
 	private List<RandomizationWeek> randomizationList;
 	private RandomizationWeek randWeekItem;
 	private List<Integer> centerIDs;
@@ -82,7 +81,7 @@ public class FetchData {
 
 			results = statement.executeQuery(query);
 
-			centerList = new ArrayList<Zentrum>();
+			centerList = new ArrayList<>();
 
 			// loop through the result set
 			while (results.next()) {
@@ -112,7 +111,7 @@ public class FetchData {
 
 			results = statement.executeQuery(query);
 
-			centerList = new ArrayList<Zentrum>();
+			centerList = new ArrayList<>();
 
 			// loop through the result set
 			while (results.next()) {
@@ -144,7 +143,7 @@ public class FetchData {
 
 			results = statement.executeQuery(query);
 			InformedConsent consent;
-			consentList = new ArrayList<InformedConsent>();
+			consentList = new ArrayList<>();
 
 			// loop through the result set
 			while (results.next()) {
@@ -180,7 +179,7 @@ public class FetchData {
 
 			results = statement.executeQuery(query);
 			InformedConsent informedConsent;
-			consentList = new ArrayList<InformedConsent>();
+			consentList = new ArrayList<>();
 			// loop through the result set
 			while (results.next()) {
 
@@ -204,9 +203,9 @@ public class FetchData {
 		centerList = fetchAllCenter();
 		List<Integer> centerIDList = fetchZentrumByAllRandWeek();
 		MonitorVisite sampleVisite;
-		HashMap<String, Integer> centerFreq = new HashMap<String, Integer>();
+		HashMap<String, Integer> centerFreq = new HashMap<>();
 
-		visiteList = new ArrayList<MonitorVisite>();
+		List<MonitorVisite> visiteList = new ArrayList<>();
 
 		for (Integer integer : centerIDList) {
 			if (!centerFreq.containsKey(integer.toString())) {
@@ -216,20 +215,14 @@ public class FetchData {
 			}
 		}
 
-		centerFreq.forEach((key, value) -> {
-			centerFreq.put(key, value);
-		});
-
-
 		LocalDate startDate = LocalDate.of(2019, 6, 1);
 		LocalDate endDate = startDate.plusYears(2);
 		List<LocalDate> listOfDates;
-		int numberOfPatient = 0;
 		String key;
 
 		for (Zentrum center : centerList) {
 			key = String.valueOf(center.getZentrum_id());
-			numberOfPatient = centerFreq.containsKey(key) ? centerFreq.get(key) : 0;
+			int numberOfPatient = centerFreq.containsKey(key) ? centerFreq.get(key) : 0;
 			if (numberOfPatient >= 10) {
 				listOfDates = startDate.datesUntil(endDate, Period.ofMonths(1)).collect(Collectors.toList());
 				sampleVisite = new MonitorVisite(center, numberOfPatient, listOfDates.subList(0, 5));
@@ -242,7 +235,7 @@ public class FetchData {
 				listOfDates = startDate.datesUntil(endDate, Period.ofMonths(3)).collect(Collectors.toList());
 				sampleVisite = new MonitorVisite(center, numberOfPatient, listOfDates.subList(0, 5));
 			} else {
-				listOfDates = new ArrayList<LocalDate>();
+				listOfDates = new ArrayList<>();
 				sampleVisite = new MonitorVisite(center, numberOfPatient, listOfDates);
 			}
 
@@ -335,8 +328,8 @@ public class FetchData {
 
 	public List<PatientCenter> fetchAllNumberPatientenPerCenterByLandByWeek(Land land, int week) {
 
-		List<PatientCenter> numberOfPatientPerCenterGermany = new ArrayList<PatientCenter>();
-		List<PatientCenter> numberOfPatientPerCenterGB = new ArrayList<PatientCenter>();
+		List<PatientCenter> numberOfPatientPerCenterGermany = new ArrayList<>();
+		List<PatientCenter> numberOfPatientPerCenterGB = new ArrayList<>();
 
 		List<PatientCenter> allPatientCenter = fetchAllNumberOfPatientPerCenterByWeek(week);
 
@@ -354,8 +347,8 @@ public class FetchData {
 	public List<PatientCenter> fetchAllNumberOfPatientPerCenterByWeek(int week) {
 
 		centerListByWeek = fetchAllZentrumByRandWeek(week);
-		HashMap<String, Integer> centerFreq = new HashMap<String, Integer>();
-		List<PatientCenter> list = new ArrayList<PatientCenter>();
+		HashMap<String, Integer> centerFreq = new HashMap<>();
+		List<PatientCenter> list = new ArrayList<>();
 
 		for (Integer integer : centerListByWeek) {
 			if (!centerFreq.containsKey(integer.toString())) {
@@ -493,7 +486,7 @@ public class FetchData {
 			query = "SELECT * FROM Random_Woche_" + week;
 
 			statement = connection.createStatement();
-			randomizationList = new ArrayList<RandomizationWeek>();
+			randomizationList = new ArrayList<>();
 			results = statement.executeQuery(query);
 
 			// loop through the result set
@@ -520,7 +513,7 @@ public class FetchData {
 			query = "SELECT * FROM Random_Woche_1 UNION SELECT * FROM Random_Woche_2";
 
 			statement = connection.createStatement();
-			randomizationList = new ArrayList<RandomizationWeek>();
+			randomizationList = new ArrayList<>();
 			results = statement.executeQuery(query);
 
 			// loop through the result set
