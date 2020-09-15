@@ -27,11 +27,11 @@ public class MonitorVisite extends Zentrum {
 	}
 
 	/**
-	 * @param monitor
-	 * @param pruefer
-	 * @param ort
-	 * @param land
-	 * @param zentrum_id
+	 * @param monitor Monitor
+	 * @param pruefer Prüfer
+	 * @param ort Ort
+	 * @param land Land
+	 * @param zentrum_id Zentrum ID
 	 */
 	public MonitorVisite(String monitor, String pruefer, String ort, String land, int zentrum_id) {
 		super(monitor, pruefer, ort, land, zentrum_id);
@@ -45,7 +45,7 @@ public class MonitorVisite extends Zentrum {
 	public MonitorVisite(Zentrum center, int numberOfPatient, List<LocalDate> visites) {
 		this(center);
 		this.numberOfPatient = new SimpleIntegerProperty(numberOfPatient);
-		this.visiteDate = (visites !=null) ? new SimpleListProperty<LocalDate>(FXCollections.observableArrayList(visites)): null;
+		this.visiteDate = (visites !=null) ? new SimpleListProperty<>(FXCollections.observableArrayList(visites)): null;
 	}
 	
 	public int getNumberOfPatient() {

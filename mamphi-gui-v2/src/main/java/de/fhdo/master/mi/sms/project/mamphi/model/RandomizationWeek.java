@@ -25,10 +25,10 @@ public class RandomizationWeek {
 	}
 
 	/**
-	 * @param patient_id
-	 * @param zentrum
-	 * @param behandlungsarm
-	 * @param date
+	 * @param patient_id Patient ID
+	 * @param zentrum Zentrum ID
+	 * @param behandlungsarm Behandlungsarm
+	 * @param date Datum
 	 */
 	public RandomizationWeek(int patient_id, int zentrum, String behandlungsarm, String date) {
 		super();

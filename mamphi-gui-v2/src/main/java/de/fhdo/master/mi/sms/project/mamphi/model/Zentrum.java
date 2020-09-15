@@ -31,11 +31,11 @@ public class Zentrum {
 	}
 
 	/**
-	 * @param monitor
-	 * @param pruefer
-	 * @param ort
-	 * @param land
-	 * @param zentrum_id
+	 * @param monitor Monitor
+	 * @param pruefer Prüfer
+	 * @param ort Ort
+	 * @param land Land
+	 * @param zentrum_id Zentrum ID
 	 */
 	public Zentrum(String monitor, String pruefer, String ort, String land, int zentrum_id) {
 		super();
@@ -106,8 +106,8 @@ public class Zentrum {
 
 	private int getZentrum_id(String land, List<Zentrum> centerList) {
 
-		List<Zentrum> centerInD = new ArrayList<Zentrum>();
-		List<Zentrum> centerInGB = new ArrayList<Zentrum>();
+		List<Zentrum> centerInD = new ArrayList<>();
+		List<Zentrum> centerInGB = new ArrayList<>();
 
 		for (Zentrum center : centerList) {
 			if (center.getLand().equals("Deutschland")) {

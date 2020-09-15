@@ -12,8 +12,8 @@ public class PatientCenter {
 	}
 
 	/**
-	 * @param center
-	 * @param count
+	 * @param center Zentrum
+	 * @param count Anzahl Patienten
 	 */
 	public PatientCenter(String center, Integer count) {
 		super();

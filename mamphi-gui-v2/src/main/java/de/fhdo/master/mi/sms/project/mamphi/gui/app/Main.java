@@ -56,18 +56,13 @@ public class Main extends Application {
 	private ObservableList<InformedConsent> consentData;
 	private List<Integer> centerIds;
 	private List<Integer> patientIds;
-	private HBox hbConsentFilter;
-
 	private TableView<Zentrum> centerTable;
 	private List<Zentrum> centerList;
 	private ObservableList<Zentrum> data;
 
 	private ObservableList<Integer> centerIdData;
-	private ObservableList<Integer> patientIdData;
-
 	private ObservableList<String> landNames;
 	private ComboBox<String> cbLand;
-	private VBox vbox;
 
 	private List<RandomizationWeek> randWeekItems;
 	private ObservableList<RandomizationWeek> randWeekData;
@@ -201,33 +196,25 @@ public class Main extends Application {
 				}
 			});
 
-			consentBtn.setOnAction(new EventHandler<ActionEvent>() {
+			consentBtn.setOnAction(ActionEvent -> {
 
-				@Override
-				public void handle(ActionEvent event) {
+				root = new FlowPane(10, 10);
+				final HBox hbConsentTable = createConsentTable();
 
-					root = new FlowPane(10, 10);
-					final HBox hbConsentTable = createConsentTable();
+				// Add the created horizontal box to the root pane
+				root.getChildren().addAll(btnMenu, hbConsentTable);
 
-					// Add the created horizontal box to the root pane
-					root.getChildren().addAll(btnMenu, hbConsentTable);
-
-					mainScene.setRoot(root);
-				}
+				mainScene.setRoot(root);
 			});
 
-			randomWeekBtn.setOnAction(new EventHandler<ActionEvent>() {
+			randomWeekBtn.setOnAction(ActionEvent -> {
 
-				@Override
-				public void handle(ActionEvent event) {
+				root = new FlowPane(10, 10);
+				final HBox hbox = createRamdomizationPane();
 
-					root = new FlowPane(10, 10);
-					final HBox hbox = createRamdomizationPane();
-
-					// Add the created horizontal box to the root pane
-					root.getChildren().addAll(btnMenu, hbox);
-					mainScene.setRoot(root);
-				}
+				// Add the created horizontal box to the root pane
+				root.getChildren().addAll(btnMenu, hbox);
+				mainScene.setRoot(root);
 			});
 
 			monitoringBtn.setOnAction(new EventHandler<ActionEvent>() {
@@ -477,7 +464,7 @@ public class Main extends Application {
 		// Adding new Items
 		Label addPatientLabel = new Label("Patient ID: ");
 		patientIds = fetcher.fetchPatientenAllID();
-		patientIdData = FXCollections.observableArrayList(patientIds);
+		ObservableList<Integer> patientIdData = FXCollections.observableArrayList(patientIds);
 
 		ComboBox<Integer> cbAddRandPatient = new ComboBox<Integer>(patientIdData);
 		cbAddRandPatient.setPromptText("Bitte Wählen");
@@ -889,11 +876,11 @@ public class Main extends Application {
 			}
 		});
 
-		hbConsentFilter = new HBox(filterConsent, cbConsentFilter);
+		HBox hbConsentFilter = new HBox(filterConsent, cbConsentFilter);
 		hbConsentFilter.setSpacing(10);
 		hbConsentFilter.setPadding(new Insets(5, 0, 0, 150));
 
-		vbox = new VBox(consentTableLabel, hbConsentFilter, consentTable);
+		VBox vbox = new VBox(consentTableLabel, hbConsentFilter, consentTable);
 		vbox.setSpacing(5);
 
 		hbConsentTable.setPadding(new Insets(10, 10, 10, 10));
