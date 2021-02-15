@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
+import de.fhdo.master.mi.sms.project.mamphi.model.User;
 import de.fhdo.master.mi.sms.project.mamphi.model.Consent;
 import de.fhdo.master.mi.sms.project.mamphi.model.InformedConsent;
 import de.fhdo.master.mi.sms.project.mamphi.model.Land;
@@ -63,7 +63,7 @@ public class Main extends Application {
 	private ObservableList<Integer> centerIdData;
 	private ObservableList<String> landNames;
 	private ComboBox<String> cbLand;
-
+	private ArrayList<User> users = new ArrayList<>();
 	private List<RandomizationWeek> randWeekItems;
 	private ObservableList<RandomizationWeek> randWeekData;
 	private TableView<RandomizationWeek> randWeekTable;
@@ -74,6 +74,11 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			primaryStage.setTitle("Mamphi Administration GUI");
+
+			User demo = new User("demo", "demo");
+			users.add(demo);
+			User admin = new User("admin", "admin");
+			users.add(admin);
 			// Set Icon
 			// Create an Image
 			InputStream stream = getClass().getResourceAsStream("mamphi.png");
@@ -153,11 +158,14 @@ public class Main extends Application {
 				@Override
 				public void handle(ActionEvent event) {
 
-					if (userTextField.getText().equals("admin") && pwBox.getText().equals("admin")) {
+					User loginUser = new User(userTextField.getText(), pwBox.getText());
+
+					if(users.contains(loginUser)) {
 
 						primaryStage.setScene(mainScene);
 						actiontarget.setText("");
 						primaryStage.show();
+
 					} else {
 						actiontarget.setText("Sign in data incorrect");
 					}
