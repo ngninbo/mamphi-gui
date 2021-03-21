@@ -326,7 +326,7 @@ public class Main extends Application {
 					});
 
 					// Adding new items
-					Text centerFormText = new Text("Neues Zentrum Anlegen: ");
+					Text centerFormText = new Text("Neues Zentrum anlegen: ");
 					centerFormText.setFont(new Font("Arial", 20));
 					final TextField addMonitorName = new TextField();
 					final TextField addPrueferName = new TextField();
@@ -471,7 +471,7 @@ public class Main extends Application {
 
 		// Adding new Items
 		Label addPatientLabel = new Label("Patient ID: ");
-		patientIds = fetcher.fetchPatientenAllID();
+		patientIds = fetcher.fetchAllPatientenID();
 		ObservableList<Integer> patientIdData = FXCollections.observableArrayList(patientIds);
 
 		ComboBox<Integer> cbAddRandPatient = new ComboBox<Integer>(patientIdData);
@@ -741,7 +741,7 @@ public class Main extends Application {
 
 		consentTable.setItems(consentData);
 		consentTable.getColumns().addAll(patientIDCol, zentrumCol, consentCol, dateCol);
-		Text consentFormText = new Text("Neue Einwilligung Anlegen:");
+		Text consentFormText = new Text("Neue Einwilligung anlegen:");
 		consentFormText.setFont(new Font("Arial", 20));
 		Button deleteConsentBtn = new Button("Einwilligung löschen");
 		deleteConsentBtn.setVisible(true);
@@ -810,7 +810,7 @@ public class Main extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 
-				patientIds = fetcher.fetchPatientenAllID();
+				patientIds = fetcher.fetchAllPatientenID();
 
 				Collections.sort(patientIds);
 
@@ -1037,7 +1037,7 @@ public class Main extends Application {
 		hbCenterFilter.setPadding(new Insets(5, 0, 0, 250));
 
 		// Adding new center functionality
-		Text centerFormText = new Text("Neues Zentrum Anlegen: ");
+		Text centerFormText = new Text("Neues Zentrum anlegen: ");
 		centerFormText.setFont(new Font("Arial", 20));
 		final TextField addMonitorName = new TextField();
 		final TextField addPrueferName = new TextField();
