@@ -138,7 +138,7 @@ public class FetchData {
 			// create a connection to the database
 			connection = DriverManager.getConnection(url);
 
-			query = "select * from Informed_consent";
+			query = "select Patient_Id, Zentrum, Einwilligung, strftime('%d.%m.%Y', Datum) as Datum from Informed_consent";
 
 			statement = connection.createStatement();
 
@@ -169,11 +169,14 @@ public class FetchData {
 			connection = DriverManager.getConnection(url);
 
 			if (consent.equals(Consent.INCOMPLETE)) {
-				query = "SELECT * FROM Informed_consent WHERE Einwilligung = 'nan'";
+				query = "SELECT Patient_Id, Zentrum, Einwilligung, strftime('%d.%m.%Y', Datum) as Datum " +
+						"FROM Informed_consent WHERE Einwilligung = 'nan'";
 			} else if (consent.equals(Consent.MISSING)) {
-				query = "SELECT * FROM Informed_consent WHERE Einwilligung = 'nan' AND Datum != 'NaT'";
+				query = "SELECT Patient_Id, Zentrum, Einwilligung, strftime('%d.%m.%Y', Datum) as Datum " +
+						"FROM Informed_consent WHERE Einwilligung = 'nan' AND Datum != 'NaT'";
 			} else {
-				query = "SELECT * FROM Informed_consent WHERE Einwilligung != 'nan' AND Datum > '2019.06.03'";
+				query = "SELECT Patient_Id, Zentrum, Einwilligung, strftime('%d.%m.%Y', Datum) as Datum " +
+						"FROM Informed_consent WHERE Einwilligung != 'nan' AND Datum > '2019.06.03'";
 			}
 
 			statement = connection.createStatement();
@@ -468,7 +471,7 @@ public class FetchData {
 		try {
 			// create a connection to the database
 			connection = DriverManager.getConnection(url);
-			query = "SELECT * FROM Random_Woche_" + week;
+			query = "SELECT Patient_Id, Zentrum, Behandlungsarm, strftime('%d.%m.%Y', Datum) as Datum FROM Random_Woche_" + week;
 
 			statement = connection.createStatement();
 			randomizationList = new ArrayList<>();
@@ -495,7 +498,10 @@ public class FetchData {
 		try {
 			// create a connection to the database
 			connection = DriverManager.getConnection(url);
-			query = "SELECT * FROM Random_Woche_1 UNION SELECT * FROM Random_Woche_2";
+			query = "SELECT Patient_Id, Zentrum, Behandlungsarm, strftime('%d.%m.%Y', Datum) as Datum " +
+					"FROM Random_Woche_1 " +
+					"UNION SELECT Patient_Id, Zentrum, Behandlungsarm, strftime('%d.%m.%Y', Datum) as Datum " +
+					"FROM Random_Woche_2";
 
 			statement = connection.createStatement();
 			randomizationList = new ArrayList<>();
