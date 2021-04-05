@@ -1091,10 +1091,9 @@ public class Main extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				
-				Zentrum neuZentrum = null;
-				
 				if(addMonitorName.getText() != null && addPrueferName.getText() != null && addOrt.getText() != null && selectedLand !=null) {
-					neuZentrum = new Zentrum(addMonitorName.getText(), addPrueferName.getText(), addOrt.getText(), selectedLand, data);
+					Zentrum neuZentrum = new Zentrum(addMonitorName.getText(), addPrueferName.getText(), addOrt.getText(),
+							selectedLand, fetcher.getMaxID(selectedLand.equals("Deutschland") ? Land.D : Land.GB));
 					data.add(neuZentrum);
 					fetcher.updateZentrum(neuZentrum);
 					addMonitorName.clear();

@@ -35,6 +35,7 @@ public class FetchData {
 	private List<Integer> centerIDs;
 	private List<Integer> patientIDs;
 	private static String query;
+	private int maxId;
 
     private static final LocalDate startDate = LocalDate.of(2019, 6, 1);
     private static final LocalDate endDate = startDate.plusYears(2);
@@ -225,8 +226,10 @@ public class FetchData {
 
             while (results.next()) {
 
-            	MonitorVisite monitorVisite = new MonitorVisite(results.getInt("Zentrum_Id"), results.getString("Land"),
-						results.getString("Ort"), results.getString("Pruefer"), results.getString("Monitor"),
+            	MonitorVisite monitorVisite = new MonitorVisite(results.getInt("Zentrum_Id"),
+						results.getString("Land").equals("D") ? "Deutschland" : "Großbritanien",
+						results.getString("Ort"), results.getString("Pruefer"),
+						results.getString("Monitor"),
 						results.getInt("Gesamtanzahl"));
 
 				List<LocalDate> listOfVisiteDates;
@@ -512,5 +515,29 @@ public class FetchData {
 		}
 
 		return randomizationList;
+	}
+
+	public int getMaxID(Land land){
+
+		try {
+			connection = DriverManager.getConnection(url);
+
+			query = "SELECT max(Zentrum_Id) + 1 as MAX_ID\n" +
+					"FROM Zentren\n" +
+					"WHERE Land = '"+ land +"'";
+
+			statement = connection.createStatement();
+
+			results = statement.executeQuery(query);
+
+			while (results.next()){
+				maxId = results.getInt("MAX_ID");
+			}
+
+		}catch (SQLException e){
+			e.printStackTrace();
+		}
+
+		return maxId;
 	}
 }
