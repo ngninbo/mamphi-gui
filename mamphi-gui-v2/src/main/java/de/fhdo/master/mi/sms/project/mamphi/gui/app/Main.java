@@ -597,82 +597,82 @@ public class Main extends Application {
 				List<PatientCenter> patientPerCenter;
 				ObservableList<PatientCenter> patientPerCenterData;
 				switch (choice) {
-				case "Angaben zur Randomisierung in der Woche 1 anzeigen":
-					week = 1;
-					patientPerCenter = fetcher.fetchAllNumberOfPatientPerCenterByWeek(week);
-					patientPerCenterData = FXCollections.observableArrayList(patientPerCenter);
-					patientPerCenterTable.setItems(patientPerCenterData);
-					randWeekItems = fetcher.fetchAllRandomizationByWeek(week);
-					randWeekData = FXCollections.observableArrayList(randWeekItems);
-					randTableText.setText("Angaben zur Randomisierung in der Woche 1");
-					numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro Zentrum \nin Woche 1");
-					randWeekTable.setItems(randWeekData);
-					break;
-				case "Angaben zur Randomisierung in der Woche 2 anzeigen":
-					week = 2;
-					patientPerCenter = fetcher.fetchAllNumberOfPatientPerCenterByWeek(week);
-					patientPerCenterData = FXCollections.observableArrayList(patientPerCenter);
-					patientPerCenterTable.setItems(patientPerCenterData);
-					randWeekItems = fetcher.fetchAllRandomizationByWeek(week);
-					randWeekData = FXCollections.observableArrayList(randWeekItems);
-					randTableText.setText("Angaben zur Randomisierung in der Woche 2");
-					numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro Zentrum \nin Woche 2");
-					randWeekTable.setItems(randWeekData);
-					break;
-				case "Anzahl der Patienten pro Zentrum in Deutschland in der Woche 1":
-					week = 1;
-					patientPerCenter = fetcher.fetchAllNumberPatientenPerCenterByLandByWeek(Land.D, week);
-					patientPerCenterData = FXCollections.observableArrayList(patientPerCenter);
-					patientPerCenterTable.setItems(patientPerCenterData);
-					randWeekItems = fetcher.fetchAllRandomizationByWeek(week);
-					randWeekData = FXCollections.observableArrayList(randWeekItems);
-					randTableText.setText("Angaben zur Randomisierung in der Woche 1");
-					numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro deutsches Zentrum \nin Woche 1");
-					randWeekTable.setItems(randWeekData);
-					break;
-				case "Anzahl der Patienten pro Zentrum in Deutschland in der Woche 2":
-					week = 2;
-					patientPerCenter = fetcher.fetchAllNumberPatientenPerCenterByLandByWeek(Land.D, week);
-					patientPerCenterData = FXCollections.observableArrayList(patientPerCenter);
-					patientPerCenterTable.setItems(patientPerCenterData);
-					randWeekItems = fetcher.fetchAllRandomizationByWeek(week);
-					randWeekData = FXCollections.observableArrayList(randWeekItems);
-					randTableText.setText("Angaben zur Randomisierung in der Woche 2");
-					numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro deutsches Zentrum \nin Woche 2");
-					randWeekTable.setItems(randWeekData);
-					break;
-				case "Anzahl der Patienten pro Zentrum in Großbritanien in der Woche 1":
-					week = 1;
-					patientPerCenter = fetcher.fetchAllNumberPatientenPerCenterByLandByWeek(Land.GB, week);
-					patientPerCenterData = FXCollections.observableArrayList(patientPerCenter);
-					patientPerCenterTable.setItems(patientPerCenterData);
-					randWeekItems = fetcher.fetchAllRandomizationByWeek(week);
-					randWeekData = FXCollections.observableArrayList(randWeekItems);
-					randTableText.setText("Angaben zur Randomisierung in der Woche 1");
-					numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro britisches Zentrum \nin Woche 1");
-					randWeekTable.setItems(randWeekData);
-					break;
-				case "Anzahl der Patienten pro Zentrum in Großbritanien in der Woche 2":
-					week = 2;
-					patientPerCenter = fetcher.fetchAllNumberPatientenPerCenterByLandByWeek(Land.GB, week);
-					patientPerCenterData = FXCollections.observableArrayList(patientPerCenter);
-					patientPerCenterTable.setItems(patientPerCenterData);
-					randWeekItems = fetcher.fetchAllRandomizationByWeek(week);
-					randWeekData = FXCollections.observableArrayList(randWeekItems);
-					randTableText.setText("Angaben zur Randomisierung in der Woche 2");
-					numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro britisches Zentrum \nin Woche 2");
-					randWeekTable.setItems(randWeekData);
-					break;
-				case "Angabe zur Randomisierung in alle Wochen":
-					patientPerCenter = fetcher.fetchNumberOfPatientPerCenterByAllWeek();
-					patientPerCenterData = FXCollections.observableArrayList(patientPerCenter);
-					patientPerCenterTable.setItems(patientPerCenterData);
-					randWeekItems = fetcher.fetchAllRandomWeekItems();
-					randWeekData = FXCollections.observableArrayList(randWeekItems);
-					randTableText.setText("Angaben zur Randomisierung in alle Wochen");
-					numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro Zentrum \nalle Woche");
-					randWeekTable.setItems(randWeekData);
-					break;
+					case "Angaben zur Randomisierung in der Woche 1 anzeigen":
+						week = 1;
+						patientPerCenter = fetcher.fetchAllNumberOfPatientPerCenterByWeek(week);
+						patientPerCenterData = FXCollections.observableArrayList(patientPerCenter);
+						patientPerCenterTable.setItems(patientPerCenterData);
+						randWeekItems = fetcher.fetchAllRandomizationByWeek(week);
+						randWeekData = FXCollections.observableArrayList(randWeekItems);
+						randTableText.setText("Angaben zur Randomisierung in der Woche 1");
+						numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro Zentrum \nin Woche 1");
+						randWeekTable.setItems(randWeekData);
+						break;
+					case "Angaben zur Randomisierung in der Woche 2 anzeigen":
+						week = 2;
+						patientPerCenter = fetcher.fetchAllNumberOfPatientPerCenterByWeek(week);
+						patientPerCenterData = FXCollections.observableArrayList(patientPerCenter);
+						patientPerCenterTable.setItems(patientPerCenterData);
+						randWeekItems = fetcher.fetchAllRandomizationByWeek(week);
+						randWeekData = FXCollections.observableArrayList(randWeekItems);
+						randTableText.setText("Angaben zur Randomisierung in der Woche 2");
+						numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro Zentrum \nin Woche 2");
+						randWeekTable.setItems(randWeekData);
+						break;
+					case "Anzahl der Patienten pro Zentrum in Deutschland in der Woche 1":
+						week = 1;
+						patientPerCenter = fetcher.fetchAllNumberPatientenPerCenterByLandByWeek(Land.D, week);
+						patientPerCenterData = FXCollections.observableArrayList(patientPerCenter);
+						patientPerCenterTable.setItems(patientPerCenterData);
+						randWeekItems = fetcher.fetchAllRandomizationByWeekInLand(week, Land.D);
+						randWeekData = FXCollections.observableArrayList(randWeekItems);
+						randTableText.setText("Angaben zur Randomisierung in der Woche 1");
+						numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro deutsches Zentrum \nin Woche 1");
+						randWeekTable.setItems(randWeekData);
+						break;
+					case "Anzahl der Patienten pro Zentrum in Deutschland in der Woche 2":
+						week = 2;
+						patientPerCenter = fetcher.fetchAllNumberPatientenPerCenterByLandByWeek(Land.D, week);
+						patientPerCenterData = FXCollections.observableArrayList(patientPerCenter);
+						patientPerCenterTable.setItems(patientPerCenterData);
+						randWeekItems = fetcher.fetchAllRandomizationByWeekInLand(week, Land.D);
+						randWeekData = FXCollections.observableArrayList(randWeekItems);
+						randTableText.setText("Angaben zur Randomisierung in der Woche 2");
+						numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro deutsches Zentrum \nin Woche 2");
+						randWeekTable.setItems(randWeekData);
+						break;
+					case "Anzahl der Patienten pro Zentrum in Großbritanien in der Woche 1":
+						week = 1;
+						patientPerCenter = fetcher.fetchAllNumberPatientenPerCenterByLandByWeek(Land.GB, week);
+						patientPerCenterData = FXCollections.observableArrayList(patientPerCenter);
+						patientPerCenterTable.setItems(patientPerCenterData);
+						randWeekItems = fetcher.fetchAllRandomizationByWeekInLand(week, Land.GB);
+						randWeekData = FXCollections.observableArrayList(randWeekItems);
+						randTableText.setText("Angaben zur Randomisierung in der Woche 1");
+						numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro britisches Zentrum \nin Woche 1");
+						randWeekTable.setItems(randWeekData);
+						break;
+					case "Anzahl der Patienten pro Zentrum in Großbritanien in der Woche 2":
+						week = 2;
+						patientPerCenter = fetcher.fetchAllNumberPatientenPerCenterByLandByWeek(Land.GB, week);
+						patientPerCenterData = FXCollections.observableArrayList(patientPerCenter);
+						patientPerCenterTable.setItems(patientPerCenterData);
+						randWeekItems = fetcher.fetchAllRandomizationByWeekInLand(week, Land.GB);
+						randWeekData = FXCollections.observableArrayList(randWeekItems);
+						randTableText.setText("Angaben zur Randomisierung in der Woche 2");
+						numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro britisches Zentrum \nin Woche 2");
+						randWeekTable.setItems(randWeekData);
+						break;
+					case "Angabe zur Randomisierung in alle Wochen":
+						patientPerCenter = fetcher.fetchNumberOfPatientPerCenterByAllWeek();
+						patientPerCenterData = FXCollections.observableArrayList(patientPerCenter);
+						patientPerCenterTable.setItems(patientPerCenterData);
+						randWeekItems = fetcher.fetchAllRandomWeekItems();
+						randWeekData = FXCollections.observableArrayList(randWeekItems);
+						randTableText.setText("Angaben zur Randomisierung in alle Wochen");
+						numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro Zentrum \nalle Woche");
+						randWeekTable.setItems(randWeekData);
+						break;
 				}
 			}
 		});

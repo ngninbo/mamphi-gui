@@ -347,42 +347,30 @@ public class FetchData {
 
 	public List<PatientCenter> fetchAllNumberPatientenPerCenterByLandByWeek(Land land, int week) {
 
-        List<PatientCenter> listNumberPatientByCenterByLand = new ArrayList<>();
+		List<PatientCenter> listNumberPatientByCenterByLand = new ArrayList<>();
 
-        try {
-            connection = DriverManager.getConnection(url);
+		try {
+			connection = DriverManager.getConnection(url);
 
-            if (land.equals(Land.D)) {
+			query = "SELECT Zentrum, count(Zentrum) as Anzahl "
+					+ "FROM Random_Woche_"+ week +
+					" JOIN (SELECT Zentrum_Id FROM Zentren WHERE Land = '"+ land +"') on Zentrum_Id = Zentrum GROUP BY Zentrum";
 
-                query = "SELECT tab1.Zentrum as Zentrum, tab1.Anzahl as Anzahl, tab2.Land as Land_kurz, Replace(Land, 'D', 'Deutschland') as Land_long "
-                        + "FROM (SELECT Random_Woche_" + week + ".Zentrum, COUNT(Random_Woche_" + week
-                        + ".Zentrum) as Anzahl " + "FROM Random_Woche_" + week + " GROUP BY Random_Woche_" + week
-                        + ".Zentrum) tab1 "
-                        + "LEFT JOIN (SELECT Zentrum_Id, Land FROM Zentren) tab2 ON tab1.Zentrum = tab2.Zentrum_Id WHERE Land_kurz = 'D'";
-            } else {
+			statement = connection.createStatement();
 
-                query = "SELECT tab1.Zentrum as Zentrum, tab1.Anzahl as Anzahl, tab2.Land as Land_kurz, Replace(Land, 'GB', 'Großbritanien') as Land_long "
-                        + "FROM (SELECT Random_Woche_" + week + ".Zentrum, COUNT(Random_Woche_" + week
-                        + ".Zentrum) as Anzahl " + "FROM Random_Woche_" + week + " GROUP BY Random_Woche_" + week
-                        + ".Zentrum) tab1 "
-                        + "LEFT JOIN (SELECT Zentrum_Id, Land FROM Zentren) tab2 ON tab1.Zentrum = tab2.Zentrum_Id WHERE Land_kurz = 'GB'";
-            }
+			results = statement.executeQuery(query);
 
-            statement = connection.createStatement();
+			while (results.next()) {
+				listNumberPatientByCenterByLand
+						.add(new PatientCenter(results.getString("Zentrum"), results.getInt("Anzahl")));
+			}
 
-            results = statement.executeQuery(query);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-            while (results.next()) {
-                listNumberPatientByCenterByLand
-                        .add(new PatientCenter(results.getString("Zentrum"), results.getInt("Anzahl")));
-            }
-
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        return listNumberPatientByCenterByLand;
+		return listNumberPatientByCenterByLand;
 	}
 
 	public List<PatientCenter> fetchAllNumberOfPatientPerCenterByWeek(int week) {
@@ -471,10 +459,39 @@ public class FetchData {
 		try {
 			// create a connection to the database
 			connection = DriverManager.getConnection(url);
-			query = "SELECT Patient_Id, Zentrum, Behandlungsarm, strftime('%d.%m.%Y', Datum) as Datum FROM Random_Woche_" + week;
+			query = "SELECT Patient_Id, Zentrum, Behandlungsarm, strftime('%d.%m.%Y', Datum) as Datum " +
+                    "FROM Random_Woche_" + week;
 
 			statement = connection.createStatement();
 			randomizationList = new ArrayList<>();
+			results = statement.executeQuery(query);
+
+			// loop through the result set
+			while (results.next()) {
+
+				randWeekItem = new RandomizationWeek(results.getInt("Patient_Id"), results.getInt("Zentrum"),
+						results.getString("Behandlungsarm"), results.getString("Datum"));
+				randomizationList.add(randWeekItem);
+			}
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return randomizationList;
+	}
+
+	public List<RandomizationWeek> fetchAllRandomizationByWeekInLand(int week, Land land) {
+
+		try {
+			// create a connection to the database
+			connection = DriverManager.getConnection(url);
+			query = "SELECT Patient_Id, Zentrum, Behandlungsarm, strftime('%d.%m.%Y', Datum) as Datum "
+					+ "FROM Random_Woche_"+ week +" JOIN (SELECT Zentrum_Id FROM Zentren WHERE Land = '"+ land +"') on Zentrum_Id = Zentrum";
+
+			statement = connection.createStatement();
+			randomizationList = new ArrayList<RandomizationWeek>();
 			results = statement.executeQuery(query);
 
 			// loop through the result set
