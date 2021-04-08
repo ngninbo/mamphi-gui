@@ -836,7 +836,8 @@ public class Main extends Application {
 		Label filterConsent = new Label("Filtern: ");
 		ObservableList<String> consentFilterOptions = FXCollections.observableArrayList("Alle Einwilligungen",
 				"Liste der Patienten mit fehlende Einwilligung", "Liste der Patienten mit unvollständigen Einwilligung",
-				"Liste der Patienten mit erteilten Einwilligung nach der Radomisierung");
+				"Liste der Patienten mit erteilten Einwilligung nach der Radomisierung", "Liste der Patienten mit erteilten Einwilligung", 
+				"Liste der Patienten ohne erteilten Einwilligung");
 
 		final ComboBox<String> cbConsentFilter = new ComboBox<String>(consentFilterOptions);
 		cbConsentFilter.setPromptText("Liste auswählen und anzeigen");
@@ -879,8 +880,20 @@ public class Main extends Application {
 					consentTable.setItems(consentData);
 					vbConsent.setVisible(true);
 					break;
+				case "Liste der Patienten mit erteilten Einwilligung":
+					consentList = fetcher.fetchAllInformedConsent(true);
+					consentData = FXCollections.observableArrayList(consentList);
+					consentTable.setItems(consentData);
+					vbConsent.setVisible(true);
+					break;
+					
+				case "Liste der Patienten ohne erteilten Einwilligung":
+					consentList = fetcher.fetchAllInformedConsent(false);
+					consentData = FXCollections.observableArrayList(consentList);
+					consentTable.setItems(consentData);
+					vbConsent.setVisible(true);
+					break;
 				}
-
 			}
 		});
 

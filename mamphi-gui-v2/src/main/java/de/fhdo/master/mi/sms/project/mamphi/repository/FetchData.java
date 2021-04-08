@@ -162,6 +162,38 @@ public class FetchData {
 
 		return consentList;
 	}
+	
+	public List<InformedConsent> fetchAllInformedConsent(boolean isInformed){
+		
+		try {
+			// create a connection to the database
+			connection = DriverManager.getConnection(url);
+
+			query = (isInformed) ? "select Patient_Id, Zentrum, Einwilligung, strftime('%d.%m.%Y', Datum) as Datum from Informed_consent WHERE Einwilligung = 'ja'":
+				"select Patient_Id, Zentrum, Einwilligung, strftime('%d.%m.%Y', Datum) as Datum from Informed_consent WHERE Einwilligung = 'nein'";
+
+			statement = connection.createStatement();
+
+			results = statement.executeQuery(query);
+			InformedConsent consent;
+			consentList = new ArrayList<>();
+
+			// loop through the result set
+			while (results.next()) {
+
+				consent = new InformedConsent(results.getInt("Patient_Id"), results.getInt("Zentrum"),
+						results.getString("Einwilligung").toUpperCase(), results.getString("Datum"));
+				consentList.add(consent);
+			}
+			connection.close();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return consentList;
+	}
 
 	public List<InformedConsent> fetchAllInformedConsent(Consent consent) {
 
