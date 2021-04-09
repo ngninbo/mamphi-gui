@@ -3,7 +3,7 @@ use mamphi_db;
 
 create table Zentren
 (
-	Zentrum_Zentrum_Id smallint,
+	Zentrum_Id smallint,
     Land varchar(30),
     Ort varchar(55),
     Prüfer varchar(55),
