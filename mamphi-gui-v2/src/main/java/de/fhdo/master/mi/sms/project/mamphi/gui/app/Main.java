@@ -663,7 +663,7 @@ public class Main extends Application {
 						numberPatientPerCenterTableLabel.setText("Anzahl Patienten pro britisches Zentrum \nin Woche 2");
 						randWeekTable.setItems(randWeekData);
 						break;
-					case "Angabe zur Randomisierung in alle Wochen":
+					default:
 						patientPerCenter = fetcher.fetchNumberOfPatientPerCenterByAllWeek();
 						patientPerCenterData = FXCollections.observableArrayList(patientPerCenter);
 						patientPerCenterTable.setItems(patientPerCenterData);
@@ -874,12 +874,7 @@ public class Main extends Application {
 					consentTable.setItems(lateConsentData);
 					vbConsent.setVisible(false);
 					break;
-				case "Alle Einwilligungen":
-					consentList = fetcher.fetchAllInformedConsent();
-					consentData = FXCollections.observableArrayList(consentList);
-					consentTable.setItems(consentData);
-					vbConsent.setVisible(true);
-					break;
+				
 				case "Liste der Patienten mit erteilten Einwilligung":
 					consentList = fetcher.fetchAllInformedConsent(true);
 					consentData = FXCollections.observableArrayList(consentList);
@@ -889,6 +884,13 @@ public class Main extends Application {
 					
 				case "Liste der Patienten ohne erteilten Einwilligung":
 					consentList = fetcher.fetchAllInformedConsent(false);
+					consentData = FXCollections.observableArrayList(consentList);
+					consentTable.setItems(consentData);
+					vbConsent.setVisible(true);
+					break;
+					
+				default:
+					consentList = fetcher.fetchAllInformedConsent();
 					consentData = FXCollections.observableArrayList(consentList);
 					consentTable.setItems(consentData);
 					vbConsent.setVisible(true);
@@ -1023,23 +1025,26 @@ public class Main extends Application {
 				ObservableList<Zentrum> centerListData;
 
 				switch (choice) {
-				case "Liste aller Zentren":
-					centerList = fetcher.fetchAllCenter();
-					data = FXCollections.observableArrayList(centerList);
-					centerTableLabel.setText("Liste aller vorhandenen Zentren in der Studie");
-					centerTable.setItems(data);
-					break;
+				
 				case "Liste der Zentren in Deutschland":
 					centerListLand = fetcher.fetchAllCenterByLand(Land.D);
 					centerTableLabel.setText("Liste aller vorhandenen deutschen Zentren in der Studie");
 					centerListData = FXCollections.observableArrayList(centerListLand);
 					centerTable.setItems(centerListData);
 					break;
+					
 				case "Liste der Zentren in Großbritanien":
 					centerListLand = fetcher.fetchAllCenterByLand(Land.GB);
 					centerTableLabel.setText("Liste aller vorhandenen britischen Zentren in der Studie");
 					centerListData = FXCollections.observableArrayList(centerListLand);
 					centerTable.setItems(centerListData);
+					break;
+					
+				default:
+					centerList = fetcher.fetchAllCenter();
+					data = FXCollections.observableArrayList(centerList);
+					centerTableLabel.setText("Liste aller vorhandenen Zentren in der Studie");
+					centerTable.setItems(data);
 					break;
 				}
 			}
