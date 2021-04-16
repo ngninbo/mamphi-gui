@@ -15,7 +15,7 @@ insert into Zentren(Zentrum_Id,Land,Ort,Prüfer,Monitor)values (102,'D','Essen',
 insert into Zentren(Zentrum_Id,Land,Ort,Prüfer,Monitor)values (103,'D','München','Moser','Wittmann');
 insert into Zentren(Zentrum_Id,Land,Ort,Prüfer,Monitor)values (104,'D','Herne','Kwiatkowski','Wittmann');
 insert into Zentren(Zentrum_Id,Land,Ort,Prüfer,Monitor)values (105,'D','Hannover','Meyer','Lange');
-insert into Zentren(Zentrum_Id,Land,Ort,Prüfer,Monitor)values (106,'D','Köln','BrettschneZentrum_Ider','Bruch');
+insert into Zentren(Zentrum_Id,Land,Ort,Prüfer,Monitor)values (106,'D','Köln','Brettschneider','Bruch');
 insert into Zentren(Zentrum_Id,Land,Ort,Prüfer,Monitor)values (107,'D','Bremen','VanGool','Lange');
 insert into Zentren(Zentrum_Id,Land,Ort,Prüfer,Monitor)values (108,'D','Hamburg','Talmann-Berg','Lange');
 insert into Zentren(Zentrum_Id,Land,Ort,Prüfer,Monitor)values (109,'D','Stuttgart','Fischer','Bruch');
