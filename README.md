@@ -9,11 +9,13 @@ In this version of the application the mentioned data are query from a SQLite Da
 # SQLite Database
 
 For now, application used an sqlite Database saved locally. The data stored in this database had been extracted from Excel-Sheets programmatically.
-This database can also be reproduiced using the sql script `Mamphi.sql` provided with this repository. 
+This database can also be reproduiced using the sql script `Mamphi.sql` provided with this repository.
+
 In that case, some sql statements used to fetched the data from the database, which are saved the script `Anweisungen.sql`, have to be updated 
 in order to manage the data properly. They may be look like those used in another version of the application using a mysql database, 
 see [mamphi_query_mysql.sql](https://github.com/ngninbo/mamphi-admin-gui/blob/main/mamphi_query_mysql.sql)
 
+The recommended SQLite Editor for this purpose will be [DB Browser for SQLite](https://sqlitebrowser.org/).
 
 # Get Started
 
