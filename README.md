@@ -6,11 +6,18 @@ The Goal of the so implemented application is to allow authorized administrator 
 
 In this version of the application the mentioned data are query from a SQLite Data Base.
 
+# SQLite Database
+
+For now, application used an sqlite Database saved locally. The data stored in this database had been extracted from Excel-Sheets programmatically.
+This database can also be reproduiced using the sql script `Mamphi.sql` provided with this repository. 
+In that case, some sql statements used to fetched the data from the database, which are saved the script `Anweisungen.sql`, have to be updated 
+in order to manage the data properly. They may be look like those used in another version of the application using a mysql database, 
+see [mamphi_query_mysql.sql](https://github.com/ngninbo/mamphi-admin-gui/blob/main/mamphi_query_mysql.sql)
+
+
 # Get Started
 
-After cloning the project, create the data base using the sql script `mamphi.sql`.
-
-Then, open the project in an editor and make sure you set the url (e.g. path to the SQLite data base) for connection in the class `Fetcher.java`
+After cloning the project, open the it in an editor and setup the url (e.g. path to the SQLite data base) for connection in the class `Fetcher.java`
 properly.
 
 To run the application use the following command. 
