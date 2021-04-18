@@ -493,7 +493,7 @@ public class FetchData {
             // results = connection.createStatement().executeQuery(query);
 
             while (results.next()) {
-                list.add(new PatientCenter(results.getString("ZentrumID"), results.getInt("Gesamtanzahl")));
+                list.add(new PatientCenter(results.getString("Zentrum"), results.getInt("Gesamtanzahl")));
             }
 
         } catch (SQLException e) {
