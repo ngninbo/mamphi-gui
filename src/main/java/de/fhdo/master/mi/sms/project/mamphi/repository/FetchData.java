@@ -42,7 +42,7 @@ public class FetchData {
 
 	// DB parameters
     // TODO: Setup the path to your sqlite data base here
-	private final String url = "jdbc:sqlite:C:\\mamphi\\mamphi.db";  
+	private final String url = "jdbc:sqlite:C:\\mamphi\\mamphidb.db";  
 
 	public void updateZentrum(Zentrum center) {
 		try {
@@ -52,7 +52,7 @@ public class FetchData {
 			query = "INSERT INTO Zentren VALUES (?, ?, ?, ?, ?)";
 
 			PreparedStatement stmt = connection.prepareStatement(query);
-			stmt.setLong(1, center.getZentrum_id());
+			stmt.setLong(1, center.getZentrumID());
 			stmt.setString(2, center.getLand().equals("Deutschland") ? Land.D.toString() : Land.GB.toString());
 			stmt.setString(3, center.getOrt());
 			stmt.setString(4, center.getPruefer());
@@ -90,7 +90,7 @@ public class FetchData {
 				center = new Zentrum(results.getString("Monitor"), results.getString("Pruefer"),
 						results.getString("Ort"),
 						results.getString("Land").equals(Land.D.toString()) ? "Deutschland" : "Großbritanien",
-						results.getInt("Zentrum_Id"));
+						results.getInt("ZentrumID"));
 				centerList.add(center);
 			}
 			connection.close();
@@ -120,7 +120,7 @@ public class FetchData {
 				center = new Zentrum(results.getString("Monitor"), results.getString("Pruefer"),
 						results.getString("Ort"),
 						results.getString("Land").equals("D") ? "Deutschland" : "Großbritanien",
-						results.getInt("Zentrum_Id"));
+						results.getInt("ZentrumID"));
 				centerList.add(center);
 			}
 			connection.close();
@@ -139,7 +139,7 @@ public class FetchData {
 			// create a connection to the database
 			connection = DriverManager.getConnection(url);
 
-			query = "select Patient_Id, Zentrum, Einwilligung, strftime('%d.%m.%Y', Datum) as Datum from Informed_consent";
+			query = "select patientenID, Zentrum, Einwilligung, Datum from Informed_consent";
 
 			statement = connection.createStatement();
 
@@ -149,9 +149,15 @@ public class FetchData {
 
 			// loop through the result set
 			while (results.next()) {
+				
+				String einwilligung = "";
+				
+				if (results.getString("Einwilligung") != null) {
+					einwilligung = results.getString("Einwilligung").toUpperCase();
+				}
 
-				consent = new InformedConsent(results.getInt("Patient_Id"), results.getInt("Zentrum"),
-						results.getString("Einwilligung").toUpperCase(), results.getString("Datum"));
+				consent = new InformedConsent(results.getInt("patientenID"), results.getInt("Zentrum"),
+						einwilligung, results.getString("Datum"));
 				consentList.add(consent);
 			}
 			connection.close();
@@ -170,8 +176,8 @@ public class FetchData {
 			// create a connection to the database
 			connection = DriverManager.getConnection(url);
 
-			query = (isInformed) ? "select Patient_Id, Zentrum, Einwilligung, strftime('%d.%m.%Y', Datum) as Datum from Informed_consent WHERE Einwilligung = 'ja'":
-				"select Patient_Id, Zentrum, Einwilligung, strftime('%d.%m.%Y', Datum) as Datum from Informed_consent WHERE Einwilligung = 'nein'";
+			query = (isInformed) ? "select patientenID, Zentrum, Einwilligung, Datum from Informed_consent WHERE Einwilligung = 'ja'":
+				"select patientenID, Zentrum, Einwilligung, Datum from Informed_consent WHERE Einwilligung = 'nein'";
 
 			statement = connection.createStatement();
 
@@ -182,7 +188,7 @@ public class FetchData {
 			// loop through the result set
 			while (results.next()) {
 
-				consent = new InformedConsent(results.getInt("Patient_Id"), results.getInt("Zentrum"),
+				consent = new InformedConsent(results.getInt("patientenID"), results.getInt("Zentrum"),
 						results.getString("Einwilligung").toUpperCase(), results.getString("Datum"));
 				consentList.add(consent);
 			}
@@ -202,14 +208,15 @@ public class FetchData {
 			connection = DriverManager.getConnection(url);
 
 			if (consent.equals(Consent.INCOMPLETE)) {
-				query = "SELECT Patient_Id, Zentrum, Einwilligung, strftime('%d.%m.%Y', Datum) as Datum " +
-						"FROM Informed_consent WHERE Einwilligung = 'nan'";
+				query = "SELECT 	PatientenID, Zentrum, Einwilligung, Datum	\r\n" + 
+						"FROM Informed_consent\r\n" + 
+						"WHERE Einwilligung IS NULL OR Datum IS NULL;";
 			} else if (consent.equals(Consent.MISSING)) {
-				query = "SELECT Patient_Id, Zentrum, Einwilligung, strftime('%d.%m.%Y', Datum) as Datum " +
-						"FROM Informed_consent WHERE Einwilligung = 'nan' AND Datum != 'NaT'";
+				query = "SELECT PatientenID, Zentrum, Einwilligung, Datum " +
+						"FROM Informed_consent WHERE Einwilligung IS NULL;";
 			} else {
-				query = "SELECT Patient_Id, Zentrum, Einwilligung, strftime('%d.%m.%Y', Datum) as Datum " +
-						"FROM Informed_consent WHERE Einwilligung != 'nan' AND Datum > '2019.06.03'";
+				query = "SELECT * FROM Informed_consent\r\n" + 
+						"WHERE substr(Datum,7)||substr(Datum,4,2)||substr(Datum,1,2) > '20190603';";
 			}
 
 			statement = connection.createStatement();
@@ -219,9 +226,15 @@ public class FetchData {
 			consentList = new ArrayList<>();
 			// loop through the result set
 			while (results.next()) {
+				
+				String einwilligung = "";
+				
+				if (results.getString("Einwilligung") != null) {
+					einwilligung = results.getString("Einwilligung").toUpperCase();
+				}
 
-				informedConsent = new InformedConsent(results.getInt("Patient_Id"), results.getInt("Zentrum"),
-						results.getString("Einwilligung").toUpperCase(), results.getString("Datum"));
+				informedConsent = new InformedConsent(results.getInt("patientenID"), results.getInt("Zentrum"),
+						einwilligung, results.getString("Datum"));
 				consentList.add(informedConsent);
 
 			}
@@ -235,24 +248,41 @@ public class FetchData {
 		return consentList;
 	}
 
-    public List<MonitorVisite> fetchMonitorVisites() {
+    public List<MonitorVisite> fetchMonitorVisites(boolean isAllCenterInvolved) {
 
         try {
             connection = DriverManager.getConnection(url);
 
-            query = "SELECT tab1.Zentrum_Id, tab1.Land, tab1.Ort, tab1.Pruefer, tab1.Monitor, tab2.Gesamtanzahl\n" +
-					"FROM\n" +
-					"(SELECT * FROM Zentren ORDER BY Zentrum_Id ASC) tab1\n" +
-					"JOIN (SELECT Zentrum_Id, Gesamtanzahl \n" +
-					"FROM\n" +
-					"(SELECT Zentrum_Id FROM Zentren ORDER BY Zentrum_Id ASC)\n" +
-					"LEFT JOIN (SELECT Zentrum, SUM(Anzahl) as Gesamtanzahl\n" +
-					"FROM\n" +
-					"(SELECT Random_Woche_1.Zentrum, COUNT(Random_Woche_1.Zentrum) as Anzahl\n" +
-					"FROM Random_Woche_1 GROUP BY Random_Woche_1.Zentrum\n" +
-					"UNION SELECT Random_Woche_2.Zentrum, COUNT(Random_Woche_2.Zentrum) as Anzahl\n" +
-					"FROM Random_Woche_2 GROUP BY Random_Woche_2.Zentrum)\n" +
-					"GROUP BY Zentrum) ON Zentrum_Id = Zentrum) tab2 ON tab1.Zentrum_Id = tab2.Zentrum_Id;";
+            query = (isAllCenterInvolved) ? "SELECT z.ZentrumID, z.Land, z.Ort, z.Pruefer, z.Monitor, zg.Gesamtanzahl as Gesamtanzahl\r\n" + 
+            		"FROM(SELECT * FROM Zentren ORDER BY ZentrumID ASC) z\r\n" + 
+            		"JOIN (	SELECT ZentrumID, Gesamtanzahl \r\n" + 
+            		"		FROM (SELECT ZentrumID FROM Zentren ORDER BY ZentrumID ASC)\r\n" + 
+            		"		LEFT JOIN (	SELECT Zentrum, SUM(Anzahl) as Gesamtanzahl\r\n" + 
+            		"					FROM(	SELECT r1.Zentrum, COUNT(r1.Zentrum) as Anzahl\r\n" + 
+            		"							FROM Randomisierung_Woche_1 r1 \r\n" + 
+            		"							GROUP BY r1.Zentrum\r\n" + 
+            		"							UNION 	SELECT r2.Zentrum, COUNT(r2.Zentrum) as Anzahl\r\n" + 
+            		"									FROM Randomisierung_Woche_2 r2 \r\n" + 
+            		"									GROUP BY r2.Zentrum)\r\n" + 
+            		"					GROUP BY Zentrum) \r\n" + 
+            		"		ON ZentrumID = Zentrum) zg \r\n" + 
+            		"ON z.ZentrumID = zg.ZentrumID;":
+            		"SELECT z.ZentrumID, z.Land, z.Ort, z.Pruefer, z.Monitor, zg.Gesamtanzahl \r\n" + 
+            		"FROM Zentren z\r\n" + 
+            		"JOIN (	SELECT za.Zentrum, SUM(za.ANZAHL) AS Gesamtanzahl \r\n" + 
+            		"		FROM (	SELECT r1.Zentrum, COUNT(r1.Zentrum) as Anzahl\r\n" + 
+            		"				FROM Randomisierung_Woche_1 r1\r\n" + 
+            		"				GROUP BY r1.Zentrum\r\n" + 
+            		"				UNION\r\n" + 
+            		"				SELECT 	CASE \r\n" + 
+            		"							WHEN r2.Zentrum IS NULL THEN 999\r\n" + 
+            		"							ELSE r2.Zentrum\r\n" + 
+            		"						END AS Zentrum, \r\n" + 
+            		"						COUNT(r2.Zentrum) as Anzahl\r\n" + 
+            		"				FROM Randomisierung_Woche_2 r2\r\n" + 
+            		"				GROUP BY r2.Zentrum) za\r\n" + 
+            		"		GROUP BY Zentrum) zg \r\n" + 
+            		"ON zg.Zentrum = z.ZentrumID;";
 
 			statement = connection.createStatement();
 
@@ -262,7 +292,7 @@ public class FetchData {
 
             while (results.next()) {
 
-            	MonitorVisite monitorVisite = new MonitorVisite(results.getInt("Zentrum_Id"),
+            	MonitorVisite monitorVisite = new MonitorVisite(results.getInt("ZentrumID"),
 						results.getString("Land").equals("D") ? "Deutschland" : "Großbritanien",
 						results.getString("Ort"), results.getString("Pruefer"),
 						results.getString("Monitor"),
@@ -303,10 +333,10 @@ public class FetchData {
 		try {
 			connection = DriverManager.getConnection(url);
 
-			query = "INSERT INTO Random_Woche_" + week + " VALUES (?, ?, ?, ?)";
+			query = "INSERT INTO Randomisierung_Woche_" + week + " (PatientenID, Zentrum, Behandlungsarm, Datum) VALUES (?, ?, ?, ?)";
 
 			PreparedStatement stmt = connection.prepareStatement(query);
-			stmt.setLong(1, rand.getPatient_id());
+			stmt.setLong(1, rand.getPatientenID());
 			stmt.setLong(2, rand.getZentrum());
 			stmt.setString(3, rand.getBehandlungsarm());
 			stmt.setString(4, rand.getDate());
@@ -331,13 +361,14 @@ public class FetchData {
 		try {
 
 			connection = DriverManager.getConnection(url);
-			query = "INSERT INTO Informed_consent VALUES (?, ?, ?, ?)";
+			query = "INSERT INTO Informed_consent (PatientenID, Zentrum, Einwilligung, Datum) VALUES (?, ?, ?, ?)";
 
 			PreparedStatement stmt = connection.prepareStatement(query);
-			stmt.setLong(1, consent.getPatient_id());
-			stmt.setLong(2, consent.getZentrum_id());
+			stmt.setLong(1, consent.getPatientenID());
+			stmt.setLong(2, consent.getZentrumID());
 			stmt.setString(3, consent.getEinwilligung());
 			stmt.setString(4, consent.getDate());
+			
 
 			result = stmt.executeUpdate();
 
@@ -357,7 +388,7 @@ public class FetchData {
 		try {
 			// create a connection to the database
 			connection = DriverManager.getConnection(url);
-			query = "select Zentrum_Id from Zentren";
+			query = "select ZentrumID from Zentren";
 
 			statement = connection.createStatement();
 
@@ -367,7 +398,7 @@ public class FetchData {
 
 			// loop through the result set
 			while (results.next()) {
-				centerIDs.add(results.getInt("Zentrum_Id"));
+				centerIDs.add(results.getInt("ZentrumID"));
 			}
 			connection.close();
 		} catch (SQLException e) {
@@ -386,8 +417,8 @@ public class FetchData {
 			connection = DriverManager.getConnection(url);
 
 			query = "SELECT Zentrum, count(Zentrum) as Anzahl "
-					+ "FROM Random_Woche_"+ week +
-					" JOIN (SELECT Zentrum_Id FROM Zentren WHERE Land = '"+ land +"') on Zentrum_Id = Zentrum GROUP BY Zentrum";
+					+ "FROM Randomisierung_Woche_"+ week +
+					" JOIN (SELECT ZentrumID FROM Zentren WHERE Land = '"+ land +"') on ZentrumID = Zentrum GROUP BY Zentrum";
 
 			statement = connection.createStatement();
 
@@ -412,8 +443,15 @@ public class FetchData {
 
         try {
             connection = DriverManager.getConnection(url);
-            query = "SELECT Random_Woche_" + week + ".Zentrum, COUNT(Random_Woche_" + week + ".Zentrum) as Anzahl "
-                    + "FROM Random_Woche_" + week + " GROUP BY Random_Woche_" + week + ".Zentrum";
+            
+            query = "SELECT 	CASE \r\n" + 
+            		"			WHEN r.Zentrum IS NULL THEN 999\r\n" + 
+            		"			ELSE r.Zentrum\r\n" + 
+            		"		END AS Zentrum, \r\n" + 
+            		"		COUNT(r.Zentrum) as Anzahl\r\n" + 
+            		"FROM Randomisierung_Woche_"+ week +" r\r\n" + 
+            		"GROUP BY r.Zentrum;";
+            
             results = connection.createStatement().executeQuery(query);
 
             while (results.next()) {
@@ -435,16 +473,19 @@ public class FetchData {
         try {
             connection = DriverManager.getConnection(url);
 
-            query = "SELECT Zentrum_Id, Gesamtanzahl \n" +
-					"FROM\n" +
-					"(SELECT Zentrum_Id FROM Zentren ORDER BY Zentrum_Id ASC)\n" +
-					"LEFT JOIN (SELECT Zentrum, SUM(Anzahl) as Gesamtanzahl\n" +
-					"FROM\n" +
-					"(SELECT Random_Woche_1.Zentrum, COUNT(Random_Woche_1.Zentrum) as Anzahl\n" +
-					"FROM Random_Woche_1 GROUP BY Random_Woche_1.Zentrum\n" +
-					"UNION SELECT Random_Woche_2.Zentrum, COUNT(Random_Woche_2.Zentrum) as Anzahl\n" +
-					"FROM Random_Woche_2 GROUP BY Random_Woche_2.Zentrum)\n" +
-					"GROUP BY Zentrum) ON Zentrum_Id = Zentrum;";
+            query = "SELECT za.Zentrum, SUM(za.ANZAHL) AS Gesamtanzahl \r\n" + 
+            		"FROM (	SELECT r1.Zentrum, COUNT(r1.Zentrum) as Anzahl\r\n" + 
+            		"		FROM Randomisierung_Woche_1 r1\r\n" + 
+            		"		GROUP BY r1.Zentrum\r\n" + 
+            		"		UNION\r\n" + 
+            		"		SELECT 	CASE \r\n" + 
+            		"					WHEN r2.Zentrum IS NULL THEN 999\r\n" + 
+            		"					ELSE r2.Zentrum\r\n" + 
+            		"				END AS Zentrum, \r\n" + 
+            		"				COUNT(r2.Zentrum) as Anzahl\r\n" + 
+            		"		FROM Randomisierung_Woche_2 r2\r\n" + 
+            		"		GROUP BY r2.Zentrum) za\r\n" + 
+            		"GROUP BY Zentrum;";
 
 			statement = connection.createStatement();
 
@@ -452,7 +493,7 @@ public class FetchData {
             // results = connection.createStatement().executeQuery(query);
 
             while (results.next()) {
-                list.add(new PatientCenter(results.getString("Zentrum_Id"), results.getInt("Gesamtanzahl")));
+                list.add(new PatientCenter(results.getString("ZentrumID"), results.getInt("Gesamtanzahl")));
             }
 
         } catch (SQLException e) {
@@ -468,7 +509,7 @@ public class FetchData {
 		try {
 			// create a connection to the database
 			connection = DriverManager.getConnection(url);
-			query = "select Patient_Id from Informed_consent";
+			query = "select patientenID from Informed_consent";
 
 			statement = connection.createStatement();
 			patientIDs = new ArrayList<>();
@@ -476,7 +517,7 @@ public class FetchData {
 
 			// loop through the result set
 			while (results.next()) {
-				patientIDs.add(results.getInt("Patient_Id"));
+				patientIDs.add(results.getInt("patientenID"));
 			}
 			connection.close();
 		} catch (SQLException e) {
@@ -492,8 +533,14 @@ public class FetchData {
 		try {
 			// create a connection to the database
 			connection = DriverManager.getConnection(url);
-			query = "SELECT Patient_Id, Zentrum, Behandlungsarm, strftime('%d.%m.%Y', Datum) as Datum " +
-                    "FROM Random_Woche_" + week;
+			query = "SELECT 	r.PatientenID, \r\n" + 
+					"		CASE \r\n" + 
+					"			WHEN r.Zentrum IS NULL THEN 999\r\n" + 
+					"			ELSE r.Zentrum\r\n" + 
+					"		END AS Zentrum, \r\n" + 
+					"		r.Behandlungsarm, r.Datum\r\n" + 
+					"FROM Randomisierung_Woche_"+ week +" r\r\n" + 
+					"WHERE PatientenID IS NOT NULL;";
 
 			statement = connection.createStatement();
 			randomizationList = new ArrayList<>();
@@ -502,7 +549,7 @@ public class FetchData {
 			// loop through the result set
 			while (results.next()) {
 
-				randWeekItem = new RandomizationWeek(results.getInt("Patient_Id"), results.getInt("Zentrum"),
+				randWeekItem = new RandomizationWeek(results.getInt("patientenID"), results.getInt("Zentrum"),
 						results.getString("Behandlungsarm"), results.getString("Datum"));
 				randomizationList.add(randWeekItem);
 			}
@@ -520,8 +567,8 @@ public class FetchData {
 		try {
 			// create a connection to the database
 			connection = DriverManager.getConnection(url);
-			query = "SELECT Patient_Id, Zentrum, Behandlungsarm, strftime('%d.%m.%Y', Datum) as Datum "
-					+ "FROM Random_Woche_"+ week +" JOIN (SELECT Zentrum_Id FROM Zentren WHERE Land = '"+ land +"') on Zentrum_Id = Zentrum";
+			query = "SELECT patientenID, Zentrum, Behandlungsarm, Datum "
+					+ "FROM Randomisierung_Woche_"+ week +" JOIN (SELECT ZentrumID FROM Zentren WHERE Land = '"+ land +"') on ZentrumID = Zentrum";
 
 			statement = connection.createStatement();
 			randomizationList = new ArrayList<RandomizationWeek>();
@@ -530,7 +577,7 @@ public class FetchData {
 			// loop through the result set
 			while (results.next()) {
 
-				randWeekItem = new RandomizationWeek(results.getInt("Patient_Id"), results.getInt("Zentrum"),
+				randWeekItem = new RandomizationWeek(results.getInt("patientenID"), results.getInt("Zentrum"),
 						results.getString("Behandlungsarm"), results.getString("Datum"));
 				randomizationList.add(randWeekItem);
 			}
@@ -548,10 +595,17 @@ public class FetchData {
 		try {
 			// create a connection to the database
 			connection = DriverManager.getConnection(url);
-			query = "SELECT Patient_Id, Zentrum, Behandlungsarm, strftime('%d.%m.%Y', Datum) as Datum " +
-					"FROM Random_Woche_1 " +
-					"UNION SELECT Patient_Id, Zentrum, Behandlungsarm, strftime('%d.%m.%Y', Datum) as Datum " +
-					"FROM Random_Woche_2";
+			query = "SELECT r1.PatientenID, r1.Zentrum, r1.Behandlungsarm, r1.Datum\r\n" + 
+					"FROM Randomisierung_Woche_1 r1\r\n" + 
+					"UNION\r\n" + 
+					"SELECT 	r2.PatientenID, \r\n" + 
+					"		CASE \r\n" + 
+					"			WHEN r2.Zentrum IS NULL THEN 999\r\n" + 
+					"			ELSE r2.Zentrum\r\n" + 
+					"		END AS Zentrum, \r\n" + 
+					"		r2.Behandlungsarm, r2.Datum\r\n" + 
+					"FROM Randomisierung_Woche_2 r2\r\n" + 
+					"WHERE PatientenID IS NOT NULL;";
 
 			statement = connection.createStatement();
 			randomizationList = new ArrayList<>();
@@ -560,7 +614,7 @@ public class FetchData {
 			// loop through the result set
 			while (results.next()) {
 
-				randWeekItem = new RandomizationWeek(results.getInt("Patient_Id"), results.getInt("Zentrum"),
+				randWeekItem = new RandomizationWeek(results.getInt("patientenID"), results.getInt("Zentrum"),
 						results.getString("Behandlungsarm"), results.getString("Datum"));
 				randomizationList.add(randWeekItem);
 			}
@@ -578,7 +632,7 @@ public class FetchData {
 		try {
 			connection = DriverManager.getConnection(url);
 
-			query = "SELECT max(Zentrum_Id) + 1 as MAX_ID\n" +
+			query = "SELECT max(ZentrumID) + 1 as MAX_ID\n" +
 					"FROM Zentren\n" +
 					"WHERE Land = '"+ land +"'";
 

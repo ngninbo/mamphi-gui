@@ -39,7 +39,7 @@ public class MonitorVisite extends Zentrum {
 	}
 
 	public MonitorVisite(Zentrum center) {
-		this(center.getMonitor(), center.getPruefer(), center.getOrt(), center.getLand(), center.getZentrum_id());
+		this(center.getMonitor(), center.getPruefer(), center.getOrt(), center.getLand(), center.getZentrumID());
 	}
 	
 	public MonitorVisite(Zentrum center, int numberOfPatient, List<LocalDate> visites) {

@@ -1,4 +1,4 @@
-# mamphi-admin-gui
+# mamphi-gui
 
 This is a sample project implementing a graphical user interface application for the management of a clinical trial.
 
@@ -6,30 +6,44 @@ The Goal of the so implemented application is to allow authorized administrator 
 
 In this version of the application the mentioned data are query from a SQLite Data Base.
 
-# SQLite Database
+## SQLite Database repoduction
 
-For now, application used an sqlite Database saved locally. The data stored in this database had been extracted from Excel-Sheets programmatically.
-This database can also be reproduiced using the sql script `Mamphi.sql` provided with this repository.
+As mentioned before, this application get data from a sqlite Database and diplay it. 
+So in order to run the application, the database have to be created and saved locally. 
+This can be archived using the script named `mamphidb.db.sql` provided with this repository. 
+For time saving, the SQLite Editor [DB Browser for SQLite](https://sqlitebrowser.org/) is recommanded for this purpose.
 
-In that case, some sql statements used to fetched the data from the database, which are saved the script `Anweisungen.sql`, have to be updated 
-in order to manage the data properly. They may be look like those used in another version of the application using a mysql database, 
-see [mamphi_query_mysql.sql](https://github.com/ngninbo/mamphi-admin-gui/blob/main/mamphi_query_mysql.sql)
+By interest, the samples SQL statements used to get manage the data from the database can be found in the script `Statements.sql`.
 
-The recommended SQLite Editor for this purpose will be [DB Browser for SQLite](https://sqlitebrowser.org/).
+## Get Started
 
-# Get Started
+Clone the project
 
-After cloning the project, open the it in an editor and setup the url (e.g. path to the SQLite data base) for connection in the class `Fetcher.java`
-properly.
+```shell
+git clone https://github.com/ngninbo/mamphi-gui.git
+```
 
-To run the application use the following command. 
+Import the project in our favority IDE
+
+Setup the url (e.g. path to the SQLite data base) in the class `Fetcher.java` from the package `de.fhdo.master.mi.sms.project.mamphi.repository`. 
+This URL is needed by the SQLite JDBC dirver for connection.
+
+```Java
+// TODO: Setup the path to your sqlite data base here
+private final String url = "jdbc:sqlite:C:\\mamphi\\mamphidb.db";
+```
+
+Run the application using the following command
 
 ```shell
 clean javafx:run
 ```
 
-For Signing in use the following cred-itials:
+Sign in using the following creditials
 
+```text
 username: demo
 
 password: demo
+```
+

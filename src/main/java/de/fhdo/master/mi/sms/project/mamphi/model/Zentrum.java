@@ -21,7 +21,7 @@ public class Zentrum {
 	private SimpleStringProperty pruefer;
 	private SimpleStringProperty ort;
 	private SimpleStringProperty land;
-	private SimpleIntegerProperty zentrum_id;
+	private SimpleIntegerProperty zentrumID;
 
 	/**
 	 * 
@@ -35,15 +35,15 @@ public class Zentrum {
 	 * @param pruefer Prüfer
 	 * @param ort Ort
 	 * @param land Land
-	 * @param zentrum_id Zentrum ID
+	 * @param zentrumID Zentrum ID
 	 */
-	public Zentrum(String monitor, String pruefer, String ort, String land, int zentrum_id) {
+	public Zentrum(String monitor, String pruefer, String ort, String land, int zentrumID) {
 		super();
 		this.monitor = new SimpleStringProperty(monitor);
 		this.pruefer = new SimpleStringProperty(pruefer);
 		this.ort = new SimpleStringProperty(ort);
 		this.land = new SimpleStringProperty(land);
-		this.zentrum_id = new SimpleIntegerProperty(zentrum_id);
+		this.zentrumID = new SimpleIntegerProperty(zentrumID);
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class Zentrum {
 		this.pruefer = new SimpleStringProperty(pruefer);
 		this.ort = new SimpleStringProperty(ort);
 		this.land = new SimpleStringProperty(land);
-		this.zentrum_id = new SimpleIntegerProperty(this.getZentrum_id(land, centerList));
+		this.zentrumID = new SimpleIntegerProperty(this.getZentrumID(land, centerList));
 	}
 
 	public String getMonitor() {
@@ -96,15 +96,15 @@ public class Zentrum {
 		this.land.set(land);
 	}
 
-	public int getZentrum_id() {
-		return this.zentrum_id.get();
+	public int getZentrumID() {
+		return this.zentrumID.get();
 	}
 
-	public void setZentrum_id(int zentrum_id) {
-		this.zentrum_id.set(zentrum_id);
+	public void setZentrumID(int zentrumID) {
+		this.zentrumID.set(zentrumID);
 	}
 
-	private int getZentrum_id(String land, List<Zentrum> centerList) {
+	private int getZentrumID(String land, List<Zentrum> centerList) {
 
 		List<Zentrum> centerInD = new ArrayList<>();
 		List<Zentrum> centerInGB = new ArrayList<>();
@@ -120,15 +120,15 @@ public class Zentrum {
 		if (land.equals("Deutschland")) {
 			for (Zentrum center : centerInD) {
 
-				if (center.getZentrum_id() > maxId) {
-					maxId = center.getZentrum_id();
+				if (center.getZentrumID() > maxId) {
+					maxId = center.getZentrumID();
 				}
 			}
 		} else {
 			for (Zentrum center : centerInGB) {
 
-				if (center.getZentrum_id() > maxId) {
-					maxId = center.getZentrum_id();
+				if (center.getZentrumID() > maxId) {
+					maxId = center.getZentrumID();
 				}
 			}
 		}
