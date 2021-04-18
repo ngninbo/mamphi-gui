@@ -235,7 +235,7 @@ public class Main extends Application {
 					monitorplanLabel.setFont(new Font("Arial", 20));
 					TableView<MonitorVisite> monitorplan = new TableView<MonitorVisite>();
 					monitorplan.setEditable(false);
-					List<MonitorVisite> visiteItems = fetcher.fetchMonitorVisites();
+					List<MonitorVisite> visiteItems = fetcher.fetchMonitorVisites(false);
 					ObservableList<MonitorVisite> visiteData = FXCollections.observableArrayList(visiteItems);
 					TableColumn<MonitorVisite, String> ortCol = new TableColumn<MonitorVisite, String>("Ort");
 					TableColumn<MonitorVisite, String> monitorCol = new TableColumn<MonitorVisite, String>("Monitor");
@@ -293,7 +293,7 @@ public class Main extends Application {
 					TableColumn<MonitorVisite, String> zentrumIDCol = new TableColumn<MonitorVisite, String>(
 							"Zentrum ID");
 					zentrumIDCol.setMinWidth(100);
-					zentrumIDCol.setCellValueFactory(new PropertyValueFactory<MonitorVisite, String>("zentrum_id"));
+					zentrumIDCol.setCellValueFactory(new PropertyValueFactory<MonitorVisite, String>("zentrumID"));
 
 					TableColumn<MonitorVisite, Integer> numberPatientCol = new TableColumn<MonitorVisite, Integer>(
 							"Anzahl Patienten");
@@ -430,7 +430,7 @@ public class Main extends Application {
 		TableColumn<RandomizationWeek, Integer> patientIDCol = new TableColumn<RandomizationWeek, Integer>(
 				"Patient ID");
 		patientIDCol.setMinWidth(100);
-		patientIDCol.setCellValueFactory(new PropertyValueFactory<RandomizationWeek, Integer>("patient_id"));
+		patientIDCol.setCellValueFactory(new PropertyValueFactory<RandomizationWeek, Integer>("patientenID"));
 
 		TableColumn<RandomizationWeek, Integer> centerCol = new TableColumn<RandomizationWeek, Integer>("Zentrum");
 		centerCol.setMinWidth(100);
@@ -703,11 +703,11 @@ public class Main extends Application {
 		consentData = FXCollections.observableArrayList(consentList);
 		TableColumn<InformedConsent, Integer> patientIDCol = new TableColumn<InformedConsent, Integer>("Patient ID");
 		patientIDCol.setMinWidth(100);
-		patientIDCol.setCellValueFactory(new PropertyValueFactory<InformedConsent, Integer>("patient_id"));
+		patientIDCol.setCellValueFactory(new PropertyValueFactory<InformedConsent, Integer>("patientenID"));
 
 		TableColumn<InformedConsent, Integer> zentrumCol = new TableColumn<InformedConsent, Integer>("Zentrum");
 		zentrumCol.setMinWidth(100);
-		zentrumCol.setCellValueFactory(new PropertyValueFactory<InformedConsent, Integer>("zentrum_id"));
+		zentrumCol.setCellValueFactory(new PropertyValueFactory<InformedConsent, Integer>("zentrumID"));
 
 		TableColumn<InformedConsent, String> consentCol = new TableColumn<InformedConsent, String>(
 				"Einwilligung erteilt");
@@ -924,7 +924,7 @@ public class Main extends Application {
 
 			@Override
 			public int compare(Zentrum o1, Zentrum o2) {
-				if (o1.getZentrum_id() > o2.getZentrum_id()) {
+				if (o1.getZentrumID() > o2.getZentrumID()) {
 					return 1;
 				}
 				return -1;
@@ -988,7 +988,7 @@ public class Main extends Application {
 
 		TableColumn<Zentrum, String> zentrumIDCol = new TableColumn<Zentrum, String>("Zentrum ID");
 		zentrumIDCol.setMinWidth(100);
-		zentrumIDCol.setCellValueFactory(new PropertyValueFactory<Zentrum, String>("zentrum_id"));
+		zentrumIDCol.setCellValueFactory(new PropertyValueFactory<Zentrum, String>("zentrumID"));
 
 		centerTable.setItems(data);
 		centerTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);

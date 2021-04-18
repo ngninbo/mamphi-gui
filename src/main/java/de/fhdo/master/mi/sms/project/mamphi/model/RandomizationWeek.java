@@ -12,7 +12,7 @@ import javafx.beans.property.SimpleStringProperty;
  */
 public class RandomizationWeek {
 
-	private SimpleIntegerProperty patient_id;
+	private SimpleIntegerProperty patientenID;
 	private SimpleIntegerProperty zentrum;
 	private SimpleStringProperty behandlungsarm;
 	private SimpleStringProperty date;
@@ -25,25 +25,25 @@ public class RandomizationWeek {
 	}
 
 	/**
-	 * @param patient_id Patient ID
+	 * @param patientenID Patient ID
 	 * @param zentrum Zentrum ID
 	 * @param behandlungsarm Behandlungsarm
 	 * @param date Datum
 	 */
-	public RandomizationWeek(int patient_id, int zentrum, String behandlungsarm, String date) {
+	public RandomizationWeek(int patientenID, int zentrum, String behandlungsarm, String date) {
 		super();
-		this.patient_id = new SimpleIntegerProperty(patient_id);
+		this.patientenID = new SimpleIntegerProperty(patientenID);
 		this.zentrum = new SimpleIntegerProperty(zentrum);
 		this.behandlungsarm = new SimpleStringProperty(behandlungsarm);
 		this.date = new SimpleStringProperty(date);
 	}
 
-	public int getPatient_id() {
-		return this.patient_id.get();
+	public int getPatientenID() {
+		return this.patientenID.get();
 	}
 
-	public void setPatient_id(int patient_id) {
-		this.patient_id.set(patient_id);
+	public void setPatientenID(int patientenID) {
+		this.patientenID.set(patientenID);
 	}
 
 	public int getZentrum() {

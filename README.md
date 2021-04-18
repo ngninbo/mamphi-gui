@@ -10,12 +10,15 @@ In this version of the application the mentioned data are query from a SQLite Da
 
 As mentioned before, this application get data from a sqlite Database and diplay it. 
 So in order to run the application, the database have to be created and saved locally. 
-This can be archived using the script named `mamphi.db.sql` provided with this repository. 
+
+This can be archived using the script named `mamphidb.db.sql` provided with this repository. 
+
 For time saving, the SQLite Editor [DB Browser for SQLite](https://sqlitebrowser.org/) is recommanded for this purpose.
 
 By interest, the samples SQL statements used to get manage the data from the database can be found in the script `Statements.sql`.
 
 ## Get Started
+
 
 Clone the project.
 
@@ -23,14 +26,17 @@ Clone the project.
 git clone https://github.com/ngninbo/mamphi-gui.git
 ```
 
+
 Import the project in our favority IDE.
+
 
 Setup the url (e.g. path to the SQLite data base) in the class `Fetcher.java` from the package `de.fhdo.master.mi.sms.project.mamphi.repository`. 
 This URL is needed by the SQLite JDBC dirver for connection.
 
 ```Java
 // TODO: Setup the path to your sqlite data base here
-private final String url = "jdbc:sqlite:C:\\mamphi\\mamphi.db";
+
+private final String url = "jdbc:sqlite:C:\\mamphi\\mamphidb.db";
 ```
 
 Run the application using the following command.
@@ -39,7 +45,8 @@ Run the application using the following command.
 clean javafx:run
 ```
 
-Sign in using the following creditials: 
+Sign in using the following creditials:
+
 
 ```text
 username: demo
