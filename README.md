@@ -30,7 +30,7 @@ git clone https://github.com/ngninbo/mamphi-gui.git
 Import the project in our favorite IDE.
 
 
-Setup the url (e.g. path to the SQLite data base) in the class `Fetcher.java` from the package `de.fhdo.master.mi.sms.project.mamphi.repository`. 
+Setup the url (e.g. path to the SQLite data base) in the class `FetchData.java` from the package `de.fhdo.master.mi.sms.project.mamphi.repository`. 
 This URL is needed by the SQLite JDBC driver for connection.
 
 ```Java
