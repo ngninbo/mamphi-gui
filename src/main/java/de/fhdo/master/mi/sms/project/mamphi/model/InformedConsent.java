@@ -12,8 +12,8 @@ import javafx.beans.property.SimpleStringProperty;
  */
 public class InformedConsent {
 
-	private SimpleIntegerProperty patient_id;
-	private SimpleIntegerProperty zentrum_id;
+	private SimpleIntegerProperty patientenID;
+	private SimpleIntegerProperty zentrumID;
 	private SimpleStringProperty einwilligung;
 	private SimpleStringProperty date;
 
@@ -25,33 +25,33 @@ public class InformedConsent {
 	}
 
 	/**
-	 * @param patient_id
-	 * @param zentrum_id
+	 * @param patientenID
+	 * @param zentrumID
 	 * @param einwilligung
 	 * @param date
 	 */
-	public InformedConsent(int patient_id, int zentrum_id, String einwilligung, String date) {
+	public InformedConsent(int patientenID, int zentrumID, String einwilligung, String date) {
 		super();
-		this.patient_id = new SimpleIntegerProperty(patient_id);
-		this.zentrum_id = new SimpleIntegerProperty(zentrum_id);
+		this.patientenID = new SimpleIntegerProperty(patientenID);
+		this.zentrumID = new SimpleIntegerProperty(zentrumID);
 		this.einwilligung = new SimpleStringProperty(einwilligung);
 		this.date = new SimpleStringProperty(date);
 	}
 
-	public int getPatient_id() {
-		return this.patient_id.get();
+	public int getPatientenID() {
+		return this.patientenID.get();
 	}
 
-	public void setPatient_id(int patient_id) {
-		this.patient_id.set(patient_id);
+	public void setPatientenID(int patientenID) {
+		this.patientenID.set(patientenID);
 	}
 
-	public int getZentrum_id() {
-		return this.zentrum_id.get();
+	public int getZentrumID() {
+		return this.zentrumID.get();
 	}
 
-	public void setZentrum_id(int zentrum_id) {
-		this.zentrum_id.set(zentrum_id);
+	public void setzentrumID(int zentrumID) {
+		this.zentrumID.set(zentrumID);
 	}
 
 	public String getEinwilligung() {
@@ -72,7 +72,7 @@ public class InformedConsent {
 
 	@Override
 	public String toString() {
-		return "InformedConsent [patient_id=" + patient_id + ", zentrum_id=" + zentrum_id + ", einwilligung="
+		return "InformedConsent [patientenID=" + patientenID + ", zentrumID=" + zentrumID + ", einwilligung="
 				+ einwilligung + ", date=" + date + "]";
 	}
 }
