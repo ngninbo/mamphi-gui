@@ -70,7 +70,6 @@ local.properties
 
 ### Images ###
 # JPEG
-*.jpg
 *.jpeg
 *.jpe
 *.jif

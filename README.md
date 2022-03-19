@@ -54,3 +54,8 @@ username: demo
 password: demo
 ```
 
+# TODO
+- Refactor code
+- Use FXML to display views
+- Automatically create database and populate it with data if not exits
+
