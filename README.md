@@ -43,7 +43,7 @@ This file name is needed for a successful SQLite JDBC driver connection.
 Run the application using the following command.
 
 ```shell
-clean javafx:run
+mvn clean install javafx:run
 ```
 
 Sign in using the following credentials:

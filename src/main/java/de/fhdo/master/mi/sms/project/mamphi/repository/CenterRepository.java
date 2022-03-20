@@ -45,8 +45,8 @@ public class CenterRepository extends BaseRepository<Zentrum> {
             stmt.setLong(1, center.getZentrumID());
             stmt.setString(2, GERMANY.equals(center.getLand()) ? Land.D.toString() : Land.GB.toString());
             stmt.setString(3, center.getOrt());
-            stmt.setString(MIN_NUMBER_PATIENTS, center.getPruefer());
-            stmt.setString(LIMIT_FUTURE_VISITS, center.getMonitor());
+            stmt.setString(FOUR, center.getPruefer());
+            stmt.setString(FIVE, center.getMonitor());
 
             int result = stmt.executeUpdate();
 
@@ -255,15 +255,15 @@ public class CenterRepository extends BaseRepository<Zentrum> {
                 List<LocalDate> listOfVisiteDates;
                 if (monitorVisite.getNumberOfPatient() > MIN_NUM_PATIENT_FOR_MONTHLY_VISIT) {
                     listOfVisiteDates = START_DATE.datesUntil(END_DATE, Period.ofMonths(1)).collect(Collectors.toList());
-                    monitorVisite.setVisitDate(listOfVisiteDates.subList(0, LIMIT_FUTURE_VISITS));
+                    monitorVisite.setVisitDate(listOfVisiteDates.subList(0, FIVE));
                 }
-                else if (monitorVisite.getNumberOfPatient() > MIN_NUMBER_PATIENTS && monitorVisite.getNumberOfPatient() < MIN_NUM_PATIENT_FOR_MONTHLY_VISIT) {
+                else if (monitorVisite.getNumberOfPatient() > FOUR && monitorVisite.getNumberOfPatient() < MIN_NUM_PATIENT_FOR_MONTHLY_VISIT) {
                     listOfVisiteDates = START_DATE.datesUntil(END_DATE, Period.ofMonths(2)).collect(Collectors.toList());
-                    monitorVisite.setVisitDate(listOfVisiteDates.subList(0, LIMIT_FUTURE_VISITS));
+                    monitorVisite.setVisitDate(listOfVisiteDates.subList(0, FIVE));
                 }
-                else if (monitorVisite.getNumberOfPatient() > 0 && monitorVisite.getNumberOfPatient() < LIMIT_FUTURE_VISITS) {
+                else if (monitorVisite.getNumberOfPatient() > 0 && monitorVisite.getNumberOfPatient() < FIVE) {
                     listOfVisiteDates = START_DATE.datesUntil(END_DATE, Period.ofMonths(3)).collect(Collectors.toList());
-                    monitorVisite.setVisitDate(listOfVisiteDates.subList(0, LIMIT_FUTURE_VISITS));
+                    monitorVisite.setVisitDate(listOfVisiteDates.subList(0, FIVE));
                 }
                 else {
                     listOfVisiteDates = new ArrayList<>();

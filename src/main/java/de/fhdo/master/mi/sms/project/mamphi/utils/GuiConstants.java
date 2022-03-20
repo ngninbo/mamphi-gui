@@ -21,6 +21,6 @@ public class GuiConstants {
     public static final int TRIAL_YEAR = 2019;
     public static final int TRIAL_MONTH = 6;
     public static final int MIN_NUM_PATIENT_FOR_MONTHLY_VISIT = 10;
-    public static final int LIMIT_FUTURE_VISITS = 5;
-    public static final int MIN_NUMBER_PATIENTS = 4;
+    public static final int FIVE = 5;
+    public static final int FOUR = 4;
 }
