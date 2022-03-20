@@ -2,8 +2,8 @@
 
 # Table of content
 1. [Description](#Description)
-2. [SQLite Database reproduction](#SQLite Database reproduction)
-3. [Get Started](#Get Started)
+2. [SQLite Database reproduction](#database)
+3. [Get Started](#start)
 4. [TODO](#TODO)
 
 ## Description
@@ -13,7 +13,7 @@ The Goal of the so implemented application is to allow authorized administrator 
 
 In this version of the application the mentioned data are query from a SQLite Data Base.
 
-## SQLite Database reproduction
+## SQLite Database reproduction <a name="database"></a>
 
 As mentioned before, this application get data from a sqlite Database and display it. 
 So in order to run the application, the database have to be created and saved locally. 
@@ -24,7 +24,7 @@ For time saving, the SQLite Editor [DB Browser for SQLite](https://sqlitebrowser
 
 By interest, the samples SQL statements used to get manage the data from the database can be found in the script `Statements.sql`.
 
-## Get Started
+## Get Started <a name="start"></a>
 
 
 Clone the project.
