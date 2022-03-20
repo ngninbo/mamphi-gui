@@ -53,7 +53,7 @@ public class RandomizationWeekRepository extends BaseRepository<RandomizationWee
     }
 
     public RandomizationWeekRepository createTable() {
-        try (Connection connection = DriverManager.getConnection(TRIAL_DB_URL)) {
+        try (Connection connection = DriverManager.getConnection(databaseUrl)) {
             connection.setAutoCommit(false);
 
             statement = connection.createStatement();
@@ -72,7 +72,7 @@ public class RandomizationWeekRepository extends BaseRepository<RandomizationWee
     }
 
     public RandomizationWeekRepository populate() {
-        try (Connection connection = DriverManager.getConnection(TRIAL_DB_URL)) {
+        try (Connection connection = DriverManager.getConnection(databaseUrl)) {
             connection.setAutoCommit(false);
 
             statement = connection.createStatement();

@@ -21,9 +21,8 @@ public interface TrialService {
     List<InformedConsent> findAllInformedConsent(boolean isInformed);
     List<MonitorVisite> getMonitorVisitPlan(boolean isInvolved);
     int nextId(Land land);
-    List<PatientCenter> findNumberPatientPerCenterByLandByWeek(Land land, int week);
     List<PatientCenter> findNumberOfPatientPerCenterByWeek(int week);
     List<PatientCenter> findNumberOfPatientPerCenterByAllWeek();
 
-    List<PatientCenter> findAllNumberPatientPerCenterByLandByWeek(Land land, int week);
+    List<PatientCenter> findNumberPatientPerCenterByLandByWeek(Land land, int week);
 }

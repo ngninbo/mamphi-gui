@@ -7,7 +7,7 @@ import de.fhdo.master.mi.sms.project.mamphi.repository.RandomizationWeekReposito
 
 import java.util.List;
 
-public class TrialServiceImpl implements TrialService{
+public class TrialServiceImpl implements TrialService {
 
     private final CenterRepository centerRepository;
     private final InformedConsentRepository informedConsentRepository;
@@ -33,7 +33,7 @@ public class TrialServiceImpl implements TrialService{
 
     @Override
     public void update(RandomizationWeek randomizationWeek, int week) {
-
+        randomizationWeekRepository.update(randomizationWeek, week);
     }
 
     @Override
@@ -97,11 +97,6 @@ public class TrialServiceImpl implements TrialService{
     }
 
     @Override
-    public List<PatientCenter> findNumberPatientPerCenterByLandByWeek(Land land, int week) {
-        return centerRepository.findNumberPatientPerCenterByLandByWeek(land, week);
-    }
-
-    @Override
     public List<PatientCenter> findNumberOfPatientPerCenterByWeek(int week) {
         return centerRepository.findNumberOfPatientPerCenterByWeek(week);
     }
@@ -112,7 +107,7 @@ public class TrialServiceImpl implements TrialService{
     }
 
     @Override
-    public List<PatientCenter> findAllNumberPatientPerCenterByLandByWeek(Land land, int week) {
+    public List<PatientCenter> findNumberPatientPerCenterByLandByWeek(Land land, int week) {
         return centerRepository.findNumberPatientPerCenterByLandByWeek(land, week);
     }
 }

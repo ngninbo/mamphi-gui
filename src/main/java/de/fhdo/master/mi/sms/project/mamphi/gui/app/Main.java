@@ -511,7 +511,7 @@ public class Main extends Application {
                     break;
                 case RANDOM_WEEK_ONE_GERMANY_OVERVIEW_OPTION:
                     week = ONE_VALUE;
-                    patientPerCenter1 = trialService.findAllNumberPatientPerCenterByLandByWeek(Land.D, ONE_VALUE);
+                    patientPerCenter1 = trialService.findNumberPatientPerCenterByLandByWeek(Land.D, ONE_VALUE);
                     patientPerCenterData1 = FXCollections.observableArrayList(patientPerCenter1);
                     patientPerCenterTable.setItems(patientPerCenterData1);
                     randWeekItems = trialService.findAllByWeekAndLand(ONE_VALUE, Land.D);
@@ -522,7 +522,7 @@ public class Main extends Application {
                     break;
                 case RANDOM_WEEK_TWO_GERMANY_OVERVIEW_OPTION:
                     week = TWO_VALUE;
-                    patientPerCenter1 = trialService.findAllNumberPatientPerCenterByLandByWeek(Land.D, TWO_VALUE);
+                    patientPerCenter1 = trialService.findNumberPatientPerCenterByLandByWeek(Land.D, TWO_VALUE);
                     patientPerCenterData1 = FXCollections.observableArrayList(patientPerCenter1);
                     patientPerCenterTable.setItems(patientPerCenterData1);
                     randWeekItems = trialService.findAllByWeekAndLand(TWO_VALUE, Land.D);
@@ -533,7 +533,7 @@ public class Main extends Application {
                     break;
                 case RANDOM_WEEK_ONE_ENGLAND_OVERVIEW_OPTION:
                     week = ONE_VALUE;
-                    patientPerCenter1 = trialService.findAllNumberPatientPerCenterByLandByWeek(Land.GB, ONE_VALUE);
+                    patientPerCenter1 = trialService.findNumberPatientPerCenterByLandByWeek(Land.GB, ONE_VALUE);
                     patientPerCenterData1 = FXCollections.observableArrayList(patientPerCenter1);
                     patientPerCenterTable.setItems(patientPerCenterData1);
                     randWeekItems = trialService.findAllByWeekAndLand(ONE_VALUE, Land.GB);
@@ -544,7 +544,7 @@ public class Main extends Application {
                     break;
                 case RANDOM_WEEK_TWO_ENGLAND_OVERVIEW_OPTION:
                     week = TWO_VALUE;
-                    patientPerCenter1 = trialService.findAllNumberPatientPerCenterByLandByWeek(Land.GB, week);
+                    patientPerCenter1 = trialService.findNumberPatientPerCenterByLandByWeek(Land.GB, week);
                     patientPerCenterData1 = FXCollections.observableArrayList(patientPerCenter1);
                     patientPerCenterTable.setItems(patientPerCenterData1);
                     randWeekItems = trialService.findAllByWeekAndLand(week, Land.GB);
