@@ -30,14 +30,8 @@ git clone https://github.com/ngninbo/mamphi-gui.git
 Import the project in our favorite IDE.
 
 
-Setup the url (e.g. path to the SQLite data base) in the class `FetchData.java` from the package `de.fhdo.master.mi.sms.project.mamphi.repository`. 
-This URL is needed by the SQLite JDBC driver for connection.
-
-```Java
-// TODO: Setup the path to your sqlite data base here
-
-private final String url = "jdbc:sqlite:C:\\mamphi\\mamphidb.db";
-```
+Set up the database filename (e.g. name of the SQLite file containing the database) in `src/main/java/de/fhdo/master/mi/sms/project/mamphi/utils/MamphiStatements.java`
+This file name is needed for a successful SQLite JDBC driver connection.
 
 Run the application using the following command.
 
@@ -54,8 +48,17 @@ username: demo
 password: demo
 ```
 
+After started up, the application may look as follow:
+
+![screenshot](screenshot.png)
+
 # TODO
 - Refactor code
-- Use FXML to display views
-- Automatically create database and populate it with data if not exits
+- On Monitor plan view, make sure the visit date are displayed each in a row
+- Use FXML to Create the User Interface
+- Extract styling/Extend `application.css` file
+- Pass database file name as command line argument by editing `Run Configuration` or
+- Define database file name as property in `pom.xml` file
+- Make sure the application use the configured database file name on start up
+- Apply translation on every database column, field, constants, variable etc.
 

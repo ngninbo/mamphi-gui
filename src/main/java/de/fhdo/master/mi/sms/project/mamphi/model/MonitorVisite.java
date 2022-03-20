@@ -1,6 +1,3 @@
-/**
- * 
- */
 package de.fhdo.master.mi.sms.project.mamphi.model;
 
 import java.time.LocalDate;
@@ -11,13 +8,13 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 
 /**
- * @author biocl
+ * @author Beauclair Dongmo Ngnintedem
  *
  */
 public class MonitorVisite extends Zentrum {
 
 	private SimpleIntegerProperty numberOfPatient;
-	private SimpleListProperty<LocalDate> visiteDate;
+	private SimpleListProperty<LocalDate> visitDate;
 
 	/**
 	 * 
@@ -45,7 +42,7 @@ public class MonitorVisite extends Zentrum {
 	public MonitorVisite(Zentrum center, int numberOfPatient, List<LocalDate> visites) {
 		this(center);
 		this.numberOfPatient = new SimpleIntegerProperty(numberOfPatient);
-		this.setVisiteDate(visites);
+		this.setVisitDate(visites);
 	}
 
 	public MonitorVisite(int zentrum_Id, String land, String ort, String pruefer, String monitor, int gesamtanzahl) {
@@ -61,11 +58,11 @@ public class MonitorVisite extends Zentrum {
 		this.numberOfPatient.set(numberOfPatient);
 	}
 	
-	public List<LocalDate> getVisiteDate() {
-		return this.visiteDate.get();
+	public List<LocalDate> getVisitDate() {
+		return this.visitDate.get();
 	}
 	
-	public void setVisiteDate(List<LocalDate> visiteDate) {
-		this.visiteDate = (visiteDate !=null) ? new SimpleListProperty<>(FXCollections.observableArrayList(visiteDate)): null;
+	public void setVisitDate(List<LocalDate> visitDate) {
+		this.visitDate = (visitDate !=null) ? new SimpleListProperty<>(FXCollections.observableArrayList(visitDate)): null;
 	}		
 }
