@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static de.fhdo.master.mi.sms.project.mamphi.utils.GuiConstants.*;
 import static de.fhdo.master.mi.sms.project.mamphi.utils.MamphiStatements.*;
 import static de.fhdo.master.mi.sms.project.mamphi.utils.UITranslation.GERMANY;
 
@@ -25,7 +26,7 @@ public class CenterRepository extends BaseRepository<Zentrum> {
     private List<Integer> patientIDs;
     private int id;
     private List<MonitorVisite> monitorVisits;
-    private static final LocalDate START_DATE = LocalDate.of(2019, 6, 1);
+    private static final LocalDate START_DATE = LocalDate.of(TRIAL_YEAR, TRIAL_MONTH, 1);
     private static final LocalDate END_DATE = START_DATE.plusYears(2);
 
     public CenterRepository() {
@@ -44,8 +45,8 @@ public class CenterRepository extends BaseRepository<Zentrum> {
             stmt.setLong(1, center.getZentrumID());
             stmt.setString(2, GERMANY.equals(center.getLand()) ? Land.D.toString() : Land.GB.toString());
             stmt.setString(3, center.getOrt());
-            stmt.setString(4, center.getPruefer());
-            stmt.setString(5, center.getMonitor());
+            stmt.setString(MIN_NUMBER_PATIENTS, center.getPruefer());
+            stmt.setString(LIMIT_FUTURE_VISITS, center.getMonitor());
 
             int result = stmt.executeUpdate();
 
@@ -252,17 +253,17 @@ public class CenterRepository extends BaseRepository<Zentrum> {
                         results.getInt("Gesamtanzahl"));
 
                 List<LocalDate> listOfVisiteDates;
-                if (monitorVisite.getNumberOfPatient() > 10) {
+                if (monitorVisite.getNumberOfPatient() > MIN_NUM_PATIENT_FOR_MONTHLY_VISIT) {
                     listOfVisiteDates = START_DATE.datesUntil(END_DATE, Period.ofMonths(1)).collect(Collectors.toList());
-                    monitorVisite.setVisitDate(listOfVisiteDates.subList(0, 5));
+                    monitorVisite.setVisitDate(listOfVisiteDates.subList(0, LIMIT_FUTURE_VISITS));
                 }
-                else if (monitorVisite.getNumberOfPatient() > 4 && monitorVisite.getNumberOfPatient() < 10) {
+                else if (monitorVisite.getNumberOfPatient() > MIN_NUMBER_PATIENTS && monitorVisite.getNumberOfPatient() < MIN_NUM_PATIENT_FOR_MONTHLY_VISIT) {
                     listOfVisiteDates = START_DATE.datesUntil(END_DATE, Period.ofMonths(2)).collect(Collectors.toList());
-                    monitorVisite.setVisitDate(listOfVisiteDates.subList(0, 5));
+                    monitorVisite.setVisitDate(listOfVisiteDates.subList(0, LIMIT_FUTURE_VISITS));
                 }
-                else if (monitorVisite.getNumberOfPatient() > 0 && monitorVisite.getNumberOfPatient() < 5) {
+                else if (monitorVisite.getNumberOfPatient() > 0 && monitorVisite.getNumberOfPatient() < LIMIT_FUTURE_VISITS) {
                     listOfVisiteDates = START_DATE.datesUntil(END_DATE, Period.ofMonths(3)).collect(Collectors.toList());
-                    monitorVisite.setVisitDate(listOfVisiteDates.subList(0, 5));
+                    monitorVisite.setVisitDate(listOfVisiteDates.subList(0, LIMIT_FUTURE_VISITS));
                 }
                 else {
                     listOfVisiteDates = new ArrayList<>();

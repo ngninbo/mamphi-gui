@@ -86,7 +86,7 @@ public class Main extends Application {
             grid.setAlignment(Pos.CENTER);
             grid.setHgap(INSETS_VALUE);
             grid.setVgap(INSETS_VALUE);
-            grid.setPadding(new Insets(HBOX_SPACING_VALUE, HBOX_SPACING_VALUE, HBOX_SPACING_VALUE, HBOX_SPACING_VALUE));
+            grid.setPadding(new Insets(H_BOX_SPACING_VALUE, H_BOX_SPACING_VALUE, H_BOX_SPACING_VALUE, H_BOX_SPACING_VALUE));
             Text sceneTitle = new Text(WELCOME_TXT);
             sceneTitle.setId("welcome-text");
             grid.add(sceneTitle, INSETS_MIN_VALUE, INSETS_MIN_VALUE, 2, 1);
@@ -312,7 +312,7 @@ public class Main extends Application {
                 cbLand.setOnAction(arg0 -> selectedCountry = cbLand.getValue());
 
                 HBox hbLand = new HBox(landText, cbLand);
-                hbLand.setSpacing(HBOX_SPACING_VALUE);
+                hbLand.setSpacing(H_BOX_SPACING_VALUE);
                 hbLand.setPadding(new Insets(INSETS_VALUE));
                 final Button addCenterBtn = new Button(SAVE_BTN_LABEL);
                 addCenterBtn.setOnAction(event15 -> {
@@ -907,7 +907,7 @@ public class Main extends Application {
         final Text centerInputValid = new Text();
         centerInputValid.setId("centerInputValid");
         HBox hbLand = new HBox(landText, cbLand);
-        hbLand.setSpacing(HBOX_SPACING_VALUE);
+        hbLand.setSpacing(H_BOX_SPACING_VALUE);
         hbLand.setPadding(new Insets(INSETS_VALUE));
         final Button addCenterBtn = new Button(SAVE_BTN_LABEL);
         addCenterBtn.setOnAction(event -> {

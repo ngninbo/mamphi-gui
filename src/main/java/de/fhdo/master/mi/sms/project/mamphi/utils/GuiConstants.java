@@ -16,6 +16,11 @@ public class GuiConstants {
     public static final int SPACING_MAX_VALUE = 30;
     public static final int DEFAULT_MIN_WIDTH = 100;
     public static final int VISIT_COL_PREF_WIDTH = 380;
-    public static final int HBOX_SPACING_VALUE = 25;
+    public static final int H_BOX_SPACING_VALUE = 25;
     public static final int PADDING_BOTTOM_VALUE = 150;
+    public static final int TRIAL_YEAR = 2019;
+    public static final int TRIAL_MONTH = 6;
+    public static final int MIN_NUM_PATIENT_FOR_MONTHLY_VISIT = 10;
+    public static final int LIMIT_FUTURE_VISITS = 5;
+    public static final int MIN_NUMBER_PATIENTS = 4;
 }
