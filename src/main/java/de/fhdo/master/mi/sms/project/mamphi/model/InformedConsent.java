@@ -1,13 +1,10 @@
-/**
- * 
- */
 package de.fhdo.master.mi.sms.project.mamphi.model;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 /**
- * @author biocl
+ * @author Beauclair Dongmo Ngnintedem
  *
  */
 public class InformedConsent {
@@ -25,10 +22,10 @@ public class InformedConsent {
 	}
 
 	/**
-	 * @param patientenID
-	 * @param zentrumID
-	 * @param einwilligung
-	 * @param date
+	 * @param patientenID Patient id
+	 * @param zentrumID Center id
+	 * @param einwilligung Consent
+	 * @param date Date
 	 */
 	public InformedConsent(int patientenID, int zentrumID, String einwilligung, String date) {
 		super();

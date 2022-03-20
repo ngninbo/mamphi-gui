@@ -9,6 +9,7 @@ public class PatientCenter {
 	private SimpleIntegerProperty count;
 
 	public PatientCenter() {
+		super();
 	}
 
 	/**

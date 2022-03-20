@@ -33,10 +33,6 @@ public class CenterRepository extends BaseRepository<Zentrum> {
         super();
     }
 
-    public CenterRepository(String database) {
-        super(database);
-    }
-
     @Override
     public void update(Zentrum center) {
         try (Connection connection = DriverManager.getConnection(databaseUrl)) {
@@ -57,6 +53,12 @@ public class CenterRepository extends BaseRepository<Zentrum> {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public CenterRepository setDatabaseUrl(String databaseUrl) {
+        this.databaseUrl = databaseUrl;
+        return this;
     }
 
     @Override

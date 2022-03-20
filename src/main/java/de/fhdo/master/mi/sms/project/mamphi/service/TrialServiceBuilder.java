@@ -3,14 +3,16 @@ package de.fhdo.master.mi.sms.project.mamphi.service;
 import de.fhdo.master.mi.sms.project.mamphi.repository.CenterRepository;
 import de.fhdo.master.mi.sms.project.mamphi.repository.InformedConsentRepository;
 import de.fhdo.master.mi.sms.project.mamphi.repository.RandomizationWeekRepository;
+import de.fhdo.master.mi.sms.project.mamphi.utils.TrialUtils;
 
 import java.io.File;
 
-import static de.fhdo.master.mi.sms.project.mamphi.utils.MamphiStatements.*;
+import static de.fhdo.master.mi.sms.project.mamphi.utils.MamphiStatements.TRIAL_DB_URL;
 
 public class TrialServiceBuilder {
 
     private String database;
+    private String databaseUrl;
     private CenterRepository centerRepository;
     private InformedConsentRepository informedConsentRepository;
     private RandomizationWeekRepository randomizationWeekRepository;
@@ -24,37 +26,30 @@ public class TrialServiceBuilder {
 
     public TrialServiceBuilder withDatabase(String database) {
         this.database = database;
+        databaseUrl = String.format(TRIAL_DB_URL, database);
         return this;
     }
 
     public TrialServiceBuilder withCenterRepository() {
-        this.centerRepository = new CenterRepository();
+        this.centerRepository = new CenterRepository().setDatabaseUrl(databaseUrl);
         return this;
     }
 
     public TrialServiceBuilder withInformedConsentRepository() {
-        this.informedConsentRepository = new InformedConsentRepository();
+        this.informedConsentRepository = new InformedConsentRepository().setDatabaseUrl(this.databaseUrl);
         return this;
     }
 
     public TrialServiceBuilder withRandomizationWeekRepository() {
-        this.randomizationWeekRepository = new RandomizationWeekRepository();
+        this.randomizationWeekRepository = new RandomizationWeekRepository().setDatabaseUrl(this.databaseUrl);
         return this;
     }
 
-    public TrialServiceBuilder withInitialData() {
+    public TrialServiceBuilder createDatabase() {
         File file = new File(database);
 
         if (!file.exists()) {
-            this.centerRepository = (CenterRepository) new CenterRepository(database)
-                    .createTable(CREATE_CENTER_TABLE)
-                    .populate(TABLE_CENTER_INIT_DATA);
-
-            this.informedConsentRepository = (InformedConsentRepository) new InformedConsentRepository(database)
-                    .createTable(CREATE_INFORMED_CONSENT_TABLE)
-                    .populate(TABLE_INFORMED_CONSENT_INIT_DATA);
-
-            this.randomizationWeekRepository = new RandomizationWeekRepository(database).createTable().populate();
+            TrialUtils.createDatabase(databaseUrl);
         }
 
         return this;

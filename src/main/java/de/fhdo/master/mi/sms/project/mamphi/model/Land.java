@@ -1,17 +1,14 @@
-/**
- * 
- */
 package de.fhdo.master.mi.sms.project.mamphi.model;
 
 /**
- * @author biocl
+ * @author Beauclair Dongmo Ngnintedem
  *
  */
 public enum Land {
 	
 	// Germany
 	D,
-	// United Kingdom
+	// England
 	GB
 
 }

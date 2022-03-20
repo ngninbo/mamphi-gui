@@ -22,10 +22,6 @@ public class InformedConsentRepository extends BaseRepository<InformedConsent>{
         super();
     }
 
-    public InformedConsentRepository(String database) {
-        super(database);
-    }
-
     @Override
     public void update(InformedConsent informedConsent) {
 
@@ -48,6 +44,12 @@ public class InformedConsentRepository extends BaseRepository<InformedConsent>{
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public InformedConsentRepository setDatabaseUrl(String databaseUrl) {
+        this.databaseUrl = databaseUrl;
+        return this;
     }
 
     @Override

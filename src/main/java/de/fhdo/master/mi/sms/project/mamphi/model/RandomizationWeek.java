@@ -1,6 +1,3 @@
-/**
- * 
- */
 package de.fhdo.master.mi.sms.project.mamphi.model;
 
 import javafx.beans.property.SimpleIntegerProperty;
@@ -17,11 +14,8 @@ public class RandomizationWeek {
 	private SimpleStringProperty behandlungsarm;
 	private SimpleStringProperty date;
 
-	/**
-	 * 
-	 */
 	public RandomizationWeek() {
-		// TODO Auto-generated constructor stub
+		super();
 	}
 
 	/**

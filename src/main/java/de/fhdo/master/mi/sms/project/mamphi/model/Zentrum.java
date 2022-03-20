@@ -1,6 +1,3 @@
-/**
- * 
- */
 package de.fhdo.master.mi.sms.project.mamphi.model;
 
 import java.util.ArrayList;
@@ -9,8 +6,10 @@ import java.util.List;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
+import static de.fhdo.master.mi.sms.project.mamphi.utils.UITranslation.GERMANY;
+
 /**
- * @author biocl
+ * @author Beauclair Dongmo Ngnintedem
  *
  */
 public class Zentrum {
@@ -23,9 +22,6 @@ public class Zentrum {
 	private SimpleStringProperty land;
 	private SimpleIntegerProperty zentrumID;
 
-	/**
-	 * 
-	 */
 	public Zentrum() {
 		super();
 	}
@@ -110,14 +106,14 @@ public class Zentrum {
 		List<Zentrum> centerInGB = new ArrayList<>();
 
 		for (Zentrum center : centerList) {
-			if (center.getLand().equals("Deutschland")) {
+			if (GERMANY.equals(center.getLand())) {
 				centerInD.add(center);
 			} else {
 				centerInGB.add(center);
 			}
 		}
 
-		if (land.equals("Deutschland")) {
+		if (GERMANY.equals(land)) {
 			for (Zentrum center : centerInD) {
 
 				if (center.getZentrumID() > maxId) {

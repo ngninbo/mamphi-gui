@@ -1,16 +1,12 @@
 package de.fhdo.master.mi.sms.project.mamphi.model;
 
+import java.util.Objects;
+
 public class User {
 
 	private String username;
 	private String password;
-	
-	
 
-	/**
-	 * @param username User name
-	 * @param password Password
-	 */
 	public User(String username, String password) {
 		super();
 		this.username = username;
@@ -34,26 +30,16 @@ public class User {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + ((username == null) ? 0 : username.hashCode());
-		return result;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof User)) return false;
+		User user = (User) o;
+		return Objects.equals(getUsername(), user.getUsername()) &&
+				Objects.equals(getPassword(), user.getPassword());
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		
-		boolean result = false;
-
-		if ((obj == null) || (!(obj instanceof User))) {
-			return result;
-		}
-
-		User user = (User) obj;
-		result = this.username.equals(user.username) && this.password.equals(user.password);
-
-		return result;
+	public int hashCode() {
+		return Objects.hash(getUsername(), getPassword());
 	}
 }

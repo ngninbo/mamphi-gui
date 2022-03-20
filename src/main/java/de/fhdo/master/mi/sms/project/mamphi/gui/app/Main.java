@@ -59,7 +59,7 @@ public class Main extends Application {
                 .withCenterRepository()
                 .withInformedConsentRepository()
                 .withRandomizationWeekRepository()
-                .withInitialData()
+                .createDatabase()
                 .build();
 
         launch(args);

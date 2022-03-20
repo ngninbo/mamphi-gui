@@ -16,11 +16,8 @@ public class MonitorVisite extends Zentrum {
 	private SimpleIntegerProperty numberOfPatient;
 	private SimpleListProperty<LocalDate> visitDate;
 
-	/**
-	 * 
-	 */
 	public MonitorVisite() {
-		// TODO Auto-generated constructor stub
+		super();
 	}
 
 	/**
@@ -28,10 +25,10 @@ public class MonitorVisite extends Zentrum {
 	 * @param pruefer Prüfer
 	 * @param ort Ort
 	 * @param land Land
-	 * @param zentrum_id Zentrum ID
+	 * @param zentrumId Zentrum ID
 	 */
-	public MonitorVisite(String monitor, String pruefer, String ort, String land, int zentrum_id) {
-		super(monitor, pruefer, ort, land, zentrum_id);
+	public MonitorVisite(String monitor, String pruefer, String ort, String land, int zentrumId) {
+		super(monitor, pruefer, ort, land, zentrumId);
 		// TODO Auto-generated constructor stub
 	}
 
