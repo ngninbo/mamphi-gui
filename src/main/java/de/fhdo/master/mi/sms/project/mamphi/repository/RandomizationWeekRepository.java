@@ -6,7 +6,6 @@ import de.fhdo.master.mi.sms.project.mamphi.model.RandomizationWeek;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.lang3.*;
 
 import static de.fhdo.master.mi.sms.project.mamphi.utils.MamphiStatements.*;
 
@@ -22,8 +21,8 @@ public class RandomizationWeekRepository extends BaseRepository<RandomizationWee
     }
 
     @Override
-    public void update(RandomizationWeek randomizationWeek) {
-        throw new NotImplementedException("The method is not implemented yet;");
+    public void update(RandomizationWeek randomizationWeek) throws NoSuchMethodException {
+        throw new NoSuchMethodException("The method is not implemented yet;");
     }
 
     @Override

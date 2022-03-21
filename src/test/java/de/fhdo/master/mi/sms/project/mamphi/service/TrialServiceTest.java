@@ -1,5 +1,6 @@
 package de.fhdo.master.mi.sms.project.mamphi.service;
 
+import de.fhdo.master.mi.sms.project.mamphi.model.RandomizationWeek;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,13 +11,13 @@ import java.util.List;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.jupiter.api.Assertions.*;
 
-class TrialServiceTest {
+public class TrialServiceTest {
 
     private static TrialService trialService;
     private static String database = "test.db";
 
     @BeforeAll
-    static void beforeAll() {
+    public static void beforeAll() {
         trialService = TrialServiceBuilder.init()
                 .withDatabase(database)
                 .withCenterRepository()
@@ -26,80 +27,81 @@ class TrialServiceTest {
     }
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
     }
 
     @Test
-    void update() {
+    public void update() {
+        assertThrows(NoSuchMethodException.class, () -> trialService.update(new RandomizationWeek()));
     }
 
     @Test
-    void testUpdate() {
+    public void testUpdate() {
     }
 
     @Test
-    void testUpdate1() {
+    public void testUpdate1() {
 
     }
 
     @Test
-    void findAllByWeek() {
+    public void findAllByWeek() {
     }
 
     @Test
-    void findAllRandomWeek() {
+    public void findAllRandomWeek() {
     }
 
     @Test
-    void findAllByWeekAndLand() {
+    public void findAllByWeekAndLand() {
     }
 
     @Test
-    void findAllCenter() {
+    public void findAllCenter() {
     }
 
     @Test
-    void findAllCenterIds() {
+    public void findAllCenterIds() {
     }
 
     @Test
-    void findAllPatientID() {
+    public void findAllPatientID() {
     }
 
     @Test
-    void testFindAllCenter() {
+    public void testFindAllCenter() {
     }
 
     @Test
-    void findAllInformedConsent() {
+    public void findAllInformedConsent() {
     }
 
     @Test
-    void testFindAllInformedConsent() {
+    public void testFindAllInformedConsent() {
     }
 
     @Test
-    void testFindAllInformedConsent1() {
+    public void testFindAllInformedConsent1() {
     }
 
     @Test
-    void getMonitorVisitPlan() {
+    public void getMonitorVisitPlan() {
     }
 
     @Test
-    void nextId() {
+    public void nextId() {
     }
 
     @Test
-    void findNumberOfPatientPerCenterByWeek() {
+    public void findNumberOfPatientPerCenterByWeek() {
     }
 
     @Test
-    void findNumberOfPatientPerCenterByAllWeek() {
+    public void findNumberOfPatientPerCenterByAllWeek() {
     }
 
     @Test
-    void findNumberPatientPerCenterByLandByWeek() {
+    public void findNumberPatientPerCenterByLandByWeek() {
     }
 
     static List<Arguments> argCenterFactory() {

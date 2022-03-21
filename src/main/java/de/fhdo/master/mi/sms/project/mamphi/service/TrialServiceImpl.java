@@ -37,6 +37,11 @@ public class TrialServiceImpl implements TrialService {
     }
 
     @Override
+    public void update(RandomizationWeek randomizationWeek) throws NoSuchMethodException {
+        randomizationWeekRepository.update(randomizationWeek);
+    }
+
+    @Override
     public List<RandomizationWeek> findAllByWeek(int week) {
         return randomizationWeekRepository.findAllByWeek(week);
     }

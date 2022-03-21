@@ -11,5 +11,4 @@ module mamphiGuiVersion {
 	requires javafx.controls;
 	requires java.base;
 	requires java.desktop;
-    requires org.apache.commons.lang3;
 }

@@ -9,6 +9,7 @@ public interface TrialService {
     void update(Zentrum center);
     void update(InformedConsent informedConsent);
     void update(RandomizationWeek randomizationWeek, int week);
+    void update(RandomizationWeek randomizationWeek) throws NoSuchMethodException;
     List<RandomizationWeek> findAllByWeek(int week);
     List<RandomizationWeek> findAllRandomWeek();
     List<RandomizationWeek> findAllByWeekAndLand(int week, Land land);
