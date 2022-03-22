@@ -6,11 +6,8 @@ import de.fhdo.master.mi.sms.project.mamphi.model.PatientCenter;
 import de.fhdo.master.mi.sms.project.mamphi.model.Zentrum;
 
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static de.fhdo.master.mi.sms.project.mamphi.utils.GuiConstants.*;
 import static de.fhdo.master.mi.sms.project.mamphi.utils.MamphiStatements.*;
@@ -26,8 +23,6 @@ public class CenterRepository extends BaseRepository<Zentrum> {
     private List<Integer> patientIDs;
     private int id;
     private List<MonitorVisite> monitorVisits;
-    private static final LocalDate START_DATE = LocalDate.of(TRIAL_YEAR, TRIAL_MONTH, 1);
-    private static final LocalDate END_DATE = START_DATE.plusYears(2);
 
     public CenterRepository() {
         super();
@@ -254,23 +249,7 @@ public class CenterRepository extends BaseRepository<Zentrum> {
                         results.getString("Monitor"),
                         results.getInt("Gesamtanzahl"));
 
-                List<LocalDate> listOfVisiteDates;
-                if (monitorVisite.getNumberOfPatient() > MIN_NUM_PATIENT_FOR_MONTHLY_VISIT) {
-                    listOfVisiteDates = START_DATE.datesUntil(END_DATE, Period.ofMonths(1)).collect(Collectors.toList());
-                    monitorVisite.setVisitDate(listOfVisiteDates.subList(0, FIVE));
-                }
-                else if (monitorVisite.getNumberOfPatient() > FOUR && monitorVisite.getNumberOfPatient() < MIN_NUM_PATIENT_FOR_MONTHLY_VISIT) {
-                    listOfVisiteDates = START_DATE.datesUntil(END_DATE, Period.ofMonths(2)).collect(Collectors.toList());
-                    monitorVisite.setVisitDate(listOfVisiteDates.subList(0, FIVE));
-                }
-                else if (monitorVisite.getNumberOfPatient() > 0 && monitorVisite.getNumberOfPatient() < FIVE) {
-                    listOfVisiteDates = START_DATE.datesUntil(END_DATE, Period.ofMonths(3)).collect(Collectors.toList());
-                    monitorVisite.setVisitDate(listOfVisiteDates.subList(0, FIVE));
-                }
-                else {
-                    listOfVisiteDates = new ArrayList<>();
-                    monitorVisite.setVisitDate(listOfVisiteDates);
-                }
+                monitorVisite.setVisitDates();
 
                 monitorVisits.add(monitorVisite);
             }

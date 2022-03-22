@@ -1,5 +1,7 @@
 package de.fhdo.master.mi.sms.project.mamphi.utils;
 
+import java.time.LocalDate;
+
 public class GuiConstants {
 
     public static final int MAIN_SCENE_HEIGHT = 999;
@@ -23,4 +25,6 @@ public class GuiConstants {
     public static final int MIN_NUM_PATIENT_FOR_MONTHLY_VISIT = 10;
     public static final int FIVE = 5;
     public static final int FOUR = 4;
+    public static final LocalDate START_DATE = LocalDate.of(TRIAL_YEAR, TRIAL_MONTH, 1);
+    public static final LocalDate END_DATE = START_DATE.plusYears(2);
 }

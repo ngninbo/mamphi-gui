@@ -317,8 +317,9 @@ public class Main extends Application {
                 final Button addCenterBtn = new Button(SAVE_BTN_LABEL);
                 addCenterBtn.setOnAction(event15 -> {
 
-                    Zentrum neuCenter = new Zentrum(addMonitorName.getText(), addProctorName.getText(),
-                            addOrt.getText(), selectedCountry, data);
+                    final String monitorNameText = addMonitorName.getText();
+                    Zentrum neuCenter = new Zentrum(monitorNameText, addProctorName.getText(),
+                            addOrt.getText(), selectedCountry, trialService.nextId(GERMANY.equals(selectedCountry) ? Land.D : Land.GB));
 
                     data.add(neuCenter);
                     trialService.update(neuCenter);
