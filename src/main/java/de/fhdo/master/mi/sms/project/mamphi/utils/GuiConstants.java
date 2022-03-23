@@ -27,4 +27,5 @@ public class GuiConstants {
     public static final int FOUR = 4;
     public static final LocalDate START_DATE = LocalDate.of(TRIAL_YEAR, TRIAL_MONTH, 1);
     public static final LocalDate END_DATE = START_DATE.plusYears(2);
+    public static final String EMPTY = "";
 }

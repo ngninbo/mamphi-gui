@@ -17,8 +17,6 @@ public class CenterRepository extends BaseRepository<Zentrum> {
 
     private Statement statement;
     private static ResultSet results;
-    private Zentrum center;
-    private List<Zentrum> centerList;
     private List<Integer> centerIDs;
     private List<Integer> patientIDs;
     private int id;
@@ -26,6 +24,45 @@ public class CenterRepository extends BaseRepository<Zentrum> {
 
     public CenterRepository() {
         super();
+    }
+
+    @Override
+    public CenterRepository setDatabaseUrl(String databaseUrl) {
+        this.databaseUrl = databaseUrl;
+        return this;
+    }
+
+    @Override
+    public List<Zentrum> findAll() {
+        return findAll(SELECT_FROM_CENTER);
+    }
+
+    public List<Zentrum> findAllByLand(Land land) {
+
+        return findAll(String.format(SELECT_FROM_CENTER_WHERE_LAND, land));
+    }
+
+    public List<Zentrum> findAll(String query) {
+
+        List<Zentrum> centerList = new ArrayList<>();
+
+        try (Connection connection = DriverManager.getConnection(databaseUrl)) {
+            statement = connection.createStatement();
+
+            results = statement.executeQuery(query);
+
+            while (results.next()) {
+                Zentrum center = new Zentrum(results.getString("Monitor"), results.getString("Pruefer"),
+                        results.getString("Ort"),
+                        results.getString("Land").equals(Land.D.toString()) ? GERMANY : "Großbritanien",
+                        results.getInt("ZentrumID"));
+                centerList.add(center);
+            }
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return centerList;
     }
 
     @Override
@@ -48,60 +85,6 @@ public class CenterRepository extends BaseRepository<Zentrum> {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public CenterRepository setDatabaseUrl(String databaseUrl) {
-        this.databaseUrl = databaseUrl;
-        return this;
-    }
-
-    @Override
-    public List<Zentrum> findAll() {
-        try (Connection connection = DriverManager.getConnection(databaseUrl)) {
-            statement = connection.createStatement();
-
-            results = statement.executeQuery(SELECT_FROM_CENTER);
-
-            centerList = new ArrayList<>();
-
-            // loop through the result set
-            while (results.next()) {
-                center = new Zentrum(results.getString("Monitor"), results.getString("Pruefer"),
-                        results.getString("Ort"),
-                        results.getString("Land").equals(Land.D.toString()) ? GERMANY : "Großbritanien",
-                        results.getInt("ZentrumID"));
-                centerList.add(center);
-            }
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return centerList;
-    }
-
-    public List<Zentrum> findAllByLand(Land land) {
-        try (Connection connection = DriverManager.getConnection(databaseUrl)) {
-            statement = connection.createStatement();
-
-            results = statement.executeQuery(String.format(SELECT_FROM_CENTER_WHERE_LAND, land));
-
-            centerList = new ArrayList<>();
-
-            while (results.next()) {
-                center = new Zentrum(results.getString("Monitor"), results.getString("Pruefer"),
-                        results.getString("Ort"),
-                        results.getString("Land").equals("D") ? GERMANY : "Großbritanien",
-                        results.getInt("ZentrumID"));
-                centerList.add(center);
-            }
-
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        return centerList;
     }
 
     public List<Integer> findAllCenterIDs() {

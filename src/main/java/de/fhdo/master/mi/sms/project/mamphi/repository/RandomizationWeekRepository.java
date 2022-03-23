@@ -11,19 +11,12 @@ import static de.fhdo.master.mi.sms.project.mamphi.utils.MamphiStatements.*;
 
 public class RandomizationWeekRepository extends BaseRepository<RandomizationWeek> {
 
-    private Statement statement;
-    private static ResultSet results;
     private List<RandomizationWeek> randomizationList;
-    private RandomizationWeek randWeekItem;
 
     public RandomizationWeekRepository() {
         super();
     }
 
-    @Override
-    public void update(RandomizationWeek randomizationWeek) throws NoSuchMethodException {
-        throw new NoSuchMethodException("The method is not implemented yet;");
-    }
 
     @Override
     public RandomizationWeekRepository setDatabaseUrl(String databaseUrl) {
@@ -33,15 +26,19 @@ public class RandomizationWeekRepository extends BaseRepository<RandomizationWee
 
     @Override
     public List<RandomizationWeek> findAll() {
+        return findAll(FETCH_ALL_RANDOMIZATION_WEEK_ITEMS);
+    }
+
+    public List<RandomizationWeek> findAll(String query) {
         try (Connection connection = DriverManager.getConnection(databaseUrl)) {
 
-            statement = connection.createStatement();
+            Statement statement = connection.createStatement();
             randomizationList = new ArrayList<>();
-            results = statement.executeQuery(FETCH_ALL_RANDOMIZATION_WEEK_ITEMS);
+            ResultSet results = statement.executeQuery(query);
 
             while (results.next()) {
 
-                randWeekItem = new RandomizationWeek(results.getInt("patientenID"), results.getInt("Zentrum"),
+                RandomizationWeek randWeekItem = new RandomizationWeek(results.getInt("patientenID"), results.getInt("Zentrum"),
                         results.getString("Behandlungsarm"), results.getString("Datum"));
                 randomizationList.add(randWeekItem);
             }
@@ -51,47 +48,19 @@ public class RandomizationWeekRepository extends BaseRepository<RandomizationWee
         }
 
         return randomizationList;
+    }
+
+    @Override
+    public void update(RandomizationWeek randomizationWeek) throws NoSuchMethodException {
+        throw new NoSuchMethodException("The method is not implemented yet;");
     }
 
     public List<RandomizationWeek> findAllByWeek(int week) {
-        try (Connection connection = DriverManager.getConnection(databaseUrl)) {
-            statement = connection.createStatement();
-            randomizationList = new ArrayList<>();
-            results = statement.executeQuery(String.format(FETCH_ALL_RANDOMIZATION_BY_WEEK, week));
-
-            while (results.next()) {
-
-                randWeekItem = new RandomizationWeek(results.getInt("patientenID"), results.getInt("Zentrum"),
-                        results.getString("Behandlungsarm"), results.getString("Datum"));
-                randomizationList.add(randWeekItem);
-            }
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        return randomizationList;
+        return findAll(String.format(FETCH_ALL_RANDOMIZATION_BY_WEEK, week));
     }
 
     public List<RandomizationWeek> findAllByWeekAndLand(int week, Land land) {
-        try (Connection connection = DriverManager.getConnection(databaseUrl)) {
-
-            statement = connection.createStatement();
-            randomizationList = new ArrayList<>();
-            results = statement.executeQuery(String.format(FETCH_ALL_RANDOMIZATION_BY_WEEK_AND_LAND, week, land));
-
-            while (results.next()) {
-
-                randWeekItem = new RandomizationWeek(results.getInt("patientenID"), results.getInt("Zentrum"),
-                        results.getString("Behandlungsarm"), results.getString("Datum"));
-                randomizationList.add(randWeekItem);
-            }
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        return randomizationList;
+        return findAll(String.format(FETCH_ALL_RANDOMIZATION_BY_WEEK_AND_LAND, week, land));
     }
 
     public void update(RandomizationWeek rand, int week) {
