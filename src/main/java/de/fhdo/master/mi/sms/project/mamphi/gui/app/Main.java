@@ -25,27 +25,28 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.*;
 
-import static de.fhdo.master.mi.sms.project.mamphi.utils.MamphiStatements.DATABASE;
+import static de.fhdo.master.mi.sms.project.mamphi.utils.TrialStatements.DATABASE_NAME;
 import static de.fhdo.master.mi.sms.project.mamphi.utils.UITranslation.*;
 import static de.fhdo.master.mi.sms.project.mamphi.utils.GuiConstants.*;
 
 public class Main extends Application {
 
     private static String selectedCountry, selConsent, chosenGroup;
-    private static int chosenCenter, chosenPatient, week;
+    private static int chosenPatient, week;
+    private static String chosenCenter;
     private static TrialService trialService;
     private TableView<InformedConsent> consentTable;
     private List<InformedConsent> consentList;
     private ObservableList<InformedConsent> consentData;
-    private List<Integer> centerIds;
+    private List<String> centerIds;
     private List<Integer> patientIds;
-    private TableView<Zentrum> centerTable;
-    private List<Zentrum> centerList;
-    private ObservableList<Zentrum> data;
+    private TableView<Centre> centerTable;
+    private List<Centre> centerList;
+    private ObservableList<Centre> data;
 
-    private ObservableList<Integer> centerIdData;
+    private ObservableList<String> centerIdData;
     private ObservableList<String> landNames;
-    private ComboBox<String> cbLand;
+    private ComboBox<String> cbCountry;
     private final ArrayList<User> users = new ArrayList<>();
     private List<RandomizationWeek> randWeekItems;
     private ObservableList<RandomizationWeek> randWeekData;
@@ -55,7 +56,7 @@ public class Main extends Application {
     public static void main(String[] args) {
 
         trialService = TrialServiceBuilder.init()
-                .withDatabase(DATABASE)
+                .withDatabase(DATABASE_NAME)
                 .withCenterRepository()
                 .withInformedConsentRepository()
                 .withRandomizationWeekRepository()
@@ -76,7 +77,7 @@ public class Main extends Application {
             users.add(admin);
             // Set Icon
             // Create an Image
-            InputStream stream = getClass().getResourceAsStream("mamphi.png");
+            InputStream stream = getClass().getResourceAsStream("trial.png");
             assert stream != null;
             Image icon = new Image(stream);
             primaryStage.getIcons().add(icon);
@@ -114,8 +115,8 @@ public class Main extends Application {
             grid.add(hbBtn, 1, 4);
 
             final Text actionTarget = new Text();
-            grid.add(actionTarget, 1, 6);
             actionTarget.setId("actionTarget");
+            grid.add(actionTarget, 1, 6);
 
             final Button consentBtn = new Button(CONSENT_BUTTON_LABEL);
             consentBtn.setTooltip(new Tooltip(CONSENT_BUTTON_TOOLTIP_TXT));
@@ -141,10 +142,11 @@ public class Main extends Application {
             root = new FlowPane(INSETS_VALUE, INSETS_VALUE);
 
             Scene loginScene = new Scene(grid, LOGIN_SCENE_GRID_DIM, LOGIN_SCENE_GRID_DIM);
-            loginScene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("application.css")).toExternalForm());
+            String style = Objects.requireNonNull(getClass().getResource("application.css")).toExternalForm();
+            loginScene.getStylesheets().add(style);
 
             Scene mainScene = new Scene(root, MAIN_SCENE_HEIGHT, MAIN_SCENE_WIDTH);
-            mainScene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("application.css")).toExternalForm());
+            mainScene.getStylesheets().add(style);
 
             // Add event handler for login button in the login view
             btn.setOnAction(event -> {
@@ -211,12 +213,12 @@ public class Main extends Application {
                 root = new FlowPane(INSETS_VALUE, INSETS_VALUE);
                 Text monitorPlanLabel = new Text(MONITOR_PLAN_OVERVIEW_TXT);
                 monitorPlanLabel.setFont(new Font(FONT_NAME, FONT));
-                TableView<MonitorVisite> monitorPlan = new TableView<>();
+                TableView<MonitorVisit> monitorPlan = new TableView<>();
                 monitorPlan.setEditable(false);
-                List<MonitorVisite> visitItems = trialService.getMonitorVisitPlan(false);
-                ObservableList<MonitorVisite> visitData = FXCollections.observableArrayList(visitItems);
-                TableColumn<MonitorVisite, String> ortCol = new TableColumn<>("Ort");
-                TableColumn<MonitorVisite, String> monitorCol = new TableColumn<>("Monitor");
+                List<MonitorVisit> visitItems = trialService.getMonitorVisitPlan(false);
+                ObservableList<MonitorVisit> visitData = FXCollections.observableArrayList(visitItems);
+                TableColumn<MonitorVisit, String> ortCol = new TableColumn<>("Ort");
+                TableColumn<MonitorVisit, String> monitorCol = new TableColumn<>("Monitor");
                 monitorCol.setMinWidth(DEFAULT_MIN_WIDTH);
 
                 monitorCol.setCellValueFactory(new PropertyValueFactory<>("monitor"));
@@ -224,37 +226,37 @@ public class Main extends Application {
                 monitorCol.setOnEditCommit(event1 -> event1.getTableView().getItems().get(event1.getTablePosition().getRow())
                         .setMonitor(event1.getNewValue()));
 
-                TableColumn<MonitorVisite, String> proctorCol = new TableColumn<>("Prüfer");
-                proctorCol.setMinWidth(DEFAULT_MIN_WIDTH);
-                proctorCol.setCellValueFactory(new PropertyValueFactory<>("pruefer"));
-                proctorCol.setCellFactory(TextFieldTableCell.forTableColumn());
-                proctorCol.setOnEditCommit(event12 -> event12.getTableView().getItems().get(event12.getTablePosition().getRow())
-                        .setPruefer(event12.getNewValue()));
+                TableColumn<MonitorVisit, String> trierrCol = new TableColumn<>("Prüfer");
+                trierrCol.setMinWidth(DEFAULT_MIN_WIDTH);
+                trierrCol.setCellValueFactory(new PropertyValueFactory<>("trier"));
+                trierrCol.setCellFactory(TextFieldTableCell.forTableColumn());
+                trierrCol.setOnEditCommit(event12 -> event12.getTableView().getItems().get(event12.getTablePosition().getRow())
+                        .setTrier(event12.getNewValue()));
 
                 ortCol.setMinWidth(DEFAULT_MIN_WIDTH);
-                ortCol.setCellValueFactory(new PropertyValueFactory<>("ort"));
+                ortCol.setCellValueFactory(new PropertyValueFactory<>("place"));
                 ortCol.setCellFactory(TextFieldTableCell.forTableColumn());
                 ortCol.setOnEditCommit(event13 -> event13.getTableView().getItems().get(event13.getTablePosition().getRow())
-                        .setOrt(event13.getNewValue()));
+                        .setPlace(event13.getNewValue()));
 
-                TableColumn<MonitorVisite, String> landCol = new TableColumn<>("Land");
+                TableColumn<MonitorVisit, String> landCol = new TableColumn<>("Land");
                 landCol.setMinWidth(DEFAULT_MIN_WIDTH);
-                landCol.setCellValueFactory(new PropertyValueFactory<>("land"));
+                landCol.setCellValueFactory(new PropertyValueFactory<>("country"));
                 landCol.setCellFactory(TextFieldTableCell.forTableColumn());
                 landCol.setOnEditCommit(event14 -> event14.getTableView().getItems().get(event14.getTablePosition().getRow())
-                        .setLand(event14.getNewValue()));
+                        .setCountry(event14.getNewValue()));
 
-                TableColumn<MonitorVisite, String> centerIDCol = new TableColumn<>("Zentrum ID");
+                TableColumn<MonitorVisit, String> centerIDCol = new TableColumn<>("Zentrum ID");
                 centerIDCol.setMinWidth(DEFAULT_MIN_WIDTH);
-                centerIDCol.setCellValueFactory(new PropertyValueFactory<>("zentrumID"));
+                centerIDCol.setCellValueFactory(new PropertyValueFactory<>("centreID"));
 
-                TableColumn<MonitorVisite, Integer> numberPatientCol = new TableColumn<>("Anzahl Patienten");
+                TableColumn<MonitorVisit, Integer> numberPatientCol = new TableColumn<>("Anzahl Patienten");
                 numberPatientCol.setMinWidth(DEFAULT_MIN_WIDTH);
                 numberPatientCol
                         .setCellValueFactory(new PropertyValueFactory<>("numberOfPatient"));
 
-                TableColumn<MonitorVisite, List<LocalDate>> visitsCol = new TableColumn<>(VISIT_COLUMN_LABEL);
-                PropertyValueFactory<MonitorVisite, List<LocalDate>> visitDates = new PropertyValueFactory<>(
+                TableColumn<MonitorVisit, List<LocalDate>> visitsCol = new TableColumn<>(VISIT_COLUMN_LABEL);
+                PropertyValueFactory<MonitorVisit, List<LocalDate>> visitDates = new PropertyValueFactory<>(
                         "visitDate");
                 visitsCol.setCellValueFactory(visitDates);
 
@@ -262,15 +264,15 @@ public class Main extends Application {
 
                 monitorPlan.setItems(visitData);
                 monitorPlan.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-                monitorPlan.getColumns().addAll(centerIDCol, landCol, ortCol, proctorCol, monitorCol,
+                monitorPlan.getColumns().addAll(centerIDCol, landCol, ortCol, trierrCol, monitorCol,
                         numberPatientCol, visitsCol);
 
                 // Delete some items
                 Button deleteItemsBtn = new Button(DELETE_BTN_LABEL);
                 deleteItemsBtn.setOnAction(ActionEvent -> {
-                    ObservableList<MonitorVisite> selectedVisits = monitorPlan.getSelectionModel()
+                    ObservableList<MonitorVisit> selectedVisits = monitorPlan.getSelectionModel()
                             .getSelectedItems();
-                    ArrayList<MonitorVisite> rows = new ArrayList<>(selectedVisits);
+                    ArrayList<MonitorVisit> rows = new ArrayList<>(selectedVisits);
                     rows.forEach(e -> monitorPlan.getItems().remove(e));
                 });
 
@@ -304,22 +306,22 @@ public class Main extends Application {
 
                 Label landText = new Label("Land: ");
                 landNames = FXCollections.observableArrayList(GERMANY, ENGLAND);
-                cbLand = new ComboBox<>(landNames);
-                cbLand.setValue(COUNTRY_CHOICE_BTN_LABEL);
-                cbLand.setMinWidth(DEFAULT_MIN_WIDTH);
-                cbLand.setPadding(new Insets(INSETS_MIN_VALUE, INSETS_MIN_VALUE, INSETS_MIN_VALUE, FONT));
+                cbCountry = new ComboBox<>(landNames);
+                cbCountry.setValue(COUNTRY_CHOICE_BTN_LABEL);
+                cbCountry.setMinWidth(DEFAULT_MIN_WIDTH);
+                cbCountry.setPadding(new Insets(INSETS_MIN_VALUE, INSETS_MIN_VALUE, INSETS_MIN_VALUE, FONT));
 
-                cbLand.setOnAction(arg0 -> selectedCountry = cbLand.getValue());
+                cbCountry.setOnAction(arg0 -> selectedCountry = cbCountry.getValue());
 
-                HBox hbLand = new HBox(landText, cbLand);
+                HBox hbLand = new HBox(landText, cbCountry);
                 hbLand.setSpacing(H_BOX_SPACING_VALUE);
                 hbLand.setPadding(new Insets(INSETS_VALUE));
                 final Button addCenterBtn = new Button(SAVE_BTN_LABEL);
                 addCenterBtn.setOnAction(event15 -> {
 
                     final String monitorNameText = addMonitorName.getText();
-                    Zentrum neuCenter = new Zentrum(monitorNameText, addProctorName.getText(),
-                            addOrt.getText(), selectedCountry, trialService.nextId(GERMANY.equals(selectedCountry) ? Land.D : Land.GB));
+                    Centre neuCenter = new Centre(monitorNameText, addProctorName.getText(),
+                            addOrt.getText(), selectedCountry, trialService.nextId(GERMANY.equals(selectedCountry) ? Country.DE : Country.GB));
 
                     data.add(neuCenter);
                     trialService.update(neuCenter);
@@ -366,18 +368,18 @@ public class Main extends Application {
 
         TableColumn<RandomizationWeek, Integer> patientIDCol = new TableColumn<>("Patient ID");
         patientIDCol.setMinWidth(DEFAULT_MIN_WIDTH);
-        patientIDCol.setCellValueFactory(new PropertyValueFactory<>("patientenID"));
+        patientIDCol.setCellValueFactory(new PropertyValueFactory<>("patientID"));
 
         TableColumn<RandomizationWeek, Integer> centerCol = new TableColumn<>("Zentrum");
         centerCol.setMinWidth(DEFAULT_MIN_WIDTH);
-        centerCol.setCellValueFactory(new PropertyValueFactory<>("zentrum"));
+        centerCol.setCellValueFactory(new PropertyValueFactory<>("centre"));
 
         TableColumn<RandomizationWeek, String> groupCol = new TableColumn<>("Behandlungsarm");
         groupCol.setMinWidth(50);
-        groupCol.setCellValueFactory(new PropertyValueFactory<>("behandlungsarm"));
+        groupCol.setCellValueFactory(new PropertyValueFactory<>("group"));
         groupCol.setCellFactory(TextFieldTableCell.forTableColumn());
         groupCol.setOnEditCommit(event -> event.getTableView().getItems().get(event.getTablePosition().getRow())
-                .setBehandlungsarm(event.getNewValue()));
+                .setGroup(event.getNewValue()));
 
         TableColumn<RandomizationWeek, String> dateCol = new TableColumn<>("Datum der Randomisierung");
         dateCol.setMinWidth(300);
@@ -406,7 +408,7 @@ public class Main extends Application {
         Label addCenterLabel = new Label("Zentrum: ");
         centerIds = trialService.findAllCenterIds();
         centerIdData = FXCollections.observableArrayList(centerIds);
-        ComboBox<Integer> cbAddCenterRand = new ComboBox<>(centerIdData);
+        ComboBox<String> cbAddCenterRand = new ComboBox<>(centerIdData);
         cbAddCenterRand.setPromptText(CHOICE_PROMPT_TEXT);
         cbAddCenterRand.setMinWidth(centerCol.getPrefWidth());
         cbAddCenterRand.setOnAction(event -> chosenCenter = cbAddCenterRand.getValue());
@@ -439,7 +441,7 @@ public class Main extends Application {
         Button addRandBtn = new Button(ENTRY_SAVE_BTN_LABEL);
         addRandBtn.setOnAction(event -> {
 
-            RandomizationWeek rand = new RandomizationWeek(chosenPatient, chosenCenter, chosenGroup,
+            RandomizationWeek rand = new RandomizationWeek(chosenPatient, Integer.parseInt(chosenCenter), chosenGroup,
                     addDateRand.getValue().toString());
             trialService.update(rand, week);
         });
@@ -452,7 +454,7 @@ public class Main extends Application {
         patientPerCenterTable.setEditable(false);
         TableColumn<PatientCenter, String> patientPerCenterCol = new TableColumn<>("Zentrum");
         patientPerCenterCol.setMinWidth(DEFAULT_MIN_WIDTH);
-        patientPerCenterCol.setCellValueFactory(new PropertyValueFactory<>("center"));
+        patientPerCenterCol.setCellValueFactory(new PropertyValueFactory<>("centre"));
 
         TableColumn<PatientCenter, Integer> patientPerCenterCol2 = new TableColumn<>("Anzahl der Patienten");
         patientPerCenterCol2.setMinWidth(MIN_WIDTH);
@@ -512,10 +514,10 @@ public class Main extends Application {
                     break;
                 case RANDOM_WEEK_ONE_GERMANY_OVERVIEW_OPTION:
                     week = ONE_VALUE;
-                    patientPerCenter1 = trialService.findNumberPatientPerCenterByLandByWeek(Land.D, ONE_VALUE);
+                    patientPerCenter1 = trialService.findNumberPatientPerCenterByLandByWeek(Country.DE, ONE_VALUE);
                     patientPerCenterData1 = FXCollections.observableArrayList(patientPerCenter1);
                     patientPerCenterTable.setItems(patientPerCenterData1);
-                    randWeekItems = trialService.findAllByWeekAndLand(ONE_VALUE, Land.D);
+                    randWeekItems = trialService.findAllByWeekAndLand(ONE_VALUE, Country.DE);
                     randWeekData = FXCollections.observableArrayList(randWeekItems);
                     randTableText.setText(String.format(RANDOM_WEEK_OVERVIEW_TITLE, ONE_VALUE));
                     numberPatientPerCenterTableLabel.setText(String.format(NUMBER_PATIENT_PER_CENTER_GERMANY_WEEK_OVERVIEW_LABEL, ONE_VALUE));
@@ -523,10 +525,10 @@ public class Main extends Application {
                     break;
                 case RANDOM_WEEK_TWO_GERMANY_OVERVIEW_OPTION:
                     week = TWO_VALUE;
-                    patientPerCenter1 = trialService.findNumberPatientPerCenterByLandByWeek(Land.D, TWO_VALUE);
+                    patientPerCenter1 = trialService.findNumberPatientPerCenterByLandByWeek(Country.DE, TWO_VALUE);
                     patientPerCenterData1 = FXCollections.observableArrayList(patientPerCenter1);
                     patientPerCenterTable.setItems(patientPerCenterData1);
-                    randWeekItems = trialService.findAllByWeekAndLand(TWO_VALUE, Land.D);
+                    randWeekItems = trialService.findAllByWeekAndLand(TWO_VALUE, Country.DE);
                     randWeekData = FXCollections.observableArrayList(randWeekItems);
                     randTableText.setText(String.format(RANDOM_WEEK_OVERVIEW_TITLE, TWO_VALUE));
                     numberPatientPerCenterTableLabel.setText(String.format(NUMBER_PATIENT_PER_CENTER_GERMANY_WEEK_OVERVIEW_LABEL, TWO_VALUE));
@@ -534,10 +536,10 @@ public class Main extends Application {
                     break;
                 case RANDOM_WEEK_ONE_ENGLAND_OVERVIEW_OPTION:
                     week = ONE_VALUE;
-                    patientPerCenter1 = trialService.findNumberPatientPerCenterByLandByWeek(Land.GB, ONE_VALUE);
+                    patientPerCenter1 = trialService.findNumberPatientPerCenterByLandByWeek(Country.GB, ONE_VALUE);
                     patientPerCenterData1 = FXCollections.observableArrayList(patientPerCenter1);
                     patientPerCenterTable.setItems(patientPerCenterData1);
-                    randWeekItems = trialService.findAllByWeekAndLand(ONE_VALUE, Land.GB);
+                    randWeekItems = trialService.findAllByWeekAndLand(ONE_VALUE, Country.GB);
                     randWeekData = FXCollections.observableArrayList(randWeekItems);
                     randTableText.setText(String.format(RANDOM_WEEK_OVERVIEW_TITLE, ONE_VALUE));
                     numberPatientPerCenterTableLabel.setText(String.format(NUMBER_PATIENT_PER_CENTER_ENGLAND_WEEK_OVERVIEW_LABEL, ONE_VALUE));
@@ -545,10 +547,10 @@ public class Main extends Application {
                     break;
                 case RANDOM_WEEK_TWO_ENGLAND_OVERVIEW_OPTION:
                     week = TWO_VALUE;
-                    patientPerCenter1 = trialService.findNumberPatientPerCenterByLandByWeek(Land.GB, week);
+                    patientPerCenter1 = trialService.findNumberPatientPerCenterByLandByWeek(Country.GB, week);
                     patientPerCenterData1 = FXCollections.observableArrayList(patientPerCenter1);
                     patientPerCenterTable.setItems(patientPerCenterData1);
-                    randWeekItems = trialService.findAllByWeekAndLand(week, Land.GB);
+                    randWeekItems = trialService.findAllByWeekAndLand(week, Country.GB);
                     randWeekData = FXCollections.observableArrayList(randWeekItems);
                     randTableText.setText(String.format(RANDOM_WEEK_OVERVIEW_TITLE, TWO_VALUE));
                     numberPatientPerCenterTableLabel.setText(String.format(NUMBER_PATIENT_PER_CENTER_ENGLAND_WEEK_OVERVIEW_LABEL, TWO_VALUE));
@@ -592,24 +594,26 @@ public class Main extends Application {
         consentData = FXCollections.observableArrayList(consentList);
         TableColumn<InformedConsent, Integer> patientIDCol = new TableColumn<>("Patient ID");
         patientIDCol.setMinWidth(DEFAULT_MIN_WIDTH);
-        patientIDCol.setCellValueFactory(new PropertyValueFactory<>("patientenID"));
+        patientIDCol.setCellValueFactory(new PropertyValueFactory<>("patientID"));
 
         TableColumn<InformedConsent, Integer> centerCol = new TableColumn<>("Zentrum");
         centerCol.setMinWidth(DEFAULT_MIN_WIDTH);
-        centerCol.setCellValueFactory(new PropertyValueFactory<>("zentrumID"));
+        centerCol.setCellValueFactory(new PropertyValueFactory<>("centreID"));
 
         TableColumn<InformedConsent, String> consentCol = new TableColumn<>("Einwilligung erteilt");
         consentCol.setMinWidth(MIN_WIDTH);
-        consentCol.setCellValueFactory(new PropertyValueFactory<>("einwilligung"));
+        consentCol.setCellValueFactory(new PropertyValueFactory<>("consent"));
         consentCol.setCellFactory(TextFieldTableCell.forTableColumn());
         consentCol.setOnEditCommit(event -> event.getTableView().getItems().get(event.getTablePosition().getRow())
-                .setEinwilligung(event.getNewValue().toUpperCase()));
+                .setConsent(event.getNewValue().toUpperCase()));
 
         TableColumn<InformedConsent, String> dateCol = new TableColumn<>("Datum der Einwilligung");
         dateCol.setMinWidth(MIN_WIDTH);
         dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
         dateCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        dateCol.setOnEditCommit(event -> event.getTableView().getItems().get(event.getTablePosition().getRow())
+        dateCol.setOnEditCommit(event -> event.getTableView()
+                .getItems()
+                .get(event.getTablePosition().getRow())
                 .setDate(event.getNewValue()));
 
         consentTable.setItems(consentData);
@@ -629,17 +633,18 @@ public class Main extends Application {
         Collections.sort(centerIds);
         centerIdData = FXCollections.observableArrayList(centerIds);
         Label centerText = new Label("Zentrum: ");
-        final ComboBox<Integer> cbCenter = new ComboBox<>(centerIdData);
+        final ComboBox<String> cbCenter = new ComboBox<>(centerIdData);
         cbCenter.setMinWidth(consentTable.getColumns().get(1).getPrefWidth());
         cbCenter.setPromptText(CHOICE_PROMPT_TEXT);
-        cbCenter.setOnAction(event -> chosenCenter = cbCenter.getValue() > INSETS_MIN_VALUE ? cbCenter.getValue() : VALUE_MISSING);
+        cbCenter.setOnAction(event -> chosenCenter = String.valueOf(INSETS_MIN_VALUE).compareTo(cbCenter.getValue()) < 0
+                ? cbCenter.getValue() : String.valueOf(VALUE_MISSING));
 
         HBox hbAddCenter = new HBox(centerText, cbCenter);
         hbAddCenter.setSpacing(SPACING_MAX_VALUE);
         hbAddCenter.setPadding(new Insets(INSETS_VALUE));
 
         Label consentText = new Label("Einwilligung: ");
-        ObservableList<String> options = FXCollections.observableArrayList(YES.toUpperCase(), NO.toUpperCase());
+        ObservableList<String> options = FXCollections.observableArrayList(EMPTY, YES.toUpperCase(), NO.toUpperCase());
         final ComboBox<String> cbConsent = new ComboBox<>(options);
         cbConsent.setValue(CHOICE_PROMPT_TEXT);
         cbConsent.setMinWidth(consentTable.getColumns().get(2).getPrefWidth());
@@ -666,11 +671,18 @@ public class Main extends Application {
 
             Collections.sort(patientIds);
 
-            InformedConsent newInformedConsent = new InformedConsent(patientIds.get(patientIds.size() - 1) + 1,
-                    chosenCenter, selConsent == null ? "nan" : selConsent,
-                    consentDate.getValue() != null ? consentDate.getValue().toString() : "NaT");
-            consentData.add(newInformedConsent);
-            trialService.update(newInformedConsent);
+            if (selConsent != null && chosenCenter != null && consentDate.getValue() != null) {
+                InformedConsent newInformedConsent = new InformedConsent(patientIds.get(patientIds.size() - 1) + 1,
+                        Integer.parseInt(chosenCenter), selConsent == null ? "nan" : selConsent,
+                        consentDate.getValue() != null ? consentDate.getValue().toString() : "NaT");
+                consentData.add(newInformedConsent);
+                trialService.update(newInformedConsent);
+                selConsent = null;
+                chosenCenter = null;
+                cbCenter.setValue(EMPTY);
+                cbConsent.setValue(EMPTY);
+                consentDate.setValue(null);
+            }
         });
 
         final VBox vbConsent = new VBox(consentFormText, hbAddCenter, hbAddConsent, hbAddDate, addConsentBtn,
@@ -683,7 +695,6 @@ public class Main extends Application {
 
         Text consentTableLabel = new Text(CONSENT_TABLE_LABEL);
         consentTableLabel.setFont(new Font(FONT_NAME, FONT));
-        // Filter Consent Table
         Label filterConsent = new Label(FILTER_LABEL);
         ObservableList<String> consentFilterOptions = FXCollections.observableArrayList(ALL_CONSENT_OPTION,
                 MISSING_CONSENT_OVERVIEW_OPTION,
@@ -769,7 +780,7 @@ public class Main extends Application {
         centerList = trialService.findAllCenter();
 
         centerList.sort((o1, o2) -> {
-            if (o1.getZentrumID() > o2.getZentrumID()) {
+            if (o1.getCentreID() > o2.getCentreID()) {
                 return 1;
             }
             return INSETS_MIN_VALUE;
@@ -777,7 +788,7 @@ public class Main extends Application {
 
         data = FXCollections.observableArrayList(centerList);
 
-        TableColumn<Zentrum, String> monitorCol = new TableColumn<>("Monitor");
+        TableColumn<Centre, String> monitorCol = new TableColumn<>("Monitor");
         monitorCol.setMinWidth(120);
 
         monitorCol.setCellValueFactory(new PropertyValueFactory<>("monitor"));
@@ -785,40 +796,40 @@ public class Main extends Application {
         monitorCol.setOnEditCommit(event -> event.getTableView().getItems().get(event.getTablePosition().getRow())
                 .setMonitor(event.getNewValue()));
 
-        TableColumn<Zentrum, String> prueferCol = new TableColumn<>("Prüfer");
-        prueferCol.setMinWidth(DEFAULT_MIN_WIDTH);
-        prueferCol.setCellValueFactory(new PropertyValueFactory<>("pruefer"));
-        prueferCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        prueferCol.setOnEditCommit(event -> event.getTableView().getItems().get(event.getTablePosition().getRow())
-                .setPruefer(event.getNewValue()));
+        TableColumn<Centre, String> trierCol = new TableColumn<>("Prüfer");
+        trierCol.setMinWidth(DEFAULT_MIN_WIDTH);
+        trierCol.setCellValueFactory(new PropertyValueFactory<>("trier"));
+        trierCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        trierCol.setOnEditCommit(event -> event.getTableView().getItems().get(event.getTablePosition().getRow())
+                .setTrier(event.getNewValue()));
 
-        TableColumn<Zentrum, String> ortCol = new TableColumn<>("Ort");
-        ortCol.setMinWidth(DEFAULT_MIN_WIDTH);
-        ortCol.setCellValueFactory(new PropertyValueFactory<>("ort"));
-        ortCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        ortCol.setOnEditCommit(event -> event.getTableView().getItems().get(event.getTablePosition().getRow())
-                .setOrt(event.getNewValue()));
+        TableColumn<Centre, String> placeCol = new TableColumn<>("Ort");
+        placeCol.setMinWidth(DEFAULT_MIN_WIDTH);
+        placeCol.setCellValueFactory(new PropertyValueFactory<>("place"));
+        placeCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        placeCol.setOnEditCommit(event -> event.getTableView().getItems().get(event.getTablePosition().getRow())
+                .setPlace(event.getNewValue()));
 
-        TableColumn<Zentrum, String> landCol = new TableColumn<>("Land");
+        TableColumn<Centre, String> landCol = new TableColumn<>("Land");
         landCol.setMinWidth(DEFAULT_MIN_WIDTH);
-        landCol.setCellValueFactory(new PropertyValueFactory<>("land"));
+        landCol.setCellValueFactory(new PropertyValueFactory<>("country"));
         landCol.setCellFactory(TextFieldTableCell.forTableColumn());
         landCol.setOnEditCommit(event -> event.getTableView().getItems().get(event.getTablePosition().getRow())
-                .setLand(event.getNewValue()));
+                .setCountry(event.getNewValue()));
 
-        TableColumn<Zentrum, String> zentrumIDCol = new TableColumn<>("Zentrum ID");
-        zentrumIDCol.setMinWidth(DEFAULT_MIN_WIDTH);
-        zentrumIDCol.setCellValueFactory(new PropertyValueFactory<>("zentrumID"));
+        TableColumn<Centre, String> centreIDCol = new TableColumn<>("Zentrum ID");
+        centreIDCol.setMinWidth(DEFAULT_MIN_WIDTH);
+        centreIDCol.setCellValueFactory(new PropertyValueFactory<>("centreID"));
 
         centerTable.setItems(data);
         centerTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        centerTable.getColumns().addAll(zentrumIDCol, landCol, ortCol, prueferCol, monitorCol);
+        centerTable.getColumns().addAll(centreIDCol, landCol, placeCol, trierCol, monitorCol);
 
         // Delete center items from table (not from database)
         Button deleteCenterBtn = new Button(DELETE_BTN_LABEL);
         deleteCenterBtn.setOnAction(event -> {
 
-            Zentrum selectedCenter = centerTable.getSelectionModel().getSelectedItem();
+            Centre selectedCenter = centerTable.getSelectionModel().getSelectedItem();
             centerTable.getItems().remove(selectedCenter);
         });
 
@@ -829,28 +840,28 @@ public class Main extends Application {
         ObservableList<String> centerFilterOptions = FXCollections.observableArrayList(
                 CENTER_OVERVIEW_OPTION,
                 GERMAN_CENTER_OVERVIEW_OPTION,
-                BRITISCH_CENTER_OVERVIEW_OPTION);
+                BRITISH_CENTER_OVERVIEW_OPTION);
 
         final ComboBox<String> cbCenterFilter = new ComboBox<>(centerFilterOptions);
         cbCenterFilter.setPromptText(CONSENT_OVERVIEW_FILTER_PROMPT_TXT);
         cbCenterFilter.setOnAction(event -> {
 
             String choice = cbCenterFilter.getValue();
-            List<Zentrum> centerListLand;
-            ObservableList<Zentrum> centerListData;
+            List<Centre> centerListLand;
+            ObservableList<Centre> centerListData;
 
             switch (choice) {
 
                 case GERMAN_CENTER_OVERVIEW_OPTION:
-                    centerListLand = trialService.findAllCenter(Land.D);
+                    centerListLand = trialService.findAllCenter(Country.DE);
                     centerTableLabel.setText(GERMAN_CENTER_OVERVIEW_LABEL);
                     centerListData = FXCollections.observableArrayList(centerListLand);
                     centerTable.setItems(centerListData);
                     break;
 
-                case BRITISCH_CENTER_OVERVIEW_OPTION:
-                    centerListLand = trialService.findAllCenter(Land.GB);
-                    centerTableLabel.setText(BRITISCH_CENTER_OVERVIEW_LABEL);
+                case BRITISH_CENTER_OVERVIEW_OPTION:
+                    centerListLand = trialService.findAllCenter(Country.GB);
+                    centerTableLabel.setText(BRITISH_CENTER_OVERVIEW_LABEL);
                     centerListData = FXCollections.observableArrayList(centerListLand);
                     centerTable.setItems(centerListData);
                     break;
@@ -872,7 +883,7 @@ public class Main extends Application {
         Text centerFormText = new Text(CENTER_FORM_TEXT);
         centerFormText.setFont(new Font(FONT_NAME, FONT));
         final TextField addMonitorName = new TextField();
-        final TextField addPrueferName = new TextField();
+        final TextField addTrierName = new TextField();
         final TextField addOrt = new TextField();
 
         Label monitorText = new Label("Monitor: ");
@@ -882,12 +893,12 @@ public class Main extends Application {
         hbMonitor.setSpacing(SPACING_DEFAULT_VALUE);
         hbMonitor.setPadding(new Insets(INSETS_VALUE, INSETS_VALUE, INSETS_VALUE, INSETS_VALUE));
 
-        Label prueferText = new Label("Prüfer: ");
-        addPrueferName.setMinWidth(MIN_WIDTH);
-        addPrueferName.setPromptText("Prüfer Name");
-        HBox hbPruefer = new HBox(prueferText, addPrueferName);
-        hbPruefer.setSpacing(SPACING_MIN_VALUE);
-        hbPruefer.setPadding(new Insets(INSETS_VALUE, INSETS_VALUE, INSETS_VALUE, INSETS_VALUE));
+        Label trierText = new Label("Prüfer: ");
+        addTrierName.setMinWidth(MIN_WIDTH);
+        addTrierName.setPromptText("Prüfer Name");
+        HBox hbTrier = new HBox(trierText, addTrierName);
+        hbTrier.setSpacing(SPACING_MIN_VALUE);
+        hbTrier.setPadding(new Insets(INSETS_VALUE, INSETS_VALUE, INSETS_VALUE, INSETS_VALUE));
 
         Label ortText = new Label("Ort: ");
         addOrt.setMinWidth(MIN_WIDTH);
@@ -898,36 +909,37 @@ public class Main extends Application {
 
         Label landText = new Label("Land: ");
         landNames = FXCollections.observableArrayList(GERMANY, ENGLAND);
-        cbLand = new ComboBox<>(landNames);
-        cbLand.setValue(COUNTRY_CHOICE_BTN_LABEL);
-        cbLand.setMinWidth(DEFAULT_MIN_WIDTH);
-        cbLand.setPadding(new Insets(INSETS_MIN_VALUE, INSETS_MIN_VALUE, INSETS_MIN_VALUE, FONT));
+        cbCountry = new ComboBox<>(landNames);
+        cbCountry.setValue(COUNTRY_CHOICE_BTN_LABEL);
+        cbCountry.setMinWidth(DEFAULT_MIN_WIDTH);
+        cbCountry.setPadding(new Insets(INSETS_MIN_VALUE, INSETS_MIN_VALUE, INSETS_MIN_VALUE, FONT));
 
-        cbLand.setOnAction(arg0 -> selectedCountry = cbLand.getValue() != null ? cbLand.getValue() : null);
+        cbCountry.setOnAction(arg0 -> selectedCountry = cbCountry.getValue() != null ? cbCountry.getValue() : null);
 
         final Text centerInputValid = new Text();
         centerInputValid.setId("centerInputValid");
-        HBox hbLand = new HBox(landText, cbLand);
+        HBox hbLand = new HBox(landText, cbCountry);
         hbLand.setSpacing(H_BOX_SPACING_VALUE);
         hbLand.setPadding(new Insets(INSETS_VALUE));
         final Button addCenterBtn = new Button(SAVE_BTN_LABEL);
         addCenterBtn.setOnAction(event -> {
 
-            if (addMonitorName.getText() != null && addPrueferName.getText() != null && addOrt.getText() != null && selectedCountry != null) {
-                Zentrum neuCenter = new Zentrum(addMonitorName.getText(), addPrueferName.getText(), addOrt.getText(),
-                        selectedCountry, trialService.nextId(GERMANY.equals(selectedCountry) ? Land.D : Land.GB));
+            if (addMonitorName.getText() != null && addTrierName.getText() != null && addOrt.getText() != null && selectedCountry != null) {
+                Centre neuCenter = new Centre(addMonitorName.getText(), addTrierName.getText(), addOrt.getText(),
+                        selectedCountry, trialService.nextId(GERMANY.equals(selectedCountry) ? Country.DE : Country.GB));
                 data.add(neuCenter);
                 trialService.update(neuCenter);
                 addMonitorName.clear();
-                addPrueferName.clear();
+                addTrierName.clear();
                 addOrt.clear();
-                centerInputValid.setText("");
+                cbCountry.setValue(null);
+                selectedCountry = null;
             } else {
                 centerInputValid.setText(INPUT_VALIDATION_ERROR_MSG);
             }
         });
 
-        final VBox vbAddCenter = new VBox(centerFormText, hbMonitor, hbPruefer, hbLand, hbOrt, centerInputValid, addCenterBtn,
+        final VBox vbAddCenter = new VBox(centerFormText, hbMonitor, hbTrier, hbLand, hbOrt, centerInputValid, addCenterBtn,
                 deleteCenterBtn);
         vbAddCenter.setSpacing(SPACING_DEFAULT_VALUE);
         vbAddCenter.setPadding(new Insets(80, INSETS_VALUE, INSETS_VALUE, SPACING_MAX_VALUE));

@@ -22,7 +22,7 @@ public class TrialServiceImpl implements TrialService {
     }
 
     @Override
-    public void update(Zentrum center) {
+    public void update(Centre center) {
         centerRepository.update(center);
     }
 
@@ -52,17 +52,17 @@ public class TrialServiceImpl implements TrialService {
     }
 
     @Override
-    public List<RandomizationWeek> findAllByWeekAndLand(int week, Land land) {
-        return randomizationWeekRepository.findAllByWeekAndLand(week, land);
+    public List<RandomizationWeek> findAllByWeekAndLand(int week, Country country) {
+        return randomizationWeekRepository.findAllByWeekAndLand(week, country);
     }
 
     @Override
-    public List<Zentrum> findAllCenter() {
+    public List<Centre> findAllCenter() {
         return centerRepository.findAll();
     }
 
     @Override
-    public List<Integer> findAllCenterIds() {
+    public List<String> findAllCenterIds() {
         return centerRepository.findAllCenterIDs();
     }
 
@@ -72,8 +72,8 @@ public class TrialServiceImpl implements TrialService {
     }
 
     @Override
-    public List<Zentrum> findAllCenter(Land land) {
-        return centerRepository.findAllByLand(land);
+    public List<Centre> findAllCenter(Country country) {
+        return centerRepository.findAllByCountry(country);
     }
 
     @Override
@@ -92,13 +92,13 @@ public class TrialServiceImpl implements TrialService {
     }
 
     @Override
-    public List<MonitorVisite> getMonitorVisitPlan(boolean isInvolved) {
+    public List<MonitorVisit> getMonitorVisitPlan(boolean isInvolved) {
         return centerRepository.getMonitorVisitPlan(isInvolved);
     }
 
     @Override
-    public int nextId(Land land) {
-        return centerRepository.nextId(land);
+    public int nextId(Country country) {
+        return centerRepository.nextId(country);
     }
 
     @Override
@@ -112,7 +112,7 @@ public class TrialServiceImpl implements TrialService {
     }
 
     @Override
-    public List<PatientCenter> findNumberPatientPerCenterByLandByWeek(Land land, int week) {
-        return centerRepository.findNumberPatientPerCenterByLandByWeek(land, week);
+    public List<PatientCenter> findNumberPatientPerCenterByLandByWeek(Country country, int week) {
+        return centerRepository.findNumberPatientPerCenterByCountryByWeek(country, week);
     }
 }

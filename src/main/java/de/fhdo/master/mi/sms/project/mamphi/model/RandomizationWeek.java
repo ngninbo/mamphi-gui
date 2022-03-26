@@ -9,9 +9,9 @@ import javafx.beans.property.SimpleStringProperty;
  */
 public class RandomizationWeek {
 
-	private SimpleIntegerProperty patientenID;
-	private SimpleIntegerProperty zentrum;
-	private SimpleStringProperty behandlungsarm;
+	private SimpleIntegerProperty patientID;
+	private SimpleIntegerProperty centre;
+	private SimpleStringProperty group;
 	private SimpleStringProperty date;
 
 	public RandomizationWeek() {
@@ -19,41 +19,41 @@ public class RandomizationWeek {
 	}
 
 	/**
-	 * @param patientenID Patient ID
-	 * @param zentrum Zentrum ID
-	 * @param behandlungsarm Behandlungsarm
+	 * @param patientID Patient ID
+	 * @param centre Centre ID
+	 * @param group Group
 	 * @param date Datum
 	 */
-	public RandomizationWeek(int patientenID, int zentrum, String behandlungsarm, String date) {
+	public RandomizationWeek(int patientID, int centre, String group, String date) {
 		super();
-		this.patientenID = new SimpleIntegerProperty(patientenID);
-		this.zentrum = new SimpleIntegerProperty(zentrum);
-		this.behandlungsarm = new SimpleStringProperty(behandlungsarm);
+		this.patientID = new SimpleIntegerProperty(patientID);
+		this.centre = new SimpleIntegerProperty(centre);
+		this.group = new SimpleStringProperty(group);
 		this.date = new SimpleStringProperty(date);
 	}
 
-	public int getPatientenID() {
-		return this.patientenID.get();
+	public int getPatientID() {
+		return this.patientID.get();
 	}
 
-	public void setPatientenID(int patientenID) {
-		this.patientenID.set(patientenID);
+	public void setPatientID(int patientID) {
+		this.patientID.set(patientID);
 	}
 
-	public int getZentrum() {
-		return this.zentrum.get();
+	public int getCentre() {
+		return this.centre.get();
 	}
 
-	public void setZentrum(int zentrum) {
-		this.zentrum.set(zentrum);
+	public void setCentre(int centre) {
+		this.centre.set(centre);
 	}
 
-	public String getBehandlungsarm() {
-		return this.behandlungsarm.get();
+	public String getGroup() {
+		return this.group.get();
 	}
 
-	public void setBehandlungsarm(String behandlungsarm) {
-		this.behandlungsarm.set(behandlungsarm);
+	public void setGroup(String group) {
+		this.group.set(group);
 	}
 
 	public String getDate() {

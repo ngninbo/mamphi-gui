@@ -61,8 +61,8 @@ public class UITranslation {
     public static final String CENTER_OVERVIEW_LABEL = "Liste aller vorhandenen Zentren in der Studie";
     public static final String CENTER_OVERVIEW_OPTION = "Liste aller Zentren";
     public static final String GERMAN_CENTER_OVERVIEW_OPTION = "Liste der Zentren in Deutschland";
-    public static final String BRITISCH_CENTER_OVERVIEW_OPTION = "Liste der Zentren in Großbritanien";
+    public static final String BRITISH_CENTER_OVERVIEW_OPTION = "Liste der Zentren in Großbritanien";
     public static final String GERMAN_CENTER_OVERVIEW_LABEL = "Liste aller vorhandenen deutschen Zentren in der Studie";
-    public static final String BRITISCH_CENTER_OVERVIEW_LABEL = "Liste aller vorhandenen britischen Zentren in der Studie";
+    public static final String BRITISH_CENTER_OVERVIEW_LABEL = "Liste aller vorhandenen britischen Zentren in der Studie";
     public static final String INPUT_VALIDATION_ERROR_MSG = "Bitte Eingaben prüfen!";
 }

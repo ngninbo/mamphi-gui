@@ -6,8 +6,9 @@ import de.fhdo.master.mi.sms.project.mamphi.repository.RandomizationWeekReposito
 import de.fhdo.master.mi.sms.project.mamphi.utils.TrialUtils;
 
 import java.io.File;
+import java.util.function.Predicate;
 
-import static de.fhdo.master.mi.sms.project.mamphi.utils.MamphiStatements.TRIAL_DB_URL;
+import static de.fhdo.master.mi.sms.project.mamphi.utils.TrialStatements.TRIAL_DB_URL;
 
 public class TrialServiceBuilder {
 
@@ -46,9 +47,9 @@ public class TrialServiceBuilder {
     }
 
     public TrialServiceBuilder createDatabase() {
-        File file = new File(database);
+        Predicate<String> fileExist = (fileName) -> new File(fileName).exists();
 
-        if (!file.exists()) {
+        if (fileExist.negate().test(database)) {
             TrialUtils.createDatabase(databaseUrl);
         }
 

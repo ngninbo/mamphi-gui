@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleStringProperty;
 
 public class PatientCenter {
 	
-	private SimpleStringProperty center;
+	private SimpleStringProperty centre;
 	private SimpleIntegerProperty count;
 
 	public PatientCenter() {
@@ -13,23 +13,23 @@ public class PatientCenter {
 	}
 
 	/**
-	 * @param center Zentrum
-	 * @param count Anzahl Patienten
+	 * @param centre Centre
+	 * @param count Number Of Patient
 	 */
-	public PatientCenter(String center, Integer count) {
+	public PatientCenter(String centre, Integer count) {
 		super();
-		this.center = new SimpleStringProperty(center);
+		this.centre = new SimpleStringProperty(centre);
 		this.count = new SimpleIntegerProperty(count);
 	}
 	
 
-	public String getCenter() {
-		return this.center.get();
+	public String getCentre() {
+		return this.centre.get();
 	}
 	
 
-	public void setCenter(String center) {
-		this.center.set(center);
+	public void setCentre(String centre) {
+		this.centre.set(centre);
 	}
 	
 
