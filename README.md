@@ -70,7 +70,7 @@ git clone https://github.com/ngninbo/mamphi-gui.git
 Import the project in our favorite IDE.
 
 
-Set up the database filename (e.g. name of the SQLite file containing the database) in `src/main/java/de/fhdo/master/mi/sms/project/mamphi/utils/MamphiStatements.java`
+Set up the database filename (e.g. name of the SQLite file containing the database) in `src/main/java/de/fhdo/master/mi/sms/project/mamphi/utils/TrialStatements.java`
 This file name is needed for a successful SQLite JDBC driver connection.
 
 Run the application using the following command.
