@@ -1,26 +1,27 @@
 package de.fhdo.master.mi.sms.project.mamphi.repository;
 
-import de.fhdo.master.mi.sms.project.mamphi.model.Land;
-import de.fhdo.master.mi.sms.project.mamphi.model.MonitorVisite;
+import de.fhdo.master.mi.sms.project.mamphi.model.Country;
+import de.fhdo.master.mi.sms.project.mamphi.model.MonitorVisit;
 import de.fhdo.master.mi.sms.project.mamphi.model.PatientCenter;
-import de.fhdo.master.mi.sms.project.mamphi.model.Zentrum;
+import de.fhdo.master.mi.sms.project.mamphi.model.Centre;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import static de.fhdo.master.mi.sms.project.mamphi.utils.GuiConstants.*;
-import static de.fhdo.master.mi.sms.project.mamphi.utils.MamphiStatements.*;
+import static de.fhdo.master.mi.sms.project.mamphi.utils.TrialStatements.*;
+import static de.fhdo.master.mi.sms.project.mamphi.utils.UITranslation.ENGLAND;
 import static de.fhdo.master.mi.sms.project.mamphi.utils.UITranslation.GERMANY;
 
-public class CenterRepository extends BaseRepository<Zentrum> {
+public class CenterRepository extends BaseRepository<Centre> {
 
     private Statement statement;
     private static ResultSet results;
-    private List<Integer> centerIDs;
+    private List<String> centerIDs;
     private List<Integer> patientIDs;
     private int id;
-    private List<MonitorVisite> monitorVisits;
+    private List<MonitorVisit> monitorVisits;
 
     public CenterRepository() {
         super();
@@ -33,18 +34,18 @@ public class CenterRepository extends BaseRepository<Zentrum> {
     }
 
     @Override
-    public List<Zentrum> findAll() {
+    public List<Centre> findAll() {
         return findAll(SELECT_FROM_CENTER);
     }
 
-    public List<Zentrum> findAllByLand(Land land) {
+    public List<Centre> findAllByCountry(Country country) {
 
-        return findAll(String.format(SELECT_FROM_CENTER_WHERE_LAND, land));
+        return findAll(String.format(SELECT_FROM_CENTER_WHERE_COUNTRY, country));
     }
 
-    public List<Zentrum> findAll(String query) {
+    public List<Centre> findAll(String query) {
 
-        List<Zentrum> centerList = new ArrayList<>();
+        List<Centre> centerList = new ArrayList<>();
 
         try (Connection connection = DriverManager.getConnection(databaseUrl)) {
             statement = connection.createStatement();
@@ -52,10 +53,10 @@ public class CenterRepository extends BaseRepository<Zentrum> {
             results = statement.executeQuery(query);
 
             while (results.next()) {
-                Zentrum center = new Zentrum(results.getString("Monitor"), results.getString("Pruefer"),
-                        results.getString("Ort"),
-                        results.getString("Land").equals(Land.D.toString()) ? GERMANY : "Großbritanien",
-                        results.getInt("ZentrumID"));
+                Centre center = new Centre(results.getString("Monitor"), results.getString("Trier"),
+                        results.getString("Place"),
+                        results.getString("Country").equals(Country.DE.toString()) ? GERMANY : ENGLAND,
+                        results.getInt("CentreID"));
                 centerList.add(center);
             }
         } catch (SQLException e) {
@@ -66,14 +67,14 @@ public class CenterRepository extends BaseRepository<Zentrum> {
     }
 
     @Override
-    public void update(Zentrum center) {
+    public void update(Centre center) {
         try (Connection connection = DriverManager.getConnection(databaseUrl)) {
-            // create a connection to the database
+
             PreparedStatement stmt = connection.prepareStatement(INTO_CENTER_VALUES);
-            stmt.setLong(1, center.getZentrumID());
-            stmt.setString(2, GERMANY.equals(center.getLand()) ? Land.D.toString() : Land.GB.toString());
-            stmt.setString(3, center.getOrt());
-            stmt.setString(FOUR, center.getPruefer());
+            stmt.setLong(1, center.getCentreID());
+            stmt.setString(2, GERMANY.equals(center.getCountry()) ? Country.DE.toString() : Country.GB.toString());
+            stmt.setString(3, center.getPlace());
+            stmt.setString(FOUR, center.getTrier());
             stmt.setString(FIVE, center.getMonitor());
 
             int result = stmt.executeUpdate();
@@ -87,7 +88,7 @@ public class CenterRepository extends BaseRepository<Zentrum> {
         }
     }
 
-    public List<Integer> findAllCenterIDs() {
+    public List<String> findAllCenterIDs() {
 
         try (Connection connection = DriverManager.getConnection(databaseUrl)) {
 
@@ -95,10 +96,10 @@ public class CenterRepository extends BaseRepository<Zentrum> {
 
             results = statement.executeQuery(SELECT_CENTER_ID_FROM_CENTER);
 
-            centerIDs = new ArrayList<>();
+            centerIDs = new ArrayList<>(List.of(""));
 
             while (results.next()) {
-                centerIDs.add(results.getInt("ZentrumID"));
+                centerIDs.add(results.getString("CentreID"));
             }
         } catch (SQLException e) {
             // TODO Auto-generated catch block
@@ -117,7 +118,7 @@ public class CenterRepository extends BaseRepository<Zentrum> {
             results = statement.executeQuery(SELECT_PATIENT_ID_FROM_INFORMED_CONSENT);
 
             while (results.next()) {
-                patientIDs.add(results.getInt("patientenID"));
+                patientIDs.add(results.getInt("patientID"));
             }
         } catch (SQLException e) {
             // TODO Auto-generated catch block
@@ -127,13 +128,13 @@ public class CenterRepository extends BaseRepository<Zentrum> {
 
     }
 
-    public int nextId(Land land){
+    public int nextId(Country country){
 
         try (Connection connection = DriverManager.getConnection(databaseUrl)) {
 
             statement = connection.createStatement();
 
-            results = statement.executeQuery(String.format(FETCH_NEXT_CENTER_ID_LAND, land));
+            results = statement.executeQuery(String.format(FETCH_NEXT_CENTRE_ID_BY_COUNTRY, country));
 
             while (results.next()){
                 id = results.getInt("MAX_ID");
@@ -146,21 +147,21 @@ public class CenterRepository extends BaseRepository<Zentrum> {
         return id;
     }
 
-    public List<PatientCenter> findNumberPatientPerCenterByLandByWeek(Land land, int week) {
+    public List<PatientCenter> findNumberPatientPerCenterByCountryByWeek(Country country, int week) {
 
-        List<PatientCenter> listNumberPatientByCenterByLand = new ArrayList<>();
+        List<PatientCenter> listNumberPatientByCentreByCountry = new ArrayList<>();
 
         try (Connection connection = DriverManager.getConnection(databaseUrl)) {
 
-            String query = String.format(FETCH_PATIENT_PER_CENTER_PER_WEEK_BY_LAND, week, land);
+            String query = String.format(FETCH_PATIENT_PER_CENTER_PER_WEEK_BY_COUNTRY, week, country);
 
             statement = connection.createStatement();
 
             results = statement.executeQuery(query);
 
             while (results.next()) {
-                listNumberPatientByCenterByLand
-                        .add(new PatientCenter(results.getString("Zentrum"), results.getInt("Anzahl")));
+                listNumberPatientByCentreByCountry
+                        .add(new PatientCenter(results.getString("Centre"), results.getInt("NumberOfPatient")));
             }
 
         } catch (SQLException e) {
@@ -168,7 +169,7 @@ public class CenterRepository extends BaseRepository<Zentrum> {
             e.printStackTrace();
         }
 
-        return listNumberPatientByCenterByLand;
+        return listNumberPatientByCentreByCountry;
     }
 
     public List<PatientCenter> findNumberOfPatientPerCenterByWeek(int week) {
@@ -180,7 +181,7 @@ public class CenterRepository extends BaseRepository<Zentrum> {
             results = connection.createStatement().executeQuery(String.format(FETCH_PATIENT_PER_CENTER_BY_WEEK, week));
 
             while (results.next()) {
-                list.add(new PatientCenter(results.getString("Zentrum"), results.getInt("Anzahl")));
+                list.add(new PatientCenter(results.getString("centre"), results.getInt("NumberOfPatient")));
             }
 
         } catch (SQLException e) {
@@ -202,7 +203,7 @@ public class CenterRepository extends BaseRepository<Zentrum> {
             results = statement.executeQuery(FETCH_NUM_PATIENT_PER_CENTER_ALL_WEEK);
 
             while (results.next()) {
-                list.add(new PatientCenter(results.getString("Zentrum"), results.getInt("Gesamtanzahl")));
+                list.add(new PatientCenter(results.getString("Centre"), results.getInt("TotalNumberOfPatient")));
             }
 
         } catch (SQLException e) {
@@ -213,7 +214,7 @@ public class CenterRepository extends BaseRepository<Zentrum> {
         return list;
     }
 
-    public List<MonitorVisite> getMonitorVisitPlan(boolean isAllCenterInvolved) {
+    public List<MonitorVisit> getMonitorVisitPlan(boolean isAllCenterInvolved) {
 
         try (Connection connection = DriverManager.getConnection(databaseUrl)) {
 
@@ -226,15 +227,15 @@ public class CenterRepository extends BaseRepository<Zentrum> {
 
             while (results.next()) {
 
-                MonitorVisite monitorVisite = new MonitorVisite(results.getInt("ZentrumID"),
-                        results.getString("Land").equals("D") ? GERMANY : "Großbritanien",
-                        results.getString("Ort"), results.getString("Pruefer"),
+                MonitorVisit monitorVisit = new MonitorVisit(results.getInt("CentreID"),
+                        results.getString("Country").equals("DE") ? GERMANY : ENGLAND,
+                        results.getString("Place"), results.getString("Trier"),
                         results.getString("Monitor"),
-                        results.getInt("Gesamtanzahl"));
+                        results.getInt("TotalNumberOfPatient"));
 
-                monitorVisite.setVisitDates();
+                monitorVisit.setVisitDates();
 
-                monitorVisits.add(monitorVisite);
+                monitorVisits.add(monitorVisit);
             }
 
         } catch (SQLException e) {

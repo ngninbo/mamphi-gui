@@ -94,13 +94,14 @@ After started up, the application may look as followed:
 
 # TODO
 - Refactor code
+- Errors handling
+- Implement delete functionality
 - On Monitor plan view, make sure the visit date are displayed each in a row
 - Use FXML to Create the User Interface
 - Extract styling/Extend `application.css` file
 - Pass database file name as command line argument by editing `Run Configuration` or
 - Define database file name as property in `pom.xml` file
 - Make sure the application use the configured database file name on start up
-- Apply translation on every database column, field, constants, variable etc.
 - Documentation
 - Last but not least, Unit tests
 

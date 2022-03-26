@@ -3,15 +3,17 @@ package de.fhdo.master.mi.sms.project.mamphi.model;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
+import java.util.Objects;
+
 /**
  * @author Beauclair Dongmo Ngnintedem
  *
  */
 public class InformedConsent {
 
-	private SimpleIntegerProperty patientenID;
-	private SimpleIntegerProperty zentrumID;
-	private SimpleStringProperty einwilligung;
+	private SimpleIntegerProperty patientID;
+	private SimpleIntegerProperty centreID;
+	private SimpleStringProperty consent;
 	private SimpleStringProperty date;
 
 	/**
@@ -22,41 +24,41 @@ public class InformedConsent {
 	}
 
 	/**
-	 * @param patientenID Patient id
-	 * @param zentrumID Center id
-	 * @param einwilligung Consent
+	 * @param patientID Patient id
+	 * @param centreID Center id
+	 * @param consent Consent
 	 * @param date Date
 	 */
-	public InformedConsent(int patientenID, int zentrumID, String einwilligung, String date) {
+	public InformedConsent(int patientID, int centreID, String consent, String date) {
 		super();
-		this.patientenID = new SimpleIntegerProperty(patientenID);
-		this.zentrumID = new SimpleIntegerProperty(zentrumID);
-		this.einwilligung = new SimpleStringProperty(einwilligung);
+		this.patientID = new SimpleIntegerProperty(patientID);
+		this.centreID = new SimpleIntegerProperty(centreID);
+		this.consent = new SimpleStringProperty(consent);
 		this.date = new SimpleStringProperty(date);
 	}
 
-	public int getPatientenID() {
-		return this.patientenID.get();
+	public int getPatientID() {
+		return this.patientID.get();
 	}
 
-	public void setPatientenID(int patientenID) {
-		this.patientenID.set(patientenID);
+	public void setPatientID(int patientID) {
+		this.patientID.set(patientID);
 	}
 
-	public int getZentrumID() {
-		return this.zentrumID.get();
+	public int getCentreID() {
+		return this.centreID.get();
 	}
 
-	public void setzentrumID(int zentrumID) {
-		this.zentrumID.set(zentrumID);
+	public void setCentreID(int zentrumID) {
+		this.centreID.set(zentrumID);
 	}
 
-	public String getEinwilligung() {
-		return this.einwilligung.get();
+	public String getConsent() {
+		return this.consent.get();
 	}
 
-	public void setEinwilligung(String einwilligung) {
-		this.einwilligung.set(einwilligung);
+	public void setConsent(String consent) {
+		this.consent.set(consent);
 	}
 
 	public String getDate() {
@@ -68,8 +70,23 @@ public class InformedConsent {
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof InformedConsent)) return false;
+		InformedConsent that = (InformedConsent) o;
+		return Objects.equals(getPatientID(), that.getPatientID()) &&
+				Objects.equals(getCentreID(), that.getCentreID()) && Objects.equals(getConsent(), that.getConsent())
+				&& Objects.equals(getDate(), that.getDate());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getPatientID(), getCentreID(), getConsent(), getDate());
+	}
+
+	@Override
 	public String toString() {
-		return "InformedConsent [patientenID=" + patientenID + ", zentrumID=" + zentrumID + ", einwilligung="
-				+ einwilligung + ", date=" + date + "]";
+		return "InformedConsent [patientID=" + patientID + ", centreID=" + centreID + ", consent="
+				+ consent + ", date=" + date + "]";
 	}
 }

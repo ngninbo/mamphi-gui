@@ -1,13 +1,13 @@
 package de.fhdo.master.mi.sms.project.mamphi.repository;
 
-import de.fhdo.master.mi.sms.project.mamphi.model.Land;
+import de.fhdo.master.mi.sms.project.mamphi.model.Country;
 import de.fhdo.master.mi.sms.project.mamphi.model.RandomizationWeek;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.fhdo.master.mi.sms.project.mamphi.utils.MamphiStatements.*;
+import static de.fhdo.master.mi.sms.project.mamphi.utils.TrialStatements.*;
 
 public class RandomizationWeekRepository extends BaseRepository<RandomizationWeek> {
 
@@ -38,8 +38,8 @@ public class RandomizationWeekRepository extends BaseRepository<RandomizationWee
 
             while (results.next()) {
 
-                RandomizationWeek randWeekItem = new RandomizationWeek(results.getInt("patientenID"), results.getInt("Zentrum"),
-                        results.getString("Behandlungsarm"), results.getString("Datum"));
+                RandomizationWeek randWeekItem = new RandomizationWeek(results.getInt("PatientID"), results.getInt("Centre"),
+                        results.getString("TreatmentGroup"), results.getString("Date"));
                 randomizationList.add(randWeekItem);
             }
         } catch (SQLException e) {
@@ -59,8 +59,8 @@ public class RandomizationWeekRepository extends BaseRepository<RandomizationWee
         return findAll(String.format(FETCH_ALL_RANDOMIZATION_BY_WEEK, week));
     }
 
-    public List<RandomizationWeek> findAllByWeekAndLand(int week, Land land) {
-        return findAll(String.format(FETCH_ALL_RANDOMIZATION_BY_WEEK_AND_LAND, week, land));
+    public List<RandomizationWeek> findAllByWeekAndLand(int week, Country country) {
+        return findAll(String.format(FETCH_ALL_RANDOMIZATION_BY_WEEK_AND_COUNTRY, week, country));
     }
 
     public void update(RandomizationWeek rand, int week) {
@@ -69,9 +69,9 @@ public class RandomizationWeekRepository extends BaseRepository<RandomizationWee
             String query = String.format(UPDATE_RANDOMIZATION_WEEK, week);
 
             PreparedStatement stmt = connection.prepareStatement(query);
-            stmt.setLong(1, rand.getPatientenID());
-            stmt.setLong(2, rand.getZentrum());
-            stmt.setString(3, rand.getBehandlungsarm());
+            stmt.setLong(1, rand.getPatientID());
+            stmt.setLong(2, rand.getCentre());
+            stmt.setString(3, rand.getGroup());
             stmt.setString(4, rand.getDate());
 
             int result = stmt.executeUpdate();

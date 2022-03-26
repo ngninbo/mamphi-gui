@@ -7,10 +7,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.fhdo.master.mi.sms.project.mamphi.utils.MamphiStatements.*;
+import static de.fhdo.master.mi.sms.project.mamphi.utils.GuiConstants.EMPTY;
+import static de.fhdo.master.mi.sms.project.mamphi.utils.TrialStatements.*;
 import static de.fhdo.master.mi.sms.project.mamphi.utils.UITranslation.NO;
 import static de.fhdo.master.mi.sms.project.mamphi.utils.UITranslation.YES;
-import static de.fhdo.master.mi.sms.project.mamphi.utils.GuiConstants.EMPTY;
 
 public class InformedConsentRepository extends BaseRepository<InformedConsent> {
 
@@ -44,11 +44,10 @@ public class InformedConsentRepository extends BaseRepository<InformedConsent> {
         try (Connection connection = DriverManager.getConnection(databaseUrl)) {
 
             PreparedStatement stmt = connection.prepareStatement(UPDATE_INFORMED_CONSENT);
-            stmt.setLong(1, informedConsent.getPatientenID());
-            stmt.setLong(2, informedConsent.getZentrumID());
-            stmt.setString(3, informedConsent.getEinwilligung());
+            stmt.setLong(1, informedConsent.getPatientID());
+            stmt.setLong(2, informedConsent.getCentreID());
+            stmt.setString(3, informedConsent.getConsent());
             stmt.setString(4, informedConsent.getDate());
-
 
             int result = stmt.executeUpdate();
 
@@ -88,9 +87,9 @@ public class InformedConsentRepository extends BaseRepository<InformedConsent> {
 
             while (results.next()) {
 
-                informedConsent = new InformedConsent(results.getInt("patientenID"), results.getInt("Zentrum"),
-                        results.getString("Einwilligung") != null ? results.getString("Einwilligung").toUpperCase() : EMPTY,
-                        results.getString("Datum"));
+                informedConsent = new InformedConsent(results.getInt("patientID"), results.getInt("Centre"),
+                        results.getString("Consent") != null ? results.getString("Consent").toUpperCase() : EMPTY,
+                        results.getString("Date"));
                 consentList.add(informedConsent);
 
             }
