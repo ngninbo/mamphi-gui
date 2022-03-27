@@ -20,7 +20,7 @@ As mentioned before, this application manage data from a sqlite Database and dis
 So in order to run the application, the database could be created manually and 
 the database filename passed to the application as program argument.
 
-This could be archived using the script named `mamphidb.db.sql` provided with this repository. 
+This could be archived using the script named `trial.db.sql` provided with this repository. 
 
 For time saving, the SQLite Editor [DB Browser for SQLite](https://sqlitebrowser.org/) is recommended for this purpose.
 
