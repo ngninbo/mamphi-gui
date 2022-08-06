@@ -1,5 +1,6 @@
 package de.fhdo.master.mi.sms.project.mamphi.model;
 
+import de.fhdo.master.mi.sms.project.mamphi.annotation.Model;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -9,6 +10,7 @@ import java.util.Objects;
  * @author Beauclair Dongmo Ngnintedem
  *
  */
+@Model
 public class InformedConsent {
 
 	private SimpleIntegerProperty patientID;

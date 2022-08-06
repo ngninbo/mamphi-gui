@@ -52,7 +52,7 @@ public class TrialServiceImpl implements TrialService {
     }
 
     @Override
-    public List<RandomizationWeek> findAllByWeekAndLand(int week, Country country) {
+    public List<RandomizationWeek> findAllByWeekAndCountry(int week, Country country) {
         return randomizationWeekRepository.findAllByWeekAndLand(week, country);
     }
 
@@ -112,7 +112,7 @@ public class TrialServiceImpl implements TrialService {
     }
 
     @Override
-    public List<PatientCenter> findNumberPatientPerCenterByLandByWeek(Country country, int week) {
+    public List<PatientCenter> findNumberPatientPerCenterByCountryByWeek(Country country, int week) {
         return centerRepository.findNumberPatientPerCenterByCountryByWeek(country, week);
     }
 }

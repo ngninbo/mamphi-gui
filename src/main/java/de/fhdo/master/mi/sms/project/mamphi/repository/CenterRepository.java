@@ -4,6 +4,7 @@ import de.fhdo.master.mi.sms.project.mamphi.model.Country;
 import de.fhdo.master.mi.sms.project.mamphi.model.MonitorVisit;
 import de.fhdo.master.mi.sms.project.mamphi.model.PatientCenter;
 import de.fhdo.master.mi.sms.project.mamphi.model.Centre;
+import de.fhdo.master.mi.sms.project.mamphi.annotation.CrudRepository;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import static de.fhdo.master.mi.sms.project.mamphi.utils.TrialStatements.*;
 import static de.fhdo.master.mi.sms.project.mamphi.utils.UITranslation.ENGLAND;
 import static de.fhdo.master.mi.sms.project.mamphi.utils.UITranslation.GERMANY;
 
+@CrudRepository
 public class CenterRepository extends BaseRepository<Centre> {
 
     private Statement statement;

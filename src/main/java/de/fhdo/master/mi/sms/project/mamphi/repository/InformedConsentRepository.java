@@ -2,6 +2,7 @@ package de.fhdo.master.mi.sms.project.mamphi.repository;
 
 import de.fhdo.master.mi.sms.project.mamphi.model.Consent;
 import de.fhdo.master.mi.sms.project.mamphi.model.InformedConsent;
+import de.fhdo.master.mi.sms.project.mamphi.annotation.CrudRepository;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import static de.fhdo.master.mi.sms.project.mamphi.utils.TrialStatements.*;
 import static de.fhdo.master.mi.sms.project.mamphi.utils.UITranslation.NO;
 import static de.fhdo.master.mi.sms.project.mamphi.utils.UITranslation.YES;
 
+@CrudRepository
 public class InformedConsentRepository extends BaseRepository<InformedConsent> {
 
     private String query;

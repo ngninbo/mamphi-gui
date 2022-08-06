@@ -37,7 +37,7 @@ public class UITranslation {
     public static final String RANDOM_WEEK_OVERVIEW_OPTION = "Angaben zur Randomisierung in der Woche %s anzeigen";
     public static final String RANDOM_WEEK_OVERVIEW_TITLE = "Angaben zur Randomisierung in der Woche %s";
     public static final String RANDOM_WEEK_OVERVIEW_LABEL = "Anzahl Patienten pro Zentrum \nin Woche %s";
-    public static final String RANDOM_WEEK_LAND_OVERVIEW_OPTION = "Anzahl der Patienten pro Zentrum in %s in der Woche %s";
+    public static final String RANDOM_WEEK_COUNTRY_OVERVIEW_OPTION = "Anzahl der Patienten pro Zentrum in %s in der Woche %s";
     public static final String VIEW_ANOTHER_RANDOM_WEEK_PROMPT_TXT = "Andere wochenliche Liste anzeigen lassen";
     public static final int ONE_VALUE = 1;
     public static final int TWO_VALUE = 2;

@@ -6,6 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.provider.Arguments;
 
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import static org.junit.jupiter.params.provider.Arguments.arguments;
@@ -14,10 +17,10 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TrialServiceTest {
 
     private static TrialService trialService;
-    private static String database = "test.db";
+    private static final String database = "test.db";
 
     @BeforeAll
-    public static void beforeAll() {
+    public static void beforeAll() throws SQLException, IOException {
         trialService = TrialServiceBuilder.init()
                 .withDatabase(database)
                 .withCenterRepository()
@@ -32,6 +35,7 @@ public class TrialServiceTest {
 
     @Test
     public void update() {
+        assertTrue(new File(database).exists());
         assertThrows(NoSuchMethodException.class, () -> trialService.update(new RandomizationWeek()));
     }
 

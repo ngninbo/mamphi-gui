@@ -67,28 +67,29 @@ public class MonitorVisit extends Centre {
 
 	public void setVisitDates() {
 
-		List<LocalDate> listOfVisiteDates;
 		final int numberPatient = getNumberOfPatient();
 
 		if (numberPatient > MIN_NUM_PATIENT_FOR_MONTHLY_VISIT) {
-			listOfVisiteDates = START_DATE.datesUntil(END_DATE, Period.ofMonths(1)).collect(Collectors.toList());
-			setVisitDates(listOfVisiteDates.subList(0, FIVE));
+			setVisitDates(nextFiveVisitDates(1));
 		}
 		else if (numberPatient > FOUR && numberPatient < MIN_NUM_PATIENT_FOR_MONTHLY_VISIT) {
-			listOfVisiteDates = START_DATE.datesUntil(END_DATE, Period.ofMonths(2)).collect(Collectors.toList());
-			setVisitDates(listOfVisiteDates.subList(0, FIVE));
+			setVisitDates(nextFiveVisitDates(2));
 		}
 		else if (numberPatient > 0 && numberPatient < FIVE) {
-			listOfVisiteDates = START_DATE.datesUntil(END_DATE, Period.ofMonths(3)).collect(Collectors.toList());
-			setVisitDates(listOfVisiteDates.subList(0, FIVE));
+			setVisitDates(nextFiveVisitDates(3));
 		}
 		else {
-			listOfVisiteDates = new ArrayList<>();
-			setVisitDates(listOfVisiteDates);
+			setVisitDates(new ArrayList<>());
 		}
 	}
 
 	private void setVisitDates(List<LocalDate> visitDate) {
 		this.visitDate = (visitDate !=null) ? new SimpleListProperty<>(FXCollections.observableArrayList(visitDate)): null;
+	}
+
+	private List<LocalDate> nextFiveVisitDates(int periodOfMonths) {
+		return START_DATE.datesUntil(END_DATE, Period.ofMonths(periodOfMonths))
+				.limit(FIVE)
+				.collect(Collectors.toList());
 	}
 }

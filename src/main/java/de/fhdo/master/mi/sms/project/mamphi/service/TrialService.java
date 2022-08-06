@@ -1,29 +1,16 @@
 package de.fhdo.master.mi.sms.project.mamphi.service;
 
-import de.fhdo.master.mi.sms.project.mamphi.model.*;
+import de.fhdo.master.mi.sms.project.mamphi.annotation.Service;
+import de.fhdo.master.mi.sms.project.mamphi.repository.BaseRepository;
 
-import java.util.List;
+import java.io.IOException;
+import java.sql.SQLException;
 
-public interface TrialService {
+@Service
+public interface TrialService extends CenterService, RandomizationWeekService, InformedConsentService {
 
-    void update(Centre center);
-    void update(InformedConsent informedConsent);
-    void update(RandomizationWeek randomizationWeek, int week);
-    void update(RandomizationWeek randomizationWeek) throws NoSuchMethodException;
-    List<RandomizationWeek> findAllByWeek(int week);
-    List<RandomizationWeek> findAllRandomWeek();
-    List<RandomizationWeek> findAllByWeekAndLand(int week, Country country);
-    List<Centre> findAllCenter();
-    List<String> findAllCenterIds();
-    List<Integer> findAllPatientID();
-    List<Centre> findAllCenter(Country country);
-    List<InformedConsent> findAllInformedConsent();
-    List<InformedConsent> findAllInformedConsent(Consent consent);
-    List<InformedConsent> findAllInformedConsent(boolean isInformed);
-    List<MonitorVisit> getMonitorVisitPlan(boolean isInvolved);
-    int nextId(Country country);
-    List<PatientCenter> findNumberOfPatientPerCenterByWeek(int week);
-    List<PatientCenter> findNumberOfPatientPerCenterByAllWeek();
+    static void createDatabase(String databaseUrl) throws SQLException, IOException {
 
-    List<PatientCenter> findNumberPatientPerCenterByLandByWeek(Country country, int week);
+        BaseRepository.createDatabase(databaseUrl);
+    }
 }

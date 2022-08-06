@@ -2,28 +2,28 @@
 SELECT * FROM Centres;
 
 -- Liste der deutschen Zentren
-SELECT * FROM Centres WHERE Land = 'D';
+SELECT * FROM Centres WHERE Country = 'D';
 
 -- Liste der britischen Zentren
-SELECT * FROM Centres WHERE Land = 'GB';
+SELECT * FROM Centres WHERE Country = 'GB';
 
 -- Nächstmögliche ID für ein britisches Zentrum
 SELECT max(CentreID) + 1 as newID
 FROM Centres
-WHERE Land = 'GB'
+WHERE Country = 'GB';
 
 -- Nächstmögliche ID für ein deutsches Zentrum
 SELECT max(CentreID) + 1 as newID
 FROM Centres
-WHERE Land = 'DE'
+WHERE Country = 'DE';
 
--- Nächstmögliche PatientenID
-SELECT max(PatientenID) + 1 as newPatientID
+-- Nächstmögliche PatientId
+SELECT max(PatientId) + 1 as newPatientID
 FROM Informed_consent;
 
 -- Anzahl der Patienten pro Zentren in der ersten Randomisierungswoche 
 SELECT r1.Centre, COUNT(r1.Centre) as Anzahl
-FROM Randomization_Week__1 r1
+FROM Randomization_Week_1 r1
 GROUP BY r1.Centre;
 
 -- Anzahl der Patienten pro Zentren in der zweiten Randomisierungswoche 
@@ -32,13 +32,13 @@ SELECT 	CASE
 			ELSE r2.Centre
 		END AS Centre, 
 		COUNT(r2.Centre) as Anzahl
-FROM Randomization_Week__2 r2
+FROM Randomization_Week_2 r2
 GROUP BY r2.Centre;
 
 -- Anzahl der Patienten pro Zentren in allen Randomisierungswochen
 SELECT za.Centre, SUM(za.ANZAHL) AS TotalNumberOfPatient 
 FROM (	SELECT r1.Centre, COUNT(r1.Centre) as Anzahl
-		FROM Randomization_Week__1 r1
+		FROM Randomization_Week_1 r1
 		GROUP BY r1.Centre
 		UNION
 		SELECT 	CASE 
@@ -46,161 +46,161 @@ FROM (	SELECT r1.Centre, COUNT(r1.Centre) as Anzahl
 					ELSE r2.Centre
 				END AS Centre, 
 				COUNT(r2.Centre) as Anzahl
-		FROM Randomization_Week__2 r2
+		FROM Randomization_Week_2 r2
 		GROUP BY r2.Centre) za
 GROUP BY Centre;
 
 
 -- Anzahl der britischen Patienten pro Zentrum in der ersten Randomisierungswochen
-SELECT ra.Centre as Centre, ra.Anzahl as Anzahl, zd.Land
+SELECT ra.Centre as Centre, ra.Anzahl as Anzahl, zd.Country
 FROM(	SELECT r.Centre, COUNT(r.Centre) as Anzahl
-		FROM Randomization_Week__1 r
+		FROM Randomization_Week_1 r
 		GROUP BY r.Centre) ra
-LEFT JOIN (	SELECT z.CentreID, z.Land 
+LEFT JOIN (	SELECT z.CentreID, z.Country 
 			FROM Centres z) zd ON ra.Centre = zd.CentreID
-WHERE zd.Land = 'GB';
+WHERE zd.Country = 'GB';
 
 
 SELECT r.Centre, count(r.Centre) as Anzahl 
-FROM Randomization_Week__1 r
+FROM Randomization_Week_1 r
 WHERE r.Centre in (SELECT z.CentreID 
 					FROM Centres z
-					WHERE z.Land = 'GB')
+					WHERE z.Country = 'GB')
 GROUP BY Centre;
 
 /*Liste der britischen Patienten in der ersten Randomisierungswoche.
-Das Datum wird hierbei in deutschsprachigen ausgegeben */
+Das Date wird hierbei in deutschsprachigen ausgegeben */
 
-SELECT r.PatientID r.Centre, r.Behandlungsarm, strftime('%d.%m.%Y', r.Datum) as Datum
-FROM Randomization_Week__1 r
+SELECT r.PatientID, r.Centre, r.TreatmentGroup, strftime('%d.%m.%Y', r.Date) as Date
+FROM Randomization_Week_1 r
 JOIN (	SELECT CentreID FROM Centres z
-		WHERE z.Land = 'GB') zb
+		WHERE z.Country = 'GB') zb
 on zb.CentreID = r.Centre;
 
-SELECT r.PatientID r.Centre, r.Behandlungsarm, r.Datum
-FROM Randomization_Week__1 r
+SELECT r.PatientID, r.Centre, r.TreatmentGroup, r.Date
+FROM Randomization_Week_1 r
 JOIN (	SELECT CentreID FROM Centres z
-		WHERE z.Land = 'GB') zb
+		WHERE z.Country = 'GB') zb
 on zb.CentreID = r.Centre;
 
 -- Anzahl der Patienten pro Zentrum in der ersten Randomisierungswoche
 SELECT Centre, count(Centre) as Anzahl
-FROM Randomization_Week__1
+FROM Randomization_Week_1
 GROUP BY Centre;
 
-SELECT r1.PatientID r1.Centre, r1.Behandlungsarm, r1.Datum
-FROM Randomization_Week__1 r1
+SELECT r1.PatientID, r1.Centre, r1.TreatmentGroup, r1.Date
+FROM Randomization_Week_1 r1
 UNION
-SELECT 	r2.PatientID 
+SELECT 	r2.PatientID,
 		CASE 
 			WHEN r2.Centre IS NULL THEN 999
 			ELSE r2.Centre
 		END AS Centre, 
-		r2.Behandlungsarm, r2.Datum
-FROM Randomization_Week__2 r2
-WHERE PatientenID IS NOT NULL;
+		r2.TreatmentGroup, r2.Date
+FROM Randomization_Week_2 r2
+WHERE PatientId IS NOT NULL;
 
 
 -- Anzahl der deutsche Patienten pro Zentrum in der ersten Randomisierungswoche
 SELECT r.Centre, count(r.Centre) as Anzahl
-FROM Randomization_Week__1 r
+FROM Randomization_Week_1 r
 JOIN (	SELECT z.CentreID FROM Centres z
-		WHERE Land = 'D') zd on zd.CentreID = r.Centre
+		WHERE Country = 'D') zd on zd.CentreID = r.Centre
 GROUP BY Centre;
 
 -- Liste der Patienten in der ersten Radominisierungswoche
-SELECT r.PatientID r.Centre, r.Behandlungsarm, strftime('%d.%m.%Y', r.Datum) as Datum 
-FROM Randomization_Week__1 r;
+SELECT r.PatientID, r.Centre, r.TreatmentGroup, strftime('%d.%m.%Y', r.Date) as Date 
+FROM Randomization_Week_1 r;
 
-SELECT r.PatientID r.Centre, r.Behandlungsarm, Datum
-FROM Randomization_Week__1 r;
+SELECT r.PatientID, r.Centre, r.TreatmentGroup, Date
+FROM Randomization_Week_1 r;
 
 
 -- Liste der Consenten
 SELECT * FROM Informed_consent;
 
-select patientID, Centre, Consent, Datum from Informed_consent;
+select patientID, Centre, Consent, Date from Informed_consent;
 
 -- Liste der Patienten bei denen die Einwilligung fehlt
 SELECT * FROM Informed_consent
-WHERE Consent IS NULL
+WHERE Consent IS NULL;
 
 -- Liste der Patienten bei denen die Einwilligung unvollständig sind
-SELECT 	PatientID, Centre, Consent, Datum	
+SELECT 	PatientID, Centre, Consent, Date	
 FROM Informed_consent
-WHERE Consent IS NULL OR Datum IS NULL;
+WHERE Consent IS NULL OR Date IS NULL;
 
 -- Liste der Patienten bei denen die Einwilligung nach der Randomisierung kommt
 SELECT * FROM Informed_consent
-where substr(Datum,7)||substr(Datum,4,2)||substr(Datum,1,2) > '20190603';
+where substr(Date,7)||substr(Date,4,2)||substr(Date,1,2) > '20190603';
 
-SELECT substr(Datum,7)||substr(Datum,4,2)||substr(Datum,1,2) AS Datum 
+SELECT substr(Date,7)||substr(Date,4,2)||substr(Date,1,2) AS Date 
 FROM Informed_consent;
 
 SELECT strftime('$d.$m.$Y', '03.06.2019');
 
 
-SELECT PatientID, Centre, Consent, Datum 
+SELECT PatientID, Centre, Consent, Date 
 FROM Informed_consent 
-WHERE Consent, = 'ja'
+WHERE Consent = 'ja';
 
 
-/*Monitoringplan: Anzeige der Informationen über ZentrumID, Land, Ort, Pruefer, 
+/*Monitoringplan: Anzeige der Informationen über ZentrumID, Country, Place, Trier, 
 Monitor und die Gesamtanzahl an Patienten aus Centres, die entweder in der ersten 
 oder zweiten Randomisierungwoche involviert waren. OUTER JOIN aktuell nicht unterstützt!*/
-SELECT z.CentreID, z.Land, z.Ort, z.Pruefer, z.Monitor, zg.TotalNumberOfPatient as NP
-FROM(SELECT * FROM Centres ORDER BY CentreID ASC) z
+SELECT z.CentreID, z.Country, z.Place, z.Trier, z.Monitor, zg.TotalNumberOfPatient as NP
+FROM(SELECT * FROM Centres ORDER BY CentreID) z
 JOIN (	SELECT CentreID, TotalNumberOfPatient 
-		FROM (SELECT CentreID FROM Centres ORDER BY CentreID ASC)
+		FROM (SELECT CentreID FROM Centres ORDER BY CentreID)
 		LEFT JOIN (	SELECT Centre, SUM(Anzahl) as TotalNumberOfPatient
 					FROM(	SELECT r1.Centre, COUNT(r1.Centre) as Anzahl
-							FROM Randomization_Week__1 r1 
+							FROM Randomization_Week_1 r1 
 							GROUP BY r1.Centre
 							UNION 	SELECT r2.Centre, COUNT(r2.Centre) as Anzahl
-									FROM Randomization_Week__2 r2 
+									FROM Randomization_Week_2 r2 
 									GROUP BY r2.Centre)
 					GROUP BY Centre) 
 		ON CentreID = Centre) zg 
 ON z.CentreID = zg.CentreID;
 
-/*Monitoringplan: Anzeige der Informationen über ZentrumID, Land, Ort, Pruefer, 
+/*Monitoringplan: Anzeige der Informationen über ZentrumID, Country, Place, Trier, 
 Monitor und die Gesamtanzahl an Patienten aus Centres, die entweder in der ersten 
 oder zweiten Randomisierungwoche involviert waren. OUTER JOIN aktuell nicht unterstützt!*/
-SELECT z.CentreID, z.Land, z.Ort, z.Pruefer, z.Monitor, zg.TotalNumberOfPatient as TotalNumberOfPatient
-FROM(SELECT * FROM Centres ORDER BY CentreID ASC) z
+SELECT z.CentreID, z.Country, z.Place, z.Trier, z.Monitor, zg.TotalNumberOfPatient as TotalNumberOfPatient
+FROM(SELECT * FROM Centres ORDER BY CentreID) z
 JOIN (	SELECT CentreID, TotalNumberOfPatient 
 		FROM (	SELECT ru.Centre, SUM(ru.Anzahl) as TotalNumberOfPatient
 				FROM(	SELECT r1.Centre, COUNT(r1.Centre) as Anzahl
-						FROM Randomization_Week__1 r1 
+						FROM Randomization_Week_1 r1 
 						GROUP BY r1.Centre
 						UNION 	SELECT r2.Centre, COUNT(r2.Centre) as Anzahl
-								FROM Randomization_Week__2 r2 
+								FROM Randomization_Week_2 r2 
 								GROUP BY r2.Centre) ru
 				GROUP BY ru.Centre) zs
 		JOIN (	SELECT CentreID FROM Centres  
-				ORDER BY CentreID ASC) zi
+				ORDER BY CentreID) zi
 		ON zi.CentreID = zs.Centre) zg 
 ON z.CentreID = zg.CentreID
-WHERE z.CentreID in(SELECT CentreID FROM (	SELECT CentreID, TotalNumberOfPatient 
+WHERE z.CentreID in(SELECT CentreID FROM (	SELECT CentreID, TotalNumberOfPatient
 												FROM (	SELECT ru2.Centre, SUM(ru2.Anzahl) as TotalNumberOfPatient
 														FROM( 	SELECT r12.Centre, COUNT(r12.Centre) as Anzahl
-																FROM Randomization_Week__1 r12 
+																FROM Randomization_Week_1 r12 
 																GROUP BY r12.Centre
 																UNION 	SELECT r22.Centre, COUNT(r22.Centre) as Anzahl
-																		FROM Randomization_Week__2 r22
+																		FROM Randomization_Week_2 r22
 																		GROUP BY r22.Centre) ru2
 														GROUP BY ru2.Centre) zs2
-												JOIN (	SELECT CentreID FROM Centres ORDER BY CentreID ASC) zi2
+												JOIN (	SELECT CentreID FROM Centres ORDER BY CentreID) zi2
 												ON zi2.CentreID = zs2.Centre));
 
 
 												
 
-SELECT z.CentreID, z.Land, z.Ort, z.Pruefer, z.Monitor, zg.TotalNumberOfPatient 
+SELECT z.CentreID, z.Country, z.Place, z.Trier, z.Monitor, zg.TotalNumberOfPatient 
 FROM Centres z
 JOIN (	SELECT za.Centre, SUM(za.ANZAHL) AS TotalNumberOfPatient 
 		FROM (	SELECT r1.Centre, COUNT(r1.Centre) as Anzahl
-				FROM Randomization_Week__1 r1
+				FROM Randomization_Week_1 r1
 				GROUP BY r1.Centre
 				UNION
 				SELECT 	CASE 
@@ -208,7 +208,7 @@ JOIN (	SELECT za.Centre, SUM(za.ANZAHL) AS TotalNumberOfPatient
 							ELSE r2.Centre
 						END AS Centre, 
 						COUNT(r2.Centre) as Anzahl
-				FROM Randomization_Week__2 r2
+				FROM Randomization_Week_2 r2
 				GROUP BY r2.Centre) za
 		GROUP BY Centre) zg 
 ON zg.Centre = z.CentreID;
@@ -223,14 +223,14 @@ GROUP BY Centre;
 SELECT r.Centre, count(r.Centre) as Anzahl
 FROM Randomization_Week_1 r
 JOIN (	SELECT z.CentreId FROM Centres z
-		WHERE Land = 'D') zd on zd.CentreId = r.Centre
+		WHERE Country = 'D') zd on zd.CentreId = r.Centre
 GROUP BY Centre;
 
 -- Liste der Patienten in der ersten Radominisierungswoche
-SELECT r.Patient_Id, r.Centre, r.Behandlungsarm, strftime('%d.%m.%Y', r.Datum) as Datum 
+SELECT r.PatientId, r.Centre, r.TreatmentGroup, strftime('%d.%m.%Y', r.Date) as Date 
 FROM Randomization_Week_1 r;
 
-SELECT r.Patient_Id, r.Centre, r.Behandlungsarm, Datum 
+SELECT r.PatientId, r.Centre, r.TreatmentGroup, Date 
 FROM Randomization_Week_1 r;
 
 
@@ -239,24 +239,24 @@ SELECT * FROM Informed_consent;
 
 -- Liste der Patienten bei denen die Einwilligung fehlt
 SELECT * FROM Informed_consent
-WHERE Consent, IS 'nan'
+WHERE Consent IS 'nan';
 
 -- Liste der Patienten bei denen die Einwilligung unvollständig sind
 SELECT * FROM Informed_consent
-WHERE Consent, IS 'nan' OR Datum IS 'NaT';
+WHERE Consent IS 'nan' OR Date IS 'NaT';
 
 -- Liste der Patienten bei denen die Einwilligung nach der Randomisierung kommt
 SELECT * FROM Informed_consent
-WHERE Datum > '2019.06.03';
+WHERE Date > '2019.06.03';
 
 
-/*Monitoringplan: Anzeige der Informationen über Zentrum_ID, Land, Ort, Prüfer, 
+/*Monitoringplan: Anzeige der Informationen über Zentrum_ID, Country, Place, Trier, 
 Monitor und die Gesamtanzahl an Patienten aus Zentren, die entweder in der ersten 
 oder zweiten Randomisierungwoche involviert waren. OUTER JOIN aktuell nicht unterstützt!*/
-SELECT z.CentreId, z.Land, z.Ort, z.Prüfer, z.Monitor, zg.Gesamtanzahl as NP
-FROM(SELECT * FROM Centres ORDER BY CentreId ASC) z
+SELECT z.CentreId, z.Country, z.Place, z.Trier, z.Monitor, zg.TotalNumberOfPatient as NP
+FROM(SELECT * FROM Centres ORDER BY CentreId) z
 JOIN (	SELECT CentreId, TotalNumberOfPatient 
-		FROM (SELECT CentreId FROM Centres ORDER BY CentreId ASC)
+		FROM (SELECT CentreId FROM Centres ORDER BY CentreId)
 		LEFT JOIN (	SELECT Centre, SUM(Anzahl) as TotalNumberOfPatient
 					FROM(	SELECT r1.Centre, COUNT(r1.Centre) as Anzahl
 							FROM Randomization_Week_1 r1 
@@ -268,13 +268,13 @@ JOIN (	SELECT CentreId, TotalNumberOfPatient
 		ON CentreId = Centre) zg 
 ON z.CentreId = zg.CentreId;
 
-/*Monitoringplan: Anzeige der Informationen über Zentrum_ID, Land, Ort, Prüfer, 
+/*Monitoringplan: Anzeige der Informationen über Zentrum_ID, Country, Place, Trier, 
 Monitor und die Gesamtanzahl an Patienten aus Zentren, die entweder in der ersten 
 oder zweiten Randomisierungwoche involviert waren. OUTER JOIN aktuell nicht unterstützt!*/
-SELECT z.CentreId, z.Land, z.Ort, z.Prüfer, z.Monitor, zg.TotalNumberOfPatient as NP
-FROM(SELECT * FROM Centres ORDER BY CentreId ASC) z
+SELECT z.CentreId, z.Country, z.Place, z.Trier, z.Monitor, zg.TotalNumberOfPatient as NP
+FROM(SELECT * FROM Centres ORDER BY CentreId) z
 JOIN (	SELECT CentreId, TotalNumberOfPatient 
-		FROM (	SELECT ru.Centre, SUM(ru.Anzahl) as TotalNumberOfPatient
+		FROM (	SELECT ru.Centre, SUM(ru.numberOfPatient) as TotalNumberOfPatient
 				FROM(	SELECT r1.Centre, COUNT(r1.Centre) as numberOfPatient
 						FROM Randomization_Week_1 r1 
 						GROUP BY r1.Centre
@@ -283,7 +283,7 @@ JOIN (	SELECT CentreId, TotalNumberOfPatient
 								GROUP BY r2.Centre) ru
 				GROUP BY ru.Centre) zs
 		JOIN (	SELECT CentreId FROM Centres  
-				ORDER BY CentreId ASC) zi
+				ORDER BY CentreId) zi
 		ON zi.CentreId = zs.Centre) zg 
 ON z.CentreId = zg.CentreId;
 

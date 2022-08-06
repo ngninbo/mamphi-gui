@@ -1,5 +1,6 @@
 package de.fhdo.master.mi.sms.project.mamphi.model;
 
+import de.fhdo.master.mi.sms.project.mamphi.annotation.Model;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -7,6 +8,7 @@ import javafx.beans.property.SimpleStringProperty;
  * @author Beauclair Dongmo Ngnintedem
  *
  */
+@Model
 public class Centre {
 
 	private SimpleStringProperty monitor;
