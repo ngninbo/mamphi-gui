@@ -2,7 +2,6 @@ package de.fhdo.master.mi.sms.project.mamphi.model;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -79,12 +78,12 @@ public class MonitorVisit extends Centre {
 			setVisitDates(nextFiveVisitDates(3));
 		}
 		else {
-			setVisitDates(new ArrayList<>());
+			setVisitDates(List.of());
 		}
 	}
 
 	private void setVisitDates(List<LocalDate> visitDate) {
-		this.visitDate = (visitDate !=null) ? new SimpleListProperty<>(FXCollections.observableArrayList(visitDate)): null;
+		this.visitDate = !visitDate.isEmpty() ? new SimpleListProperty<>(FXCollections.observableArrayList(visitDate)): null;
 	}
 
 	private List<LocalDate> nextFiveVisitDates(int periodOfMonths) {

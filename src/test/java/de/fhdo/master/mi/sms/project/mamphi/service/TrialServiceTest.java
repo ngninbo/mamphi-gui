@@ -2,6 +2,9 @@ package de.fhdo.master.mi.sms.project.mamphi.service;
 
 import de.fhdo.master.mi.sms.project.mamphi.model.Centre;
 import de.fhdo.master.mi.sms.project.mamphi.model.RandomizationWeek;
+import de.fhdo.master.mi.sms.project.mamphi.repository.CenterRepository;
+import de.fhdo.master.mi.sms.project.mamphi.repository.InformedConsentRepository;
+import de.fhdo.master.mi.sms.project.mamphi.repository.RandomizationWeekRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,10 +20,14 @@ import static org.mockito.Mockito.*;
 
 public class TrialServiceTest {
 
-    private static final TrialService trialService = mock(TrialService.class);
+    private static TrialService trialService;
+    private static final CenterRepository centerRepository = mock(CenterRepository.class);
+    private static final InformedConsentRepository informedConsentRepository = mock(InformedConsentRepository.class);
+    private static final RandomizationWeekRepository randomizationWeekRepository = mock(RandomizationWeekRepository.class);
 
     @BeforeAll
     public static void beforeAll() {
+        trialService = new TrialServiceImpl(centerRepository, informedConsentRepository, randomizationWeekRepository);
     }
 
     @BeforeEach
@@ -29,17 +36,19 @@ public class TrialServiceTest {
 
     @Test
     public void update() throws NoSuchMethodException {
-        doThrow(new NoSuchMethodException()).when(trialService).update(isA(RandomizationWeek.class));
-        assertThrows(NoSuchMethodException.class, () -> trialService.update(new RandomizationWeek()));
+        var rand = new RandomizationWeek();
+        doThrow(new NoSuchMethodException()).when(randomizationWeekRepository).update(isA(RandomizationWeek.class));
+        assertThrows(NoSuchMethodException.class, () -> trialService.update(rand));
+        verify(randomizationWeekRepository, times(1)).update(eq(rand));
     }
 
     @ParameterizedTest
     @MethodSource("argCenterFactory")
     public void testUpdate(int centreId, String country, String place, String monitor, String trier) {
-        doNothing().when(trialService).update(isA(Centre.class));
+        doNothing().when(centerRepository).update(isA(Centre.class));
         Centre centre = new Centre(monitor, trier, place, country, centreId);
         trialService.update(centre);
-        verify(trialService).update(eq(centre));
+        verify(centerRepository, times(1)).update(centre);
     }
 
     @Test
@@ -61,7 +70,7 @@ public class TrialServiceTest {
 
     @Test
     public void findAllCenter() {
-        doReturn(List.of()).when(trialService).findAllCenter();
+        doReturn(List.of()).when(centerRepository).findAll();
         List<Centre> centres = trialService.findAllCenter();
         assertThat(centres).isEqualTo(List.of());
     }

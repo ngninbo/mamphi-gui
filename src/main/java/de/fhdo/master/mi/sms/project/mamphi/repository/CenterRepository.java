@@ -43,7 +43,7 @@ public class CenterRepository extends BaseRepository<Centre> {
 
     public List<Centre> findAllByCountry(Country country) {
 
-        LOGGER.info("Fetching all items from centre table.");
+        LOGGER.info("Fetching items from centre table.");
 
         return findAll(String.format(SELECT_FROM_CENTER_WHERE_COUNTRY, country));
     }

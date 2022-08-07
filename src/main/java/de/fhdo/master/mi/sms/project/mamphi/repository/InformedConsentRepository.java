@@ -67,13 +67,8 @@ public class InformedConsentRepository extends BaseRepository<InformedConsent> {
     }
 
     public List<InformedConsent> findAllByConsent(Consent consent) {
-        if (consent.equals(Consent.INCOMPLETE)) {
-            query = SELECT_INCOMPLETE_CONSENT;
-        } else if (consent.equals(Consent.MISSING)) {
-            query = SELECT_MISSING_CONSENT;
-        } else {
-            query = SELECT_LATE_INFORMED_CONSENT;
-        }
+        query = consent.equals(Consent.INCOMPLETE) ? SELECT_INCOMPLETE_CONSENT :
+                consent.equals(Consent.MISSING) ? SELECT_MISSING_CONSENT : SELECT_LATE_INFORMED_CONSENT;
 
         return findAll(query);
     }
