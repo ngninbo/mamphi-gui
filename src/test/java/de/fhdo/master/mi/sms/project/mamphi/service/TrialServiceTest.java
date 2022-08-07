@@ -1,7 +1,6 @@
 package de.fhdo.master.mi.sms.project.mamphi.service;
 
-import de.fhdo.master.mi.sms.project.mamphi.model.Centre;
-import de.fhdo.master.mi.sms.project.mamphi.model.RandomizationWeek;
+import de.fhdo.master.mi.sms.project.mamphi.model.*;
 import de.fhdo.master.mi.sms.project.mamphi.repository.CenterRepository;
 import de.fhdo.master.mi.sms.project.mamphi.repository.InformedConsentRepository;
 import de.fhdo.master.mi.sms.project.mamphi.repository.RandomizationWeekRepository;
@@ -10,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import java.util.List;
 
@@ -53,15 +53,27 @@ public class TrialServiceTest {
 
     @Test
     public void testUpdate1() {
-
+        doNothing().when(informedConsentRepository).update(isA(InformedConsent.class));
+        var consent = new InformedConsent();
+        trialService.update(consent);
+        verify(informedConsentRepository).update(eq(consent));
     }
 
-    @Test
-    public void findAllByWeek() {
+    @ParameterizedTest(name = "Should return randomization list for the {0}. week")
+    @CsvSource({"1", "2"})
+    public void findAllByWeek(int week) {
+        doReturn(List.of()).when(randomizationWeekRepository).findAllByWeek(isA(Integer.class));
+        var list = trialService.findAllByWeek(week);
+        assertThat(list).isEqualTo(List.of());
+        verify(randomizationWeekRepository).findAllByWeek(week);
     }
 
     @Test
     public void findAllRandomWeek() {
+        doReturn(List.of()).when(randomizationWeekRepository).findAll();
+        var list = trialService.findAllRandomWeek();
+        assertThat(list).isEqualTo(List.of());
+        verify(randomizationWeekRepository).findAll();
     }
 
     @Test
@@ -73,14 +85,23 @@ public class TrialServiceTest {
         doReturn(List.of()).when(centerRepository).findAll();
         List<Centre> centres = trialService.findAllCenter();
         assertThat(centres).isEqualTo(List.of());
+        verify(centerRepository, times(1)).findAll();
     }
 
     @Test
     public void findAllCenterIds() {
+        doReturn(List.of()).when(centerRepository).findAllCenterIDs();
+        var ids = trialService.findAllCenterIds();
+        assertThat(ids).isEqualTo(List.of());
+        verify(centerRepository).findAllCenterIDs();
     }
 
     @Test
     public void findAllPatientID() {
+        doReturn(List.of()).when(centerRepository).findAllPatientID();
+        var ids = trialService.findAllPatientID();
+        assertThat(ids).isEqualTo(List.of());
+        verify(centerRepository).findAllPatientID();
     }
 
     @Test
@@ -89,14 +110,26 @@ public class TrialServiceTest {
 
     @Test
     public void findAllInformedConsent() {
+        doReturn(List.of()).when(informedConsentRepository).findAllByConsent(isA(Consent.class));
+        var consents = trialService.findAllInformedConsent(Consent.INCOMPLETE);
+        assertThat(consents).isEqualTo(List.of());
+        verify(informedConsentRepository, times(1)).findAllByConsent(eq(Consent.INCOMPLETE));
     }
 
     @Test
     public void testFindAllInformedConsent() {
+        doReturn(List.of()).when(informedConsentRepository).findAll();
+        var consents = trialService.findAllInformedConsent();
+        assertThat(consents).isEqualTo(List.of());
+        verify(informedConsentRepository).findAll();
     }
 
     @Test
     public void testFindAllInformedConsent1() {
+        doReturn(List.of()).when(informedConsentRepository).findAll(isA(Boolean.class));
+        var consents = trialService.findAllInformedConsent(true);
+        assertThat(consents).isEqualTo(List.of());
+        verify(informedConsentRepository).findAll(eq(true));
     }
 
     @Test
@@ -105,6 +138,11 @@ public class TrialServiceTest {
 
     @Test
     public void nextId() {
+        int id = 207;
+        doReturn(id).when(centerRepository).nextId(isA(Country.class));
+        int expectedId = trialService.nextId(Country.GB);
+        assertThat(expectedId).isEqualTo(id);
+        verify(centerRepository).nextId(eq(Country.GB));
     }
 
     @Test

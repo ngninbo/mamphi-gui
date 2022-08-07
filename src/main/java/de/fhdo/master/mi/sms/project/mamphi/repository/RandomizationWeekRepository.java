@@ -29,6 +29,7 @@ public class RandomizationWeekRepository extends BaseRepository<RandomizationWee
         return findAll(FETCH_ALL_RANDOMIZATION_WEEK_ITEMS);
     }
 
+    @Override
     public List<RandomizationWeek> findAll(String query) {
         try (Connection connection = DriverManager.getConnection(databaseUrl)) {
 
