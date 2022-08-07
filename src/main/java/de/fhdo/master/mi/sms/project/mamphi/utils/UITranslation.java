@@ -23,7 +23,7 @@ public class UITranslation {
     public static final String COUNTRY_CHOICE_BTN_LABEL = "Land wählen";
     public static final String VISIT_COLUMN_LABEL = "Besuch Termine";
     public static final String CHOICE_PROMPT_TEXT = "Bitte wählen";
-    public static final String DATE_FORMAT_TXT = "JJJJ-MM-TT";
+    public static final String DATE_FORMAT_TXT = "TT-MM-JJJJ";
     public static final String ENTRY_SAVE_BTN_LABEL = "Eintrag Speichern";
     public static final String NUMBER_PATIENT_PER_CENTER_ALL_WEEK_OVERVIEW_LABEL = "Anzahl Patient pro Zentrum \nalle Wochen";
     public static final String NUMBER_PATIENT_PER_CENTER_GERMANY_WEEK_OVERVIEW_LABEL = "Anzahl Patienten pro deutsches Zentrum \nin Woche %s";

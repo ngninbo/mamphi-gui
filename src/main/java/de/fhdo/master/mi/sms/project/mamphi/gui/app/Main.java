@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static de.fhdo.master.mi.sms.project.mamphi.utils.TrialStatements.DATABASE_NAME;
@@ -675,7 +676,7 @@ public class Main extends Application {
             if (selConsent != null && chosenCenter != null && consentDate.getValue() != null) {
                 InformedConsent newInformedConsent = new InformedConsent(patientIds.get(patientIds.size() - 1) + 1,
                         Integer.parseInt(chosenCenter), selConsent == null ? "nan" : selConsent,
-                        consentDate.getValue() != null ? consentDate.getValue().toString() : "NaT");
+                        consentDate.getValue() != null ? consentDate.getValue().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) : "NaT");
                 consentData.add(newInformedConsent);
                 trialService.update(newInformedConsent);
                 selConsent = null;

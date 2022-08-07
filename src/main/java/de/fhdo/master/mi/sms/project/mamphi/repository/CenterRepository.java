@@ -9,6 +9,7 @@ import de.fhdo.master.mi.sms.project.mamphi.annotation.CrudRepository;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import static de.fhdo.master.mi.sms.project.mamphi.utils.GuiConstants.*;
 import static de.fhdo.master.mi.sms.project.mamphi.utils.TrialStatements.*;
@@ -18,10 +19,10 @@ import static de.fhdo.master.mi.sms.project.mamphi.utils.UITranslation.GERMANY;
 @CrudRepository
 public class CenterRepository extends BaseRepository<Centre> {
 
+    private static final Logger LOGGER = Logger.getLogger(CenterRepository.class.getName());
+
     private Statement statement;
     private static ResultSet results;
-    private List<String> centerIDs;
-    private List<Integer> patientIDs;
     private int id;
     private List<MonitorVisit> monitorVisits;
 
@@ -42,9 +43,12 @@ public class CenterRepository extends BaseRepository<Centre> {
 
     public List<Centre> findAllByCountry(Country country) {
 
+        LOGGER.info("Fetching all items from centre table.");
+
         return findAll(String.format(SELECT_FROM_CENTER_WHERE_COUNTRY, country));
     }
 
+    @Override
     public List<Centre> findAll(String query) {
 
         List<Centre> centerList = new ArrayList<>();
@@ -65,6 +69,8 @@ public class CenterRepository extends BaseRepository<Centre> {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+
+        LOGGER.info("Fetch of centre items completed!");
         return centerList;
     }
 
@@ -92,13 +98,13 @@ public class CenterRepository extends BaseRepository<Centre> {
 
     public List<String> findAllCenterIDs() {
 
+        List<String> centerIDs = new ArrayList<>();
+
         try (Connection connection = DriverManager.getConnection(databaseUrl)) {
 
             statement = connection.createStatement();
 
             results = statement.executeQuery(SELECT_CENTER_ID_FROM_CENTER);
-
-            centerIDs = new ArrayList<>(List.of(""));
 
             while (results.next()) {
                 centerIDs.add(results.getString("CentreID"));
@@ -113,10 +119,11 @@ public class CenterRepository extends BaseRepository<Centre> {
 
     public List<Integer> findAllPatientID() {
 
+        List<Integer> patientIDs = new ArrayList<>();
+
         try (Connection connection = DriverManager.getConnection(databaseUrl)) {
 
             statement = connection.createStatement();
-            patientIDs = new ArrayList<>();
             results = statement.executeQuery(SELECT_PATIENT_ID_FROM_INFORMED_CONSENT);
 
             while (results.next()) {

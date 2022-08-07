@@ -1,32 +1,26 @@
 package de.fhdo.master.mi.sms.project.mamphi.service;
 
+import de.fhdo.master.mi.sms.project.mamphi.model.Centre;
 import de.fhdo.master.mi.sms.project.mamphi.model.RandomizationWeek;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
+import org.junit.jupiter.params.provider.MethodSource;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class TrialServiceTest {
 
-    private static TrialService trialService;
-    private static final String database = "test.db";
+    private static final TrialService trialService = mock(TrialService.class);
 
     @BeforeAll
-    public static void beforeAll() throws SQLException, IOException {
-        trialService = TrialServiceBuilder.init()
-                .withDatabase(database)
-                .withCenterRepository()
-                .withInformedConsentRepository()
-                .withRandomizationWeekRepository()
-                .build();
+    public static void beforeAll() {
     }
 
     @BeforeEach
@@ -34,13 +28,18 @@ public class TrialServiceTest {
     }
 
     @Test
-    public void update() {
-        assertTrue(new File(database).exists());
+    public void update() throws NoSuchMethodException {
+        doThrow(new NoSuchMethodException()).when(trialService).update(isA(RandomizationWeek.class));
         assertThrows(NoSuchMethodException.class, () -> trialService.update(new RandomizationWeek()));
     }
 
-    @Test
-    public void testUpdate() {
+    @ParameterizedTest
+    @MethodSource("argCenterFactory")
+    public void testUpdate(int centreId, String country, String place, String monitor, String trier) {
+        doNothing().when(trialService).update(isA(Centre.class));
+        Centre centre = new Centre(monitor, trier, place, country, centreId);
+        trialService.update(centre);
+        verify(trialService).update(eq(centre));
     }
 
     @Test
@@ -62,6 +61,9 @@ public class TrialServiceTest {
 
     @Test
     public void findAllCenter() {
+        doReturn(List.of()).when(trialService).findAllCenter();
+        List<Centre> centres = trialService.findAllCenter();
+        assertThat(centres).isEqualTo(List.of());
     }
 
     @Test
@@ -108,7 +110,7 @@ public class TrialServiceTest {
     public void findNumberPatientPerCenterByLandByWeek() {
     }
 
-    static List<Arguments> argCenterFactory() {
+    public static List<Arguments> argCenterFactory() {
         return List.of(
                 arguments(102, "D", "Essen", "Müller", "Bruch"),
                 arguments(103, "D", "München", "Moser", "Wittmann"),

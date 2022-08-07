@@ -7,6 +7,7 @@ import de.fhdo.master.mi.sms.project.mamphi.annotation.CrudRepository;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import static de.fhdo.master.mi.sms.project.mamphi.utils.GuiConstants.EMPTY;
 import static de.fhdo.master.mi.sms.project.mamphi.utils.TrialStatements.*;
@@ -15,6 +16,8 @@ import static de.fhdo.master.mi.sms.project.mamphi.utils.UITranslation.YES;
 
 @CrudRepository
 public class InformedConsentRepository extends BaseRepository<InformedConsent> {
+
+    private static final Logger LOGGER = Logger.getLogger(CenterRepository.class.getName());
 
     private String query;
 
@@ -54,7 +57,7 @@ public class InformedConsentRepository extends BaseRepository<InformedConsent> {
             int result = stmt.executeUpdate();
 
             if (result != 0) {
-                System.out.println(UPDATE_INFORMED_CONSENT_SUCCESS_MSG);
+                LOGGER.info(UPDATE_INFORMED_CONSENT_SUCCESS_MSG);
             }
 
         } catch (SQLException e) {
