@@ -26,30 +26,16 @@ public class MonitorVisit extends Centre {
 	}
 
 	/**
-	 * @param monitor Monitor
+	 * @param centerId centre id
+	 * @param country Country
+	 * @param place Place
 	 * @param trier Trier
-	 * @param ort Ort
-	 * @param land Land
-	 * @param centreId Centre ID
+	 * @param monitor Monitor
+	 * @param numOfPatient Number of patient in centre
 	 */
-	public MonitorVisit(String monitor, String trier, String ort, String land, int centreId) {
-		super(monitor, trier, ort, land, centreId);
-		// TODO Auto-generated constructor stub
-	}
-
-	public MonitorVisit(Centre center) {
-		this(center.getMonitor(), center.getTrier(), center.getPlace(), center.getCountry(), center.getCentreID());
-	}
-
-	public MonitorVisit(Centre center, int numberOfPatient, List<LocalDate> visites) {
-		this(center);
-		this.numberOfPatient = new SimpleIntegerProperty(numberOfPatient);
-		this.setVisitDates(visites);
-	}
-
-	public MonitorVisit(int zentrum_Id, String land, String ort, String pruefer, String monitor, int gesamtanzahl) {
-		super(monitor, pruefer, ort, land, zentrum_Id);
-		this.numberOfPatient = new SimpleIntegerProperty(gesamtanzahl);
+	public MonitorVisit(int centerId, String country, String place, String trier, String monitor, int numOfPatient) {
+		super(monitor, trier, place, country, centerId);
+		this.numberOfPatient = new SimpleIntegerProperty(numOfPatient);
 	}
 
 	public int getNumberOfPatient() {
