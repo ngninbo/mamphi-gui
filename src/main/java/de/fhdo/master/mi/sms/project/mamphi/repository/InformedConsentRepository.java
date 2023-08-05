@@ -1,6 +1,7 @@
 package de.fhdo.master.mi.sms.project.mamphi.repository;
 
 import de.fhdo.master.mi.sms.project.mamphi.model.Consent;
+import de.fhdo.master.mi.sms.project.mamphi.model.ConsentInformedStatus;
 import de.fhdo.master.mi.sms.project.mamphi.model.InformedConsent;
 import de.fhdo.master.mi.sms.project.mamphi.annotation.CrudRepository;
 
@@ -11,15 +12,11 @@ import java.util.logging.Logger;
 
 import static de.fhdo.master.mi.sms.project.mamphi.utils.GuiConstants.EMPTY;
 import static de.fhdo.master.mi.sms.project.mamphi.utils.TrialStatements.*;
-import static de.fhdo.master.mi.sms.project.mamphi.utils.UITranslation.NO;
-import static de.fhdo.master.mi.sms.project.mamphi.utils.UITranslation.YES;
 
 @CrudRepository
 public class InformedConsentRepository extends BaseRepository<InformedConsent> {
 
     private static final Logger LOGGER = Logger.getLogger(CenterRepository.class.getName());
-
-    private String query;
 
     public InformedConsentRepository() {
         super();
@@ -36,10 +33,8 @@ public class InformedConsentRepository extends BaseRepository<InformedConsent> {
         return findAll(SELECT_FROM_INFORMED_CONSENT);
     }
 
-    public List<InformedConsent> findAll(boolean isInformed) {
-        query = (isInformed) ? String.format(SELECT_FROM_INFORMED_CONSENT_WHERE_CONSENT, YES) :
-                String.format(SELECT_FROM_INFORMED_CONSENT_WHERE_CONSENT, NO);
-
+    public List<InformedConsent> findAll(ConsentInformedStatus status) {
+        String query = String.format(SELECT_FROM_INFORMED_CONSENT_WHERE_CONSENT, status.getTranslation());
         return findAll(query);
     }
 
@@ -67,10 +62,7 @@ public class InformedConsentRepository extends BaseRepository<InformedConsent> {
     }
 
     public List<InformedConsent> findAllByConsent(Consent consent) {
-        query = consent.equals(Consent.INCOMPLETE) ? SELECT_INCOMPLETE_CONSENT :
-                consent.equals(Consent.MISSING) ? SELECT_MISSING_CONSENT : SELECT_LATE_INFORMED_CONSENT;
-
-        return findAll(query);
+        return findAll(consent.getQuery());
     }
 
     @Override

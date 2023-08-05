@@ -122,6 +122,8 @@ public class Stagger {
                 if (users.contains(loginUser)) {
 
                     primaryStage.setScene(mainScene);
+                    // Add button menu and the created horizontal box to the root pane
+                    root.getChildren().addAll(btnMenu, menu.getCentreHBox().createCenterTable());
                     actionTarget.setText("");
                     primaryStage.show();
 
@@ -180,9 +182,6 @@ public class Stagger {
                 root.getChildren().addAll(btnMenu, hbox);
                 mainScene.setRoot(root);
             });
-
-            // Add button menu and the created horizontal box to the root pane
-            root.getChildren().addAll(btnMenu, menu.getCentreHBox().createCenterTable());
 
             primaryStage.setScene(loginScene);
             primaryStage.show();

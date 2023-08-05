@@ -1,5 +1,7 @@
 package de.fhdo.master.mi.sms.project.mamphi.utils;
 
+import de.fhdo.master.mi.sms.project.mamphi.model.Country;
+
 public class UITranslation {
 
     public static final String MAMPHI_ADMINISTRATION_GUI_TITLE = "Mamphi Administration GUI";
@@ -30,23 +32,23 @@ public class UITranslation {
     public static final String NUMBER_PATIENT_PER_CENTER_ENGLAND_WEEK_OVERVIEW_LABEL = "Anzahl Patienten pro britisches Zentrum \nin Woche %s";
     public static final String FILTER_LABEL = "Filtern: ";
     public static final String GERMANY = "Deutschland";
-    public static final String ENGLAND = "Großbritanien";
+    public static final String ENGLAND = "Großbritannien";
     public static final String YES = "ja";
     public static final String NO = "nein";
-    public static final String RANDOM_WEEK_ALL_WEEK_OVERVIEW_LABEL = "Angabe zur Randomisierung in alle Wochen";
-    public static final String RANDOM_WEEK_OVERVIEW_OPTION = "Angaben zur Randomisierung in der Woche %s anzeigen";
+    public static final String RANDOM_WEEK_OVERVIEW_OPTION = "Angaben zur Randomisierung in der %s. Woche anzeigen";
     public static final String RANDOM_WEEK_OVERVIEW_TITLE = "Angaben zur Randomisierung in der Woche %s";
     public static final String RANDOM_WEEK_OVERVIEW_LABEL = "Anzahl Patienten pro Zentrum \nin Woche %s";
-    public static final String RANDOM_WEEK_COUNTRY_OVERVIEW_OPTION = "Anzahl der Patienten pro Zentrum in %s in der Woche %s";
-    public static final String VIEW_ANOTHER_RANDOM_WEEK_PROMPT_TXT = "Andere wochenliche Liste anzeigen lassen";
+    public static final String RANDOM_WEEK_COUNTRY_OVERVIEW_OPTION = "Anzahl der Patienten pro Zentrum in %s in der %s. Woche anzeigen";
+    public static final String VIEW_ANOTHER_RANDOM_WEEK_PROMPT_TXT = "Andere wöchentliche Liste anzeigen lassen";
     public static final int ONE_VALUE = 1;
     public static final int TWO_VALUE = 2;
-    public static final String RANDOM_WEEK_ONE_OVERVIEW_OPTION = "Angaben zur Randomisierung in der Woche " + ONE_VALUE +" anzeigen";
-    public static final String RANDOM_WEEK_ONE_GERMANY_OVERVIEW_OPTION = "Anzahl der Patienten pro Zentrum in " + GERMANY +" in der Woche " + ONE_VALUE;
-    public static final String RANDOM_WEEK_ONE_ENGLAND_OVERVIEW_OPTION = "Anzahl der Patienten pro Zentrum in " + ENGLAND +" in der Woche " + ONE_VALUE;
-    public static final String RANDOM_WEEK_TWO_GERMANY_OVERVIEW_OPTION = "Anzahl der Patienten pro Zentrum in " + GERMANY +" in der Woche " + TWO_VALUE;
-    public static final String RANDOM_WEEK_TWO_ENGLAND_OVERVIEW_OPTION = "Anzahl der Patienten pro Zentrum in " + ENGLAND +" in der Woche " + TWO_VALUE;
-    public static final String RANDOM_WEEK_TWO_OVERVIEW_OPTION = "Angaben zur Randomisierung in der Woche " + TWO_VALUE +" anzeigen";
+    public static final String RANDOM_WEEK_ALL_WEEK_OVERVIEW_LABEL = "Angabe zur Randomisierung in alle Wochen anzeigen";
+    public static final String RANDOM_WEEK_ONE_OVERVIEW_OPTION = "Angaben zur Randomisierung in der " + ONE_VALUE + ". Woche anzeigen";
+    public static final String RANDOM_WEEK_TWO_OVERVIEW_OPTION = "Angaben zur Randomisierung in der " +  TWO_VALUE + ". Woche anzeigen";
+    public static final String RANDOM_WEEK_ONE_GERMANY_OVERVIEW_OPTION = "Anzahl der Patienten pro Zentrum in " + GERMANY + " in der " + ONE_VALUE + ". Woche anzeigen";
+    public static final String RANDOM_WEEK_ONE_ENGLAND_OVERVIEW_OPTION = "Anzahl der Patienten pro Zentrum in " + ENGLAND + " in der " + ONE_VALUE + ". Woche anzeigen";
+    public static final String RANDOM_WEEK_TWO_GERMANY_OVERVIEW_OPTION = "Anzahl der Patienten pro Zentrum in " + GERMANY + " in der " + TWO_VALUE + ". Woche anzeigen";
+    public static final String RANDOM_WEEK_TWO_ENGLAND_OVERVIEW_OPTION = "Anzahl der Patienten pro Zentrum in " + ENGLAND + " in der " + TWO_VALUE + ". Woche anzeigen";
     public static final String CONSENT_FORM_TXT = "Neue Einwilligung anlegen:";
     public static final String CONSENT_DELETE_BTN_LABEL = "Einwilligung löschen";
     public static final String DATE_LABEL = "Datum: ";
@@ -61,8 +63,12 @@ public class UITranslation {
     public static final String CENTER_OVERVIEW_LABEL = "Liste aller vorhandenen Zentren in der Studie";
     public static final String CENTER_OVERVIEW_OPTION = "Liste aller Zentren";
     public static final String GERMAN_CENTER_OVERVIEW_OPTION = "Liste der Zentren in Deutschland";
-    public static final String BRITISH_CENTER_OVERVIEW_OPTION = "Liste der Zentren in Großbritanien";
+    public static final String BRITISH_CENTER_OVERVIEW_OPTION = "Liste der Zentren in Großbritannien";
     public static final String GERMAN_CENTER_OVERVIEW_LABEL = "Liste aller vorhandenen deutschen Zentren in der Studie";
     public static final String BRITISH_CENTER_OVERVIEW_LABEL = "Liste aller vorhandenen britischen Zentren in der Studie";
     public static final String INPUT_VALIDATION_ERROR_MSG = "Bitte Eingaben prüfen!";
+
+    private static String formatOption(Country country, int week) {
+        return String.format("Anzahl der Patienten pro Zentrum in %s in der %s. Woche anzeigen", country, week);
+    }
 }

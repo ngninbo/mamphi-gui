@@ -4,13 +4,19 @@ import de.fhdo.master.mi.sms.project.mamphi.model.*;
 import de.fhdo.master.mi.sms.project.mamphi.repository.CenterRepository;
 import de.fhdo.master.mi.sms.project.mamphi.repository.InformedConsentRepository;
 import de.fhdo.master.mi.sms.project.mamphi.repository.RandomizationWeekRepository;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.aggregator.AggregateWith;
+import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,6 +24,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class TrialServiceTest {
 
     private static TrialService trialService;
@@ -25,16 +32,13 @@ public class TrialServiceTest {
     private static final InformedConsentRepository informedConsentRepository = mock(InformedConsentRepository.class);
     private static final RandomizationWeekRepository randomizationWeekRepository = mock(RandomizationWeekRepository.class);
 
-    @BeforeAll
-    public static void beforeAll() {
+    @BeforeEach
+    public void setUp() {
         trialService = new TrialServiceImpl(centerRepository, informedConsentRepository, randomizationWeekRepository);
     }
 
-    @BeforeEach
-    public void setUp() {
-    }
-
     @Test
+    @DisplayName("should throws NoSuchMethodException (not implemented) by attempt to update new RandomizationWeek entry")
     public void update() throws NoSuchMethodException {
         var rand = new RandomizationWeek();
         doThrow(new NoSuchMethodException()).when(randomizationWeekRepository).update(isA(RandomizationWeek.class));
@@ -44,14 +48,15 @@ public class TrialServiceTest {
 
     @ParameterizedTest
     @MethodSource("argCenterFactory")
-    public void testUpdate(int centreId, String country, String place, String monitor, String trier) {
+    @DisplayName("should update centre given in following cases:")
+    public void testUpdate(@AggregateWith(CenterAggregator.class) Centre centre) {
         doNothing().when(centerRepository).update(isA(Centre.class));
-        Centre centre = new Centre(monitor, trier, place, country, centreId);
         trialService.update(centre);
         verify(centerRepository, times(1)).update(centre);
     }
 
     @Test
+    @DisplayName("should update new consent entry")
     public void testUpdate1() {
         doNothing().when(informedConsentRepository).update(isA(InformedConsent.class));
         var consent = new InformedConsent();
@@ -69,6 +74,7 @@ public class TrialServiceTest {
     }
 
     @Test
+    @DisplayName("should return all RandomizationWeek entries")
     public void findAllRandomWeek() {
         doReturn(List.of()).when(randomizationWeekRepository).findAll();
         var list = trialService.findAllRandomWeek();
@@ -76,11 +82,17 @@ public class TrialServiceTest {
         verify(randomizationWeekRepository).findAll();
     }
 
-    @Test
-    public void findAllByWeekAndLand() {
+    @ParameterizedTest(name = "should find all random week entries from {0}. week by country {1}")
+    @CsvSource(value = {"1, DE", "2, DE", "1, GB", "2, GB"})
+    public void findAllByWeekAndLand(int week, @ConvertWith(CountryConverter.class)  Country country) {
+        doReturn(List.of()).when(randomizationWeekRepository).findAllByWeekAndLand(anyInt(), any(Country.class));
+        var list = trialService.findAllByWeekAndCountry(week, country);
+        assertThat(list).isEqualTo(List.of());
+        verify(randomizationWeekRepository).findAllByWeekAndLand(eq(week), eq(country));
     }
 
     @Test
+    @DisplayName("should return list of centres entries")
     public void findAllCenter() {
         doReturn(List.of()).when(centerRepository).findAll();
         List<Centre> centres = trialService.findAllCenter();
@@ -89,6 +101,7 @@ public class TrialServiceTest {
     }
 
     @Test
+    @DisplayName("should return list of centres ids")
     public void findAllCenterIds() {
         doReturn(List.of()).when(centerRepository).findAllCenterIDs();
         var ids = trialService.findAllCenterIds();
@@ -97,6 +110,7 @@ public class TrialServiceTest {
     }
 
     @Test
+    @DisplayName("should return list of patients ids")
     public void findAllPatientID() {
         doReturn(List.of()).when(centerRepository).findAllPatientID();
         var ids = trialService.findAllPatientID();
@@ -104,19 +118,17 @@ public class TrialServiceTest {
         verify(centerRepository).findAllPatientID();
     }
 
-    @Test
-    public void testFindAllCenter() {
-    }
-
-    @Test
-    public void findAllInformedConsent() {
+    @ParameterizedTest(name = "should return all {0} informed consents")
+    @EnumSource(value = Consent.class)
+    public void findAllInformedConsent(Consent consent) {
         doReturn(List.of()).when(informedConsentRepository).findAllByConsent(isA(Consent.class));
-        var consents = trialService.findAllInformedConsent(Consent.INCOMPLETE);
+        var consents = trialService.findAllInformedConsent(consent);
         assertThat(consents).isEqualTo(List.of());
-        verify(informedConsentRepository, times(1)).findAllByConsent(eq(Consent.INCOMPLETE));
+        verify(informedConsentRepository).findAllByConsent(eq(consent));
     }
 
     @Test
+    @DisplayName("should return all informed consents entry")
     public void testFindAllInformedConsent() {
         doReturn(List.of()).when(informedConsentRepository).findAll();
         var consents = trialService.findAllInformedConsent();
@@ -124,37 +136,22 @@ public class TrialServiceTest {
         verify(informedConsentRepository).findAll();
     }
 
-    @Test
-    public void testFindAllInformedConsent1() {
-        doReturn(List.of()).when(informedConsentRepository).findAll(isA(Boolean.class));
-        var consents = trialService.findAllInformedConsent(true);
+    @ParameterizedTest(name = "should return all informed consents with status {0}")
+    @EnumSource(value = ConsentInformedStatus.class)
+    public void findAllInformedConsentByStatus(ConsentInformedStatus status) {
+        doReturn(List.of()).when(informedConsentRepository).findAll(isA(ConsentInformedStatus.class));
+        var consents = trialService.findAllInformedConsent(status);
         assertThat(consents).isEqualTo(List.of());
-        verify(informedConsentRepository).findAll(eq(true));
-    }
-
-    @Test
-    public void getMonitorVisitPlan() {
+        verify(informedConsentRepository).findAll(eq(status));
     }
 
     @Test
     public void nextId() {
         int id = 207;
         doReturn(id).when(centerRepository).nextId(isA(Country.class));
-        int expectedId = trialService.nextId(Country.GB);
+        int expectedId = trialService.nextIdByCountry(Country.GB);
         assertThat(expectedId).isEqualTo(id);
         verify(centerRepository).nextId(eq(Country.GB));
-    }
-
-    @Test
-    public void findNumberOfPatientPerCenterByWeek() {
-    }
-
-    @Test
-    public void findNumberOfPatientPerCenterByAllWeek() {
-    }
-
-    @Test
-    public void findNumberPatientPerCenterByLandByWeek() {
     }
 
     public static List<Arguments> argCenterFactory() {

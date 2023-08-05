@@ -87,8 +87,8 @@ public class TrialServiceImpl implements TrialService {
     }
 
     @Override
-    public List<InformedConsent> findAllInformedConsent(boolean isInformed) {
-        return informedConsentRepository.findAll(isInformed);
+    public List<InformedConsent> findAllInformedConsent(ConsentInformedStatus status) {
+        return informedConsentRepository.findAll(status);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class TrialServiceImpl implements TrialService {
     }
 
     @Override
-    public int nextId(Country country) {
+    public int nextIdByCountry(Country country) {
         return centerRepository.nextId(country);
     }
 

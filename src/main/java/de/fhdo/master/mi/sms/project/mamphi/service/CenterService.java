@@ -11,7 +11,7 @@ public interface CenterService {
     List<String> findAllCenterIds();
     List<Integer> findAllPatientID();
     List<Centre> findAllCenter(Country country);
-    int nextId(Country country);
+    int nextIdByCountry(Country country);
     List<PatientCenter> findNumberOfPatientPerCenterByWeek(int week);
     List<PatientCenter> findNumberOfPatientPerCenterByAllWeek();
 

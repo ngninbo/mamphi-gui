@@ -7,8 +7,17 @@ package de.fhdo.master.mi.sms.project.mamphi.model;
 public enum Country {
 	
 	// Germany
-	DE,
+	DE ("Deutschland"),
 	// England
-	GB
+	GB ("Großbritannien");
 
+	private final String country;
+
+	Country(String country) {
+		this.country = country;
+	}
+
+	public String getFullCountryName() {
+		return country;
+	}
 }

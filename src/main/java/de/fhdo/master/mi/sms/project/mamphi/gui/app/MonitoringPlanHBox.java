@@ -3,7 +3,6 @@ package de.fhdo.master.mi.sms.project.mamphi.gui.app;
 import de.fhdo.master.mi.sms.project.mamphi.model.Centre;
 import de.fhdo.master.mi.sms.project.mamphi.model.Country;
 import de.fhdo.master.mi.sms.project.mamphi.model.MonitorVisit;
-import de.fhdo.master.mi.sms.project.mamphi.utils.GuiConstants;
 import de.fhdo.master.mi.sms.project.mamphi.utils.UITranslation;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,6 +19,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.fhdo.master.mi.sms.project.mamphi.model.Country.*;
+import static de.fhdo.master.mi.sms.project.mamphi.utils.GuiConstants.*;
+
 public class MonitoringPlanHBox {
     private final Main main;
 
@@ -29,46 +31,46 @@ public class MonitoringPlanHBox {
 
     HBox createMonitoringPlan() {
         Text monitorPlanLabel = new Text(UITranslation.MONITOR_PLAN_OVERVIEW_TXT);
-        monitorPlanLabel.setFont(new Font(GuiConstants.FONT_NAME, GuiConstants.FONT));
+        monitorPlanLabel.setFont(new Font(FONT_NAME, FONT));
         TableView<MonitorVisit> monitorPlan = new TableView<>();
         monitorPlan.setEditable(false);
         List<MonitorVisit> visitItems = Main.trialService.getMonitorVisitPlan(false);
         ObservableList<MonitorVisit> visitData = FXCollections.observableArrayList(visitItems);
         TableColumn<MonitorVisit, String> placeCol = new TableColumn<>("Ort");
         TableColumn<MonitorVisit, String> monitorCol = new TableColumn<>("Monitor");
-        monitorCol.setMinWidth(GuiConstants.DEFAULT_MIN_WIDTH);
+        monitorCol.setMinWidth(DEFAULT_MIN_WIDTH);
 
         monitorCol.setCellValueFactory(new PropertyValueFactory<>("monitor"));
         monitorCol.setCellFactory(TextFieldTableCell.forTableColumn());
         monitorCol.setOnEditCommit(event1 -> event1.getTableView().getItems().get(event1.getTablePosition().getRow())
                 .setMonitor(event1.getNewValue()));
 
-        TableColumn<MonitorVisit, String> trierrCol = new TableColumn<>("Prüfer");
-        trierrCol.setMinWidth(GuiConstants.DEFAULT_MIN_WIDTH);
-        trierrCol.setCellValueFactory(new PropertyValueFactory<>("trier"));
-        trierrCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        trierrCol.setOnEditCommit(event12 -> event12.getTableView().getItems().get(event12.getTablePosition().getRow())
+        TableColumn<MonitorVisit, String> trierCol = new TableColumn<>("Prüfer");
+        trierCol.setMinWidth(DEFAULT_MIN_WIDTH);
+        trierCol.setCellValueFactory(new PropertyValueFactory<>("trier"));
+        trierCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        trierCol.setOnEditCommit(event12 -> event12.getTableView().getItems().get(event12.getTablePosition().getRow())
                 .setTrier(event12.getNewValue()));
 
-        placeCol.setMinWidth(GuiConstants.DEFAULT_MIN_WIDTH);
+        placeCol.setMinWidth(DEFAULT_MIN_WIDTH);
         placeCol.setCellValueFactory(new PropertyValueFactory<>("place"));
         placeCol.setCellFactory(TextFieldTableCell.forTableColumn());
         placeCol.setOnEditCommit(event13 -> event13.getTableView().getItems().get(event13.getTablePosition().getRow())
                 .setPlace(event13.getNewValue()));
 
         TableColumn<MonitorVisit, String> countryCol = new TableColumn<>("Land");
-        countryCol.setMinWidth(GuiConstants.DEFAULT_MIN_WIDTH);
+        countryCol.setMinWidth(DEFAULT_MIN_WIDTH);
         countryCol.setCellValueFactory(new PropertyValueFactory<>("country"));
         countryCol.setCellFactory(TextFieldTableCell.forTableColumn());
         countryCol.setOnEditCommit(event14 -> event14.getTableView().getItems().get(event14.getTablePosition().getRow())
                 .setCountry(event14.getNewValue()));
 
         TableColumn<MonitorVisit, String> centerIDCol = new TableColumn<>("Zentrum ID");
-        centerIDCol.setMinWidth(GuiConstants.DEFAULT_MIN_WIDTH);
+        centerIDCol.setMinWidth(DEFAULT_MIN_WIDTH);
         centerIDCol.setCellValueFactory(new PropertyValueFactory<>("centreID"));
 
         TableColumn<MonitorVisit, Integer> numberPatientCol = new TableColumn<>("Anzahl Patienten");
-        numberPatientCol.setMinWidth(GuiConstants.DEFAULT_MIN_WIDTH);
+        numberPatientCol.setMinWidth(DEFAULT_MIN_WIDTH);
         numberPatientCol
                 .setCellValueFactory(new PropertyValueFactory<>("numberOfPatient"));
 
@@ -77,11 +79,11 @@ public class MonitoringPlanHBox {
                 "visitDate");
         visitsCol.setCellValueFactory(visitDates);
 
-        visitsCol.setPrefWidth(GuiConstants.VISIT_COL_PREF_WIDTH);
+        visitsCol.setPrefWidth(VISIT_COL_PREF_WIDTH);
 
         monitorPlan.setItems(visitData);
         monitorPlan.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        monitorPlan.getColumns().addAll(centerIDCol, countryCol, placeCol, trierrCol, monitorCol,
+        monitorPlan.getColumns().addAll(centerIDCol, countryCol, placeCol, trierCol, monitorCol,
                 numberPatientCol, visitsCol);
 
         // Delete some items
@@ -95,50 +97,50 @@ public class MonitoringPlanHBox {
 
         // Adding new items
         Text centerFormText = new Text(UITranslation.CENTER_FORM_TEXT);
-        centerFormText.setFont(new Font(GuiConstants.FONT_NAME, GuiConstants.FONT));
+        centerFormText.setFont(new Font(FONT_NAME, FONT));
         final TextField addMonitorName = new TextField();
         final TextField addTrierName = new TextField();
         final TextField addPlace = new TextField();
 
         Label monitorText = new Label("Monitor: ");
         addMonitorName.setPromptText("Monitor Name");
-        addMonitorName.setMinWidth(GuiConstants.MIN_WIDTH);
+        addMonitorName.setMinWidth(MIN_WIDTH);
         HBox hbMonitor = new HBox(monitorText, addMonitorName);
-        hbMonitor.setSpacing(GuiConstants.SPACING_DEFAULT_VALUE);
-        hbMonitor.setPadding(new Insets(GuiConstants.INSETS_VALUE, GuiConstants.INSETS_VALUE, GuiConstants.INSETS_VALUE, GuiConstants.INSETS_VALUE));
+        hbMonitor.setSpacing(SPACING_DEFAULT_VALUE);
+        hbMonitor.setPadding(new Insets(INSETS_VALUE, INSETS_VALUE, INSETS_VALUE, INSETS_VALUE));
 
         Label trierText = new Label("Prüfer: ");
-        addTrierName.setMinWidth(GuiConstants.MIN_WIDTH);
+        addTrierName.setMinWidth(MIN_WIDTH);
         addTrierName.setPromptText("Prüfer Name");
         HBox hbTrier = new HBox(trierText, addTrierName);
-        hbTrier.setSpacing(GuiConstants.SPACING_MIN_VALUE);
-        hbTrier.setPadding(new Insets(GuiConstants.INSETS_VALUE, GuiConstants.INSETS_VALUE, GuiConstants.INSETS_VALUE, GuiConstants.INSETS_VALUE));
+        hbTrier.setSpacing(SPACING_MIN_VALUE);
+        hbTrier.setPadding(new Insets(INSETS_VALUE, INSETS_VALUE, INSETS_VALUE, INSETS_VALUE));
 
         Label placeText = new Label("Ort: ");
-        addPlace.setMinWidth(GuiConstants.MIN_WIDTH);
+        addPlace.setMinWidth(MIN_WIDTH);
         addPlace.setPromptText("Ort");
         HBox hbPlace = new HBox(placeText, addPlace);
-        hbPlace.setSpacing(GuiConstants.SPACING_MAX_VALUE);
-        hbPlace.setPadding(new Insets(GuiConstants.INSETS_VALUE, GuiConstants.INSETS_VALUE, GuiConstants.INSETS_VALUE, GuiConstants.INSETS_VALUE));
+        hbPlace.setSpacing(SPACING_MAX_VALUE);
+        hbPlace.setPadding(new Insets(INSETS_VALUE, INSETS_VALUE, INSETS_VALUE, INSETS_VALUE));
 
         Label countryText = new Label("Land: ");
-        main.setCountryNames(FXCollections.observableArrayList(UITranslation.GERMANY, UITranslation.ENGLAND));
+        main.setCountryNames(FXCollections.observableArrayList(DE.getFullCountryName(), GB.getFullCountryName()));
         main.setCbCountry(new ComboBox<>(main.getCountryNames()));
         main.getCbCountry().setValue(UITranslation.COUNTRY_CHOICE_BTN_LABEL);
-        main.getCbCountry().setMinWidth(GuiConstants.DEFAULT_MIN_WIDTH);
-        main.getCbCountry().setPadding(new Insets(GuiConstants.INSETS_MIN_VALUE, GuiConstants.INSETS_MIN_VALUE, GuiConstants.INSETS_MIN_VALUE, GuiConstants.FONT));
+        main.getCbCountry().setMinWidth(DEFAULT_MIN_WIDTH);
+        main.getCbCountry().setPadding(new Insets(INSETS_MIN_VALUE, INSETS_MIN_VALUE, INSETS_MIN_VALUE, FONT));
 
         main.getCbCountry().setOnAction(arg0 -> Main.selectedCountry = main.getCbCountry().getValue());
 
         HBox hbCountry = new HBox(countryText, main.getCbCountry());
-        hbCountry.setSpacing(GuiConstants.H_BOX_SPACING_VALUE);
-        hbCountry.setPadding(new Insets(GuiConstants.INSETS_VALUE));
+        hbCountry.setSpacing(H_BOX_SPACING_VALUE);
+        hbCountry.setPadding(new Insets(INSETS_VALUE));
         final Button addCenterBtn = new Button(UITranslation.SAVE_BTN_LABEL);
         addCenterBtn.setOnAction(event15 -> {
 
             final String monitorNameText = addMonitorName.getText();
             Centre neuCenter = new Centre(monitorNameText, addTrierName.getText(),
-                    addPlace.getText(), Main.selectedCountry, Main.trialService.nextId(UITranslation.GERMANY.equals(Main.selectedCountry) ? Country.DE : Country.GB));
+                    addPlace.getText(), Main.selectedCountry, Main.trialService.nextIdByCountry(Country.valueOf(Main.selectedCountry)));
 
             main.getCentres().add(neuCenter);
             Main.trialService.update(neuCenter);
@@ -148,14 +150,14 @@ public class MonitoringPlanHBox {
         });
 
         final VBox vbCenter = new VBox(centerFormText, hbMonitor, hbTrier, hbCountry, hbPlace, addCenterBtn);
-        vbCenter.setSpacing(GuiConstants.SPACING_DEFAULT_VALUE);
-        vbCenter.setPadding(new Insets(GuiConstants.INSETS_VALUE, GuiConstants.INSETS_VALUE, GuiConstants.INSETS_VALUE, GuiConstants.INSETS_VALUE));
+        vbCenter.setSpacing(SPACING_DEFAULT_VALUE);
+        vbCenter.setPadding(new Insets(INSETS_VALUE, INSETS_VALUE, INSETS_VALUE, INSETS_VALUE));
         vbCenter.setVisible(false);
         final HBox hbox = new HBox();
-        hbox.setSpacing(GuiConstants.INSETS_VALUE);
-        hbox.setPadding(new Insets(GuiConstants.INSETS_VALUE, GuiConstants.INSETS_VALUE, GuiConstants.INSETS_VALUE, GuiConstants.INSETS_VALUE));
+        hbox.setSpacing(INSETS_VALUE);
+        hbox.setPadding(new Insets(INSETS_VALUE, INSETS_VALUE, INSETS_VALUE, INSETS_VALUE));
         VBox vb = new VBox(monitorPlanLabel, monitorPlan, deleteItemsBtn);
-        vb.setSpacing(GuiConstants.INSETS_VALUE);
+        vb.setSpacing(INSETS_VALUE);
         hbox.getChildren().addAll(vb, vbCenter);
         return hbox;
     }

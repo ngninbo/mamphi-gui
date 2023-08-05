@@ -4,6 +4,7 @@ import de.fhdo.master.mi.sms.project.mamphi.model.Country;
 import de.fhdo.master.mi.sms.project.mamphi.model.PatientCenter;
 import de.fhdo.master.mi.sms.project.mamphi.model.RandomizationWeek;
 import de.fhdo.master.mi.sms.project.mamphi.utils.GuiConstants;
+import de.fhdo.master.mi.sms.project.mamphi.utils.TrialUtils;
 import de.fhdo.master.mi.sms.project.mamphi.utils.UITranslation;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -143,14 +144,7 @@ public class RandomizationHBox {
         Text randTableText = new Text(UITranslation.RANDOM_WEEK_ALL_WEEK_OVERVIEW_LABEL);
         randTableText.setFont(new Font(GuiConstants.FONT_NAME, GuiConstants.FONT));
 
-        ObservableList<String> randListOpt = FXCollections.observableArrayList(
-                UITranslation.RANDOM_WEEK_ALL_WEEK_OVERVIEW_LABEL,
-                String.format(UITranslation.RANDOM_WEEK_OVERVIEW_OPTION, 1),
-                String.format(UITranslation.RANDOM_WEEK_OVERVIEW_OPTION, 2),
-                String.format(UITranslation.RANDOM_WEEK_COUNTRY_OVERVIEW_OPTION, UITranslation.GERMANY, 1),
-                String.format(UITranslation.RANDOM_WEEK_COUNTRY_OVERVIEW_OPTION, UITranslation.ENGLAND, 1),
-                String.format(UITranslation.RANDOM_WEEK_COUNTRY_OVERVIEW_OPTION, UITranslation.GERMANY, 2),
-                String.format(UITranslation.RANDOM_WEEK_COUNTRY_OVERVIEW_OPTION, UITranslation.ENGLAND, 2));
+        ObservableList<String> randListOpt = FXCollections.observableArrayList(TrialUtils.getRandomWeekOverviewOptions());
 
         ComboBox<String> cbRandWeek = new ComboBox<>(randListOpt);
         cbRandWeek.setPromptText(UITranslation.VIEW_ANOTHER_RANDOM_WEEK_PROMPT_TXT);

@@ -13,8 +13,6 @@ import java.util.logging.Logger;
 
 import static de.fhdo.master.mi.sms.project.mamphi.utils.GuiConstants.*;
 import static de.fhdo.master.mi.sms.project.mamphi.utils.TrialStatements.*;
-import static de.fhdo.master.mi.sms.project.mamphi.utils.UITranslation.ENGLAND;
-import static de.fhdo.master.mi.sms.project.mamphi.utils.UITranslation.GERMANY;
 
 @CrudRepository
 public class CenterRepository extends BaseRepository<Centre> {
@@ -61,7 +59,7 @@ public class CenterRepository extends BaseRepository<Centre> {
             while (results.next()) {
                 Centre center = new Centre(results.getString("Monitor"), results.getString("Trier"),
                         results.getString("Place"),
-                        results.getString("Country").equals(Country.DE.toString()) ? GERMANY : ENGLAND,
+                        Country.valueOf(results.getString("Country")).getFullCountryName(),
                         results.getInt("CentreID"));
                 centerList.add(center);
             }
@@ -80,7 +78,7 @@ public class CenterRepository extends BaseRepository<Centre> {
 
             PreparedStatement stmt = connection.prepareStatement(INTO_CENTER_VALUES);
             stmt.setLong(1, center.getCentreID());
-            stmt.setString(2, GERMANY.equals(center.getCountry()) ? Country.DE.toString() : Country.GB.toString());
+            stmt.setString(2, Country.valueOf(center.getCountry()).toString());
             stmt.setString(3, center.getPlace());
             stmt.setString(FOUR, center.getTrier());
             stmt.setString(FIVE, center.getMonitor());
@@ -237,7 +235,7 @@ public class CenterRepository extends BaseRepository<Centre> {
             while (results.next()) {
 
                 MonitorVisit monitorVisit = new MonitorVisit(results.getInt("CentreID"),
-                        results.getString("Country").equals("DE") ? GERMANY : ENGLAND,
+                        Country.valueOf(results.getString("Country")).getFullCountryName(),
                         results.getString("Place"), results.getString("Trier"),
                         results.getString("Monitor"),
                         results.getInt("TotalNumberOfPatient"));

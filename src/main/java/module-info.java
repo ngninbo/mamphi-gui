@@ -1,10 +1,8 @@
 module mamphiGuiVersion {
 	exports de.fhdo.master.mi.sms.project.mamphi.gui.app;
 	exports de.fhdo.master.mi.sms.project.mamphi.model;
-	exports de.fhdo.master.mi.sms.project.mamphi.repository;
 	exports de.fhdo.master.mi.sms.project.mamphi.service;
-	exports de.fhdo.master.mi.sms.project.mamphi.utils;
-    exports de.fhdo.master.mi.sms.project.mamphi.annotation;
+	exports de.fhdo.master.mi.sms.project.mamphi.repository;
 
     requires java.sql;
 	requires javafx.base;

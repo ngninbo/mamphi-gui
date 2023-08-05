@@ -16,8 +16,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 import java.util.List;
+import static de.fhdo.master.mi.sms.project.mamphi.model.Country.*;
 
 public class CentreHBox {
+
+    public static final int INSET_VALUES = 80;
+    public static final int MIN_WIDTH = 120;
     private final Main main;
 
     public CentreHBox(Main main) {
@@ -32,17 +36,13 @@ public class CentreHBox {
         main.getCenterTable().setEditable(true);
         main.setCenterList(Main.trialService.findAllCenter());
 
-        main.getCenterList().sort((o1, o2) -> {
-            if (o1.getCentreID() > o2.getCentreID()) {
-                return 1;
-            }
-            return GuiConstants.INSETS_MIN_VALUE;
-        });
+        main.getCenterList()
+                .sort((o1, o2) -> o1.getCentreID() > o2.getCentreID() ? 1 : GuiConstants.INSETS_MIN_VALUE);
 
         main.setCentres(FXCollections.observableArrayList(main.getCenterList()));
 
         TableColumn<Centre, String> monitorCol = new TableColumn<>("Monitor");
-        monitorCol.setMinWidth(120);
+        monitorCol.setMinWidth(MIN_WIDTH);
 
         monitorCol.setCellValueFactory(new PropertyValueFactory<>("monitor"));
         monitorCol.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -106,14 +106,14 @@ public class CentreHBox {
             switch (choice) {
 
                 case UITranslation.GERMAN_CENTER_OVERVIEW_OPTION:
-                    centerListByCountry = Main.trialService.findAllCenter(Country.DE);
+                    centerListByCountry = Main.trialService.findAllCenter(DE);
                     centerTableLabel.setText(UITranslation.GERMAN_CENTER_OVERVIEW_LABEL);
                     centerListData = FXCollections.observableArrayList(centerListByCountry);
                     main.getCenterTable().setItems(centerListData);
                     break;
 
                 case UITranslation.BRITISH_CENTER_OVERVIEW_OPTION:
-                    centerListByCountry = Main.trialService.findAllCenter(Country.GB);
+                    centerListByCountry = Main.trialService.findAllCenter(GB);
                     centerTableLabel.setText(UITranslation.BRITISH_CENTER_OVERVIEW_LABEL);
                     centerListData = FXCollections.observableArrayList(centerListByCountry);
                     main.getCenterTable().setItems(centerListData);
@@ -130,7 +130,8 @@ public class CentreHBox {
 
         HBox hbCenterFilter = new HBox(filterCenter, cbCenterFilter);
         hbCenterFilter.setSpacing(GuiConstants.INSETS_VALUE);
-        hbCenterFilter.setPadding(new Insets(GuiConstants.SPACING_DEFAULT_VALUE, GuiConstants.INSETS_MIN_VALUE, GuiConstants.INSETS_MIN_VALUE, 250));
+        final int v3 = 250;
+        hbCenterFilter.setPadding(new Insets(GuiConstants.SPACING_DEFAULT_VALUE, GuiConstants.INSETS_MIN_VALUE, GuiConstants.INSETS_MIN_VALUE, v3));
 
         // Adding new center functionality
         Text centerFormText = new Text(UITranslation.CENTER_FORM_TEXT);
@@ -161,13 +162,14 @@ public class CentreHBox {
         hbPlace.setPadding(new Insets(GuiConstants.INSETS_VALUE, GuiConstants.INSETS_VALUE, GuiConstants.INSETS_VALUE, GuiConstants.INSETS_VALUE));
 
         Label countryText = new Label("Land: ");
-        main.setCountryNames(FXCollections.observableArrayList(UITranslation.GERMANY, UITranslation.ENGLAND));
+        main.setCountryNames(FXCollections.observableArrayList(DE.getFullCountryName(), GB.getFullCountryName()));
         main.setCbCountry(new ComboBox<>(main.getCountryNames()));
         main.getCbCountry().setValue(UITranslation.COUNTRY_CHOICE_BTN_LABEL);
         main.getCbCountry().setMinWidth(GuiConstants.DEFAULT_MIN_WIDTH);
         main.getCbCountry().setPadding(new Insets(GuiConstants.INSETS_MIN_VALUE, GuiConstants.INSETS_MIN_VALUE, GuiConstants.INSETS_MIN_VALUE, GuiConstants.FONT));
 
-        main.getCbCountry().setOnAction(arg0 -> Main.selectedCountry = main.getCbCountry().getValue() != null ? main.getCbCountry().getValue() : null);
+        main.getCbCountry()
+                .setOnAction(arg0 -> Main.selectedCountry = main.getCbCountry().getValue() != null ? main.getCbCountry().getValue() : null);
 
         final Text centerInputValid = new Text();
         centerInputValid.setId("centerInputValid");
@@ -179,7 +181,7 @@ public class CentreHBox {
 
             if (addMonitorName.getText() != null && addTrierName.getText() != null && addPlace.getText() != null && Main.selectedCountry != null) {
                 Centre neuCenter = new Centre(addMonitorName.getText(), addTrierName.getText(), addPlace.getText(),
-                        Main.selectedCountry, Main.trialService.nextId(UITranslation.GERMANY.equals(Main.selectedCountry) ? Country.DE : Country.GB));
+                        Main.selectedCountry, Main.trialService.nextIdByCountry(Country.valueOf(Main.selectedCountry)));
                 main.getCentres().add(neuCenter);
                 Main.trialService.update(neuCenter);
                 addMonitorName.clear();
@@ -195,7 +197,7 @@ public class CentreHBox {
         final VBox vbAddCenter = new VBox(centerFormText, hbMonitor, hbTrier, hbCountry, hbPlace, centerInputValid, addCenterBtn,
                 deleteCenterBtn);
         vbAddCenter.setSpacing(GuiConstants.SPACING_DEFAULT_VALUE);
-        vbAddCenter.setPadding(new Insets(80, GuiConstants.INSETS_VALUE, GuiConstants.INSETS_VALUE, GuiConstants.SPACING_MAX_VALUE));
+        vbAddCenter.setPadding(new Insets(INSET_VALUES, GuiConstants.INSETS_VALUE, GuiConstants.INSETS_VALUE, GuiConstants.SPACING_MAX_VALUE));
 
         centerTableLabel.setFont(new Font(GuiConstants.FONT_NAME, GuiConstants.FONT));
         final VBox vbCenter = new VBox(centerTableLabel, hbCenterFilter, main.getCenterTable());

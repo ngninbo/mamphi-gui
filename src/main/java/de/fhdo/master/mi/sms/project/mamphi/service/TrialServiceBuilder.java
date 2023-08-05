@@ -3,11 +3,10 @@ package de.fhdo.master.mi.sms.project.mamphi.service;
 import de.fhdo.master.mi.sms.project.mamphi.repository.CenterRepository;
 import de.fhdo.master.mi.sms.project.mamphi.repository.InformedConsentRepository;
 import de.fhdo.master.mi.sms.project.mamphi.repository.RandomizationWeekRepository;
+import de.fhdo.master.mi.sms.project.mamphi.utils.TrialUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.function.Predicate;
 
 import static de.fhdo.master.mi.sms.project.mamphi.utils.TrialStatements.TRIAL_DB_URL;
 
@@ -27,11 +26,11 @@ public class TrialServiceBuilder {
 
     public TrialServiceBuilder withDatabase(String database) throws SQLException, IOException {
         databaseUrl = String.format(TRIAL_DB_URL, database);
-        Predicate<String> fileExist = (fileName) -> new File(fileName).exists();
 
-        if (fileExist.negate().test(database)) {
-            TrialService.createDatabase(databaseUrl);
+        if (TrialUtils.fileExist().negate().test(database)) {
+            TrialUtils.createDatabase(databaseUrl);
         }
+
         return this;
     }
 
