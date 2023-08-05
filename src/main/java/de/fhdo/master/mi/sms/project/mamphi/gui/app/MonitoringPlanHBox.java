@@ -34,7 +34,7 @@ public class MonitoringPlanHBox {
         monitorPlanLabel.setFont(new Font(FONT_NAME, FONT));
         TableView<MonitorVisit> monitorPlan = new TableView<>();
         monitorPlan.setEditable(false);
-        List<MonitorVisit> visitItems = Main.trialService.getMonitorVisitPlan(false);
+        List<MonitorVisit> visitItems = Main.trialService.getMonitorVisitPlan();
         ObservableList<MonitorVisit> visitData = FXCollections.observableArrayList(visitItems);
         TableColumn<MonitorVisit, String> placeCol = new TableColumn<>("Ort");
         TableColumn<MonitorVisit, String> monitorCol = new TableColumn<>("Monitor");

@@ -221,14 +221,13 @@ public class CenterRepository extends BaseRepository<Centre> {
         return list;
     }
 
-    public List<MonitorVisit> getMonitorVisitPlan(boolean isAllCenterInvolved) {
+    public List<MonitorVisit> getMonitorVisitPlan() {
 
         try (Connection connection = DriverManager.getConnection(databaseUrl)) {
 
             statement = connection.createStatement();
 
-            results = statement.executeQuery((isAllCenterInvolved) ? SELECT_MONITOR_PLAN_WITH_ALL_CENTER_INVOLVED :
-                    SELECT_MONITOR_PLAN_WITH_ANY_CENTER_INVOLVED);
+            results = statement.executeQuery(SELECT_MONITOR_PLAN_WITH_ANY_CENTER_INVOLVED);
 
             monitorVisits = new ArrayList<>();
 

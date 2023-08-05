@@ -15,6 +15,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
@@ -28,9 +29,15 @@ import static org.mockito.Mockito.*;
 public class TrialServiceTest {
 
     private static TrialService trialService;
-    private static final CenterRepository centerRepository = mock(CenterRepository.class);
-    private static final InformedConsentRepository informedConsentRepository = mock(InformedConsentRepository.class);
-    private static final RandomizationWeekRepository randomizationWeekRepository = mock(RandomizationWeekRepository.class);
+
+    @Mock
+    private CenterRepository centerRepository;
+
+    @Mock
+    private InformedConsentRepository informedConsentRepository;
+
+    @Mock
+    private RandomizationWeekRepository randomizationWeekRepository;
 
     @BeforeEach
     public void setUp() {
@@ -145,13 +152,13 @@ public class TrialServiceTest {
         verify(informedConsentRepository).findAll(eq(status));
     }
 
-    @Test
-    public void nextId() {
-        int id = 207;
-        doReturn(id).when(centerRepository).nextId(isA(Country.class));
-        int expectedId = trialService.nextIdByCountry(Country.GB);
-        assertThat(expectedId).isEqualTo(id);
-        verify(centerRepository).nextId(eq(Country.GB));
+    @ParameterizedTest(name = "should assert next centre id by country {0} to be {1}")
+    @CsvSource(value = {"DE, 111", "GB, 206"})
+    public void nextId(@ConvertWith(CountryConverter.class) Country country, int expected) {
+        doReturn(expected).when(centerRepository).nextId(isA(Country.class));
+        int expectedId = trialService.nextIdByCountry(country);
+        assertThat(expectedId).isEqualTo(expected);
+        verify(centerRepository).nextId(eq(country));
     }
 
     public static List<Arguments> argCenterFactory() {

@@ -92,8 +92,8 @@ public class TrialServiceImpl implements TrialService {
     }
 
     @Override
-    public List<MonitorVisit> getMonitorVisitPlan(boolean isInvolved) {
-        return centerRepository.getMonitorVisitPlan(isInvolved);
+    public List<MonitorVisit> getMonitorVisitPlan() {
+        return centerRepository.getMonitorVisitPlan();
     }
 
     @Override

@@ -16,5 +16,5 @@ public interface CenterService {
     List<PatientCenter> findNumberOfPatientPerCenterByAllWeek();
 
     List<PatientCenter> findNumberPatientPerCenterByCountryByWeek(Country country, int week);
-    List<MonitorVisit> getMonitorVisitPlan(boolean isInvolved);
+    List<MonitorVisit> getMonitorVisitPlan();
 }
