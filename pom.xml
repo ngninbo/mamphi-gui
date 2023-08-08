@@ -14,7 +14,7 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.0</version>
+				<version>3.11.0</version>
 				<configuration>
 					<release>11</release>
 				</configuration>
@@ -102,12 +102,6 @@
 			<artifactId>assertj-core</artifactId>
 			<version>3.24.2</version>
 			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.13.2</version>
 		</dependency>
 	</dependencies>
 </project>
