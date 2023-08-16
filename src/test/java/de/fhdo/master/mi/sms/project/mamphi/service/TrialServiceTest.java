@@ -11,17 +11,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.AggregateWith;
 import org.junit.jupiter.params.converter.ConvertWith;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.EnumSource;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.*;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -53,8 +49,8 @@ public class TrialServiceTest {
         verify(randomizationWeekRepository, times(1)).update(eq(rand));
     }
 
-    @ParameterizedTest
-    @MethodSource("argCenterFactory")
+    @ParameterizedTest(name = "centerId={0}, country={1}, place={2}, trier={3}, monitor={4}")
+    @CsvFileSource(resources = "/center.csv", numLinesToSkip = 1)
     @DisplayName("should update centre given in following cases:")
     public void testUpdate(@AggregateWith(CenterAggregator.class) Centre centre) {
         doNothing().when(centerRepository).update(isA(Centre.class));
@@ -159,23 +155,5 @@ public class TrialServiceTest {
         int expectedId = trialService.nextIdByCountry(country);
         assertThat(expectedId).isEqualTo(expected);
         verify(centerRepository).nextId(eq(country));
-    }
-
-    public static List<Arguments> argCenterFactory() {
-        return List.of(
-                arguments(102, "D", "Essen", "Müller", "Bruch"),
-                arguments(103, "D", "München", "Moser", "Wittmann"),
-                arguments(104, "D", "Herne", "Kwiatkowski", "Wittmann"),
-                arguments(105, "D", "Hannover", "Meyer", "Lange"),
-                arguments(106, "D", "Köln", "Brettschneider", "Bruch"),
-                arguments(107, "D", "Bremen", "Van Gool", "Lange"),
-                arguments(108, "D", "Hamburg", "Talmann-Berg", "Lange"),
-                arguments(109, "D", "Stuttgart", "Fischer", "Bruch"),
-                arguments(110, "D", "Lepzig", "Obermeier", "Bruch"),
-                arguments(201, "GB", "London", "McDonald", "Gordon"),
-                arguments(202, "GB", "London", "Priest", "Thatcher"),
-                arguments(203, "GB", "Manchester", "Down", "Gordon"),
-                arguments(204, "GB", "Brighton", "Feldham", "Gordon"),
-                arguments(205, "GB", "Leeds", "Harnister", "Thatcher"));
     }
 }
